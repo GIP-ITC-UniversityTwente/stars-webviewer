@@ -70,7 +70,7 @@ http://stars/studyareas
 				},
 				"features": [{
 					"type": "Feature",
-					"properties": { ... }
+					"properties": { }
 				}]
 			}
 		},
@@ -87,7 +87,7 @@ http://stars/studyareas
 				},
 				"features": [{
 					"type": "Feature",
-					"properties": { ... }
+					"properties": { }
 				}]
 			}
 		}
@@ -194,45 +194,45 @@ http://stars/imagecharacteristics?studyAreaId=234BCD567&cropTypeId=2BC2DEF3
 	"results": {
 		"spectralCharacteristics": [
 			{
-				"id": 1ASD345,
+				"id": "1ASD345",
 				"type": "mean reflectance"
 			},
 			{
-				"id": 2SDFG56,
+				"id": "2SDFG56",
 				"type": "ndvi"
 			},
 			{
-				"id": 3DFGH78,
+				"id": "3DFGH78",
 				"type": "ndvi green"
 			},
 			{
-				"id": 4FGHJ89,
+				"id": "4FGHJ89",
 				"type": "eve"
 			},
 			{
-				"id": 5GHJK90,
+				"id": "5GHJK90",
 				"type": "tcari"
 			}
 		],
 		"texturalCharacteristics": [
 			{
-				"id": 1QWE12,
+				"id": "1QWE12",
 				"type": "angular second moment"
 			},
 			{
-				"id": 2WER23,
+				"id": "2WER23",
 				"type": "contrast"
 			},
 			{
-				"id": 3ERT34,
+				"id": "3ERT34",
 				"type": "correlation"
 			},
 			{
-				"id": 4RTY45,
+				"id": "4RTY45",
 				"type": "energy (uniformity)"
 			},
 			{
-				"id": 5TYU56,
+				"id": "5TYU56",
 				"type": "entropy"
 			}
 		]
