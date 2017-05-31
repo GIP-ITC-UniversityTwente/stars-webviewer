@@ -10,7 +10,7 @@ To support Requirment 1a, we believe we need endpoints that will support the abi
 &nbsp;&nbsp;&nbsp;&nbsp;Get all study areas that have farm field-specific data.
 
 [/croptypes](#/croptypes_get)&nbsp;&nbsp;![icon](img/get.png)
-&nbsp;&nbsp;&nbsp;&nbsp;Get all crop types for a specific (study area,year) combination or (study area, startyear, endyear) combination.
+&nbsp;&nbsp;&nbsp;&nbsp;Get all crop types for a specific (study area, year) combination or (study area, startyear, endyear) combination.
 
 [/imagecharacteristics](#/imagecharacteristics_get)&nbsp;&nbsp;![icon](img/get.png)
 &nbsp;&nbsp;&nbsp;&nbsp;Get all image characteristics (spectral and textural) associated with a given (study area, year) or (sudy area, startyear, endyear) combination.
@@ -101,12 +101,19 @@ http://stars/studyareas
 
 #### <a id="/croptypes_get">/croptypes</a>&nbsp;&nbsp;![icon](img/get.png)
 
-Get all crop types for a specific study area.
+Get all crop types for a specific study area for the given year(s).  This is an overloaded endpoint.  
+When a single year value is provided the crops provided are present in the area in that year, when
+two year values are provided, these define a time range within which crop presence is tested.
+
+When the two year values provided are identical, this is equivalent to a query with that value as single
+year value.  When the first year value is higher than the second, the result is undefined.
 
 ##### Parameters
 |Name|Required|In|Type|Description|
 |---|---|---|---|---|
-|studyAreaId|true|query|string|The GUID for the study area you are requesting crops types for.|
+|studyAreaId|true|query|integer|The GUID for the study area you are requesting crops types for.|
+|startYear|true|query|integer|The (starting) year for which crop types are requested in the area.|
+|endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
 
 ##### Success 200 (object)
 |Name|Type|Description|
@@ -115,7 +122,6 @@ Get all crop types for a specific study area.
 |results|array||
 |-&nbsp;id|string|The GUID for the crop.|
 |-&nbsp;name|string|Name of crop.|
-|-&nbsp;variety|string|Variety of crop.|
 
 ##### Error 500 (Object)
 |Name|Type|Description|
