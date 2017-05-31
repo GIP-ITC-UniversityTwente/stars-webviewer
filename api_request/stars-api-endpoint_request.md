@@ -7,13 +7,13 @@ The purpose of this document is to communicate what STARS API endpoints are need
 To support Requirment 1a, we believe we need endpoints that will support the ability to request the following data with responses that resemble the following:
 
 [/studyareas](#/studyareas_get)&nbsp;&nbsp;![icon](img/get.png)
-&nbsp;&nbsp;&nbsp;&nbsp;Get all study areas.
+&nbsp;&nbsp;&nbsp;&nbsp;Get all study areas that have farm field-specific data.
 
 [/croptypes](#/croptypes_get)&nbsp;&nbsp;![icon](img/get.png)
-&nbsp;&nbsp;&nbsp;&nbsp;Get all crop types for a specific study area.
+&nbsp;&nbsp;&nbsp;&nbsp;Get all crop types for a specific (study area,year) combination or (study area, startyear, endyear) combination.
 
 [/imagecharacteristics](#/imagecharacteristics_get)&nbsp;&nbsp;![icon](img/get.png)
-&nbsp;&nbsp;&nbsp;&nbsp;Get all image characteristics (spectral and textural) associated with a given study area and crop type.
+&nbsp;&nbsp;&nbsp;&nbsp;Get all image characteristics (spectral and textural) associated with a given (study area, year) or (sudy area, startyear, endyear) combination.
 
 [/timeseries](#/timeseries_get)&nbsp;&nbsp;![icon](img/get.png)
 &nbsp;&nbsp;&nbsp;&nbsp;Get time series data for a specific image characteristics (spectral or textural) associated with a given study area and crop type.
@@ -22,7 +22,7 @@ To support Requirment 1a, we believe we need endpoints that will support the abi
 
 #### <a id="/studyareas_get">/studyareas</a>&nbsp;&nbsp;![icon](img/get.png)
 
-Get all study areas.
+Get all study areas that have farm field-specific data.
 
 ##### Parameters
 N/A
@@ -33,8 +33,11 @@ N/A
 |---|---|---|
 |message|string|Success message.|
 |data|object||
-|-&nbsp;id|string|GUID of study area.|
+|-&nbsp;type|string|JSON object type; ='Feature'|
+|-&nbsp;id|integer|GUID of study area.|
 |-&nbsp;name|string|Name of study area.|
+|-&nbsp;year_start|integer|Starting year of the study.|
+|-&nbsp;year_end|integer|Ending year of the study.|
 |-&nbsp;geometry|GeoJSON Object|Spatial geometry for the study area.|
 
 ##### Error 500 (Object)
