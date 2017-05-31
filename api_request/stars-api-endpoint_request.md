@@ -133,9 +133,10 @@ year value.  When the first year value is higher than the second, the result is 
 |-&nbsp;status|integer||
 
 
-##### Example Request:
+##### Example Requests:
 ```
-http://54.215.10.106/croptype?studyAreaId=234BCD567
+http://stars/croptypes?studyAreaId=234567?startYear=2014
+http://stars/croptypes?studyAreaId=234567?startYear=2014?endYear=2015
 ```
 
 ##### Sample Response:
