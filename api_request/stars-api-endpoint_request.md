@@ -61,7 +61,7 @@ http://stars/studyareas
 	"message":"success",
 	"results":[
 		{
-			"id":"1ABC2DEF3",
+			"id":12388,
 			"name":"Study Area 1",
 			"geometry":{
 				"type": "FeatureCollection",
@@ -78,7 +78,7 @@ http://stars/studyareas
 			}
 		},
 		{
-			"id":"2BCD3EFG4",
+			"id":23400,
 			"name":"Study Area 2",
 			"geometry":{
 				"type": "FeatureCollection",
@@ -145,14 +145,12 @@ http://stars/croptypes?studyAreaId=234567?startYear=2014?endYear=2015
 	"message":"success",
 	"results": [
 		{
-			"id":"1ABC2DEF3",
-			"name":"Maize",
-			"variety":"Blue Corn"
+			"id":12389,
+			"name":"Maize"
 		},
 		{
-			"id":"2BC2DEF3",
-			"name":"Maize",
-			"variety":"Flour Corn"
+			"id":223,
+			"name":"Groundnut",
 		}
 	]
 }
