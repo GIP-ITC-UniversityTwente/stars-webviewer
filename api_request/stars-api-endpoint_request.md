@@ -150,7 +150,7 @@ http://stars/croptypes?studyAreaId=234567?startYear=2014?endYear=2015
 		},
 		{
 			"id":223,
-			"name":"Groundnut",
+			"name":"Groundnut"
 		}
 	]
 }
