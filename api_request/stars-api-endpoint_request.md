@@ -32,7 +32,7 @@ N/A
 |Name|Type|Description|
 |---|---|---|
 |message|string|Success message.|
-|data|object||
+|results|object||
 |-&nbsp;type|string|JSON object type; ='Feature'|
 |-&nbsp;id|integer|GUID of study area.|
 |-&nbsp;name|string|Name of study area.|
@@ -61,37 +61,45 @@ http://stars/studyareas
 	"message":"success",
 	"results":[
 		{
-			"id":12388,
-			"name":"Study Area 1",
-			"geometry":{
-				"type": "FeatureCollection",
-				"crs": {
-					"type": "name",
-					"properties": {
-						"name": "urn:ogc:def:crs:OGC:1.3:CRS84"
-					}
-				},
-				"features": [{
-					"type": "Feature",
-					"properties": { }
-				}]
+			"type": "Feature",
+			"properties": {
+				"id": 1000,
+				"name": "Mali, Sikasso, around Sougoumba",
+				"year_start": 2014,
+				"year_end": 2014
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[-5.143373, 12.13132],
+						[-5.235212, 12.130594],
+						[-5.235968, 12.220957],
+						[-5.144098, 12.221689],
+						[-5.143373, 12.13132]
+					]
+				]
 			}
 		},
 		{
-			"id":23400,
-			"name":"Study Area 2",
-			"geometry":{
-				"type": "FeatureCollection",
-				"crs": {
-					"type": "name",
-					"properties": {
-						"name": "urn:ogc:def:crs:OGC:1.3:CRS84"
-					}
-				},
-				"features": [{
-					"type": "Feature",
-					"properties": { }
-				}]
+			"type": "Feature",
+			"properties": {
+				"id": 1001,
+				"name": "Other Mali, test 2",
+				"year_start": 2015,
+				"year_end": 2015
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[-5.143373, 12.13132],
+						[-5.235212, 12.130594],
+						[-5.235968, 12.220957],
+						[-5.144098, 12.221689],
+						[-5.143373, 12.13132]
+					]
+				]
 			}
 		}
 	]
