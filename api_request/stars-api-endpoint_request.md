@@ -13,7 +13,7 @@ To support Requirment 1a, we believe we need endpoints that will support the abi
 &nbsp;&nbsp;&nbsp;&nbsp;Get all crop types for a specific (study area, year) combination or (study area, startyear, endyear) combination.
 
 [/imagecharacteristics](#/imagecharacteristics_get)&nbsp;&nbsp;![icon](img/get.png)
-&nbsp;&nbsp;&nbsp;&nbsp;Get all image characteristics (spectral and textural) associated with a given (study area, year) or (sudy area, startyear, endyear) combination.
+&nbsp;&nbsp;&nbsp;&nbsp;Get all image characteristics (spectral and textural) associated with a given (study area, year) or (study area, startyear, endyear) combination.
 
 [/timeseries](#/timeseries_get)&nbsp;&nbsp;![icon](img/get.png)
 &nbsp;&nbsp;&nbsp;&nbsp;Get time series data for a specific image characteristics (spectral or textural) associated with a given study area and crop type.
@@ -173,13 +173,14 @@ http://stars/croptypes?studyAreaId=234567?startYear=2014?endYear=2015
 
 #### <a id="/imagecharacteristics_get">/imagecharacteristics</a>&nbsp;&nbsp;![icon](img/get.png)
 
-Get all image characteristics (spectral and textural) associated with a given study area and crop type.
+Get all image characteristics (spectral and textural) associated with a given study area and given year(s).
 
 ##### Parameters
 |Name|Required|In|Type|Description|
 |---|---|---|---|---|
 |studyAreaId|true|query|string|The GUID for the study area.|
-|cropTypeId|true|query|string|The GUID for the crop type.
+|startYear|true|query|integer|The (starting) year for which crop types are requested in the area.|
+|endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
 
 ##### Success 200 (object)
 |Name|Type|Description|
@@ -188,10 +189,18 @@ Get all image characteristics (spectral and textural) associated with a given st
 |results|object||
 |-&nbsp;spectralCharacteristics|array|Collection of spectral characteristics.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;type|string|Name of characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|datatype|The data type of its values.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter1|Description of (optional) first parameter.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter2|Description of (optional) second parameter.|
 |-&nbsp;texturalCharacteristics|array|Collection of textural characteristics.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;type|string|Name of characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|datatype|The data type of its values.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter1|Description of (optional) first parameter.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter2|Description of (optional) second parameter.|
 
 ##### Error 500 (Object)
 |Name|Type|Description|
@@ -205,11 +214,13 @@ Get all image characteristics (spectral and textural) associated with a given st
 
 ##### Example Request:
 ```
-http://stars/imagecharacteristics/<studyAreaId>/<cropTypeId>
+http://stars/imagecharacteristics/<studyAreaId>/<startYear>
+http://stars/imagecharacteristics/<studyAreaId>/<startYear>/<endYear>
 
 or
 
-http://stars/imagecharacteristics?studyAreaId=234BCD567&cropTypeId=2BC2DEF3
+http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014
+http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 ```
 
 ##### Sample Response:
@@ -219,46 +230,54 @@ http://stars/imagecharacteristics?studyAreaId=234BCD567&cropTypeId=2BC2DEF3
 	"results": {
 		"spectralCharacteristics": [
 			{
-				"id": "1ASD345",
-				"type": "mean reflectance"
+				"id": 1345,
+				"name": "mean reflectance",
+				"datatype": "float",
 			},
 			{
-				"id": "2SDFG56",
-				"type": "ndvi"
+				"id": 256,
+				"name": "ndvi",
+				"datatype": "float"
 			},
 			{
-				"id": "3DFGH78",
-				"type": "ndvi green"
+				"id": 378,
+				"name": "ndvi-green",
+				"datatype": "float"
 			},
 			{
-				"id": "4FGHJ89",
-				"type": "eve"
+				"id": 489,
+				"name": "reflectance_first_moment",
+				"datatype": "float",
+				"parameter1": "bandNumber : 1..8"
 			},
 			{
-				"id": "5GHJK90",
-				"type": "tcari"
+				"id": 590,
+				"name": "reflectance_covariance",
+				"datatype": "float",
+				"parameter1": "bandNumber : 1..8",
+				"parameter2": "bandNumber : 1..8"
 			}
 		],
 		"texturalCharacteristics": [
 			{
-				"id": "1QWE12",
-				"type": "angular second moment"
+				"id": 112,
+				"name": "angular second moment"
 			},
 			{
-				"id": "2WER23",
-				"type": "contrast"
+				"id": 223,
+				"name": "contrast"
 			},
 			{
-				"id": "3ERT34",
-				"type": "correlation"
+				"id": "734,
+				"name": "correlation"
 			},
 			{
-				"id": "4RTY45",
-				"type": "energy (uniformity)"
+				"id": 445,
+				"name": "energy (uniformity)"
 			},
 			{
-				"id": "5TYU56",
-				"type": "entropy"
+				"id": 556,
+				"name": "entropy"
 			}
 		]
 	}
