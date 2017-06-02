@@ -191,16 +191,16 @@ Get all image characteristics (spectral and textural) associated with a given st
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|datatype|The data type of its values.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter1|Description of (optional) first parameter.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter2|Description of (optional) second parameter.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;datatype|string|The data type of its values.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter1|string|Description of (optional) first parameter.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter2|string|Description of (optional) second parameter.|
 |-&nbsp;texturalCharacteristics|array|Collection of textural characteristics.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|datatype|The data type of its values.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter1|Description of (optional) first parameter.|
-|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|parameter2|Description of (optional) second parameter.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;datatype|string|The data type of its values.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter1|string|Description of (optional) first parameter.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter2|string|Description of (optional) second parameter.|
 
 ##### Error 500 (Object)
 |Name|Type|Description|
