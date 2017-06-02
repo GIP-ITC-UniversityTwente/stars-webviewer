@@ -143,6 +143,11 @@ year value.  When the first year value is higher than the second, the result is 
 
 ##### Example Requests:
 ```
+http://stars/croptypes/<studyAreaId>/<startYear>
+http://stars/croptypes/<studyAreaId>/<startYear>/<endYear>
+
+or
+
 http://stars/croptypes?studyAreaId=234567?startYear=2014
 http://stars/croptypes?studyAreaId=234567?startYear=2014?endYear=2015
 ```
@@ -200,6 +205,10 @@ Get all image characteristics (spectral and textural) associated with a given st
 
 ##### Example Request:
 ```
+http://stars/imagecharacteristics/<studyAreaId>/<cropTypeId>
+
+or
+
 http://stars/imagecharacteristics?studyAreaId=234BCD567&cropTypeId=2BC2DEF3
 ```
 
@@ -289,6 +298,10 @@ Get time series data for a specific image characteristics (spectral or textural)
 
 ##### Example Request:
 ```
+http://stars/timeseries/<studyAreaId>/<cropTypeId>/<imageCharacteristicId>
+
+or
+
 http://stars/timeseries?studyAreaId=234BCD567&cropTypeId=2BC2DEF3&imageCharacteristicId=2SDFG56
 ```
 
