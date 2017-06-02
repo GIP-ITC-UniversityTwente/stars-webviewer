@@ -268,7 +268,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 				"name": "contrast"
 			},
 			{
-				"id": "734,
+				"id": 734,
 				"name": "correlation"
 			},
 			{
