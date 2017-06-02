@@ -191,6 +191,7 @@ Get all image characteristics (spectral and textural) associated with a given st
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;sensor|string|Name of the sensor from which image obtained.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;datatype|string|The data type of its values.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter1|string|Description of (optional) first parameter.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter2|string|Description of (optional) second parameter.|
@@ -198,6 +199,7 @@ Get all image characteristics (spectral and textural) associated with a given st
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;sensor|string|Name of the sensor from which image obtained.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;datatype|string|The data type of its values.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter1|string|Description of (optional) first parameter.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parameter2|string|Description of (optional) second parameter.|
