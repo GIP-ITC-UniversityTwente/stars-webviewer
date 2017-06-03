@@ -198,6 +198,7 @@ Get all image characteristics (spectral and textural) associated with a given st
 |-&nbsp;texturalCharacteristics|array|Collection of textural characteristics.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;quantization_level|integer|Either 64 or 256.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;sensor|string|Name of the sensor from which image obtained.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;datatype|string|The data type of its values.|
