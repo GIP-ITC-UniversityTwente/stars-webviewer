@@ -300,9 +300,9 @@ Get time series data for a specific image characteristics (spectral or textural)
 |startYear|true|query|integer|The (starting) year for which crop types are requested in the area.|
 |endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
 |cropTypeId|true|query|string|The name of the crop type.|
-|imageCharacteristicId|true|query|string|The name of the image characteristic.|
-|firstBand|false|query|integer|The first band for the statistic. Requires a second band parameter also.|
-|secondBand|false|query|integer|The second band for the statistic.|
+|imageCharacteristicId|true|query|integer|The GUID of the image characteristic.|
+|firstParameter|false|query|integer|The first parameter for the statistic. If statistic is _textural_, then this parameter provides the leg distance (1-4 pixels) over which texture is computed. If statistic is _spectral_, and no secondParameter is provided, then this parameter is interpreted as the image band number.  in this case, the statistic is either reflectance_zeroth_moment (aka, mean reflectance) or reflectance_third_moment (aka, reflectance skew).|
+|secondParameter|false|query|integer|The second parameter for the statistic. Only used for _spectral_ statistic of reflectance_covariance (aka, reflectance_second_moment), and then this parameter is interpreted as second image band number.  When firstParameter=secondParameter, one is asking for the reflectance variance of that band.|
 
 ##### Success 200 (object)
 |Name|Type|Description|
