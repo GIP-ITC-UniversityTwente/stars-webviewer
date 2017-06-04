@@ -178,7 +178,7 @@ Get all image characteristics (spectral and textural) associated with a given st
 ##### Parameters
 |Name|Required|In|Type|Description|
 |---|---|---|---|---|
-|studyAreaId|true|query|string|The GUID for the study area.|
+|studyAreaId|true|query|integer|The GUID for the study area.|
 |startYear|true|query|integer|The (starting) year for which crop types are requested in the area.|
 |endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
 
@@ -291,14 +291,18 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 
 #### <a id="/timeseries_get">/timeseries</a>&nbsp;&nbsp;![icon](img/get.png)
 
-Get time series data for a specific image characteristics (spectral or textural) associated with a given study area and crop type.
+Get time series data for a specific image characteristics (spectral or textural) associated with a given study area, given year(s) and crop type.
 
 ##### Parameters
 |Name|Required|In|Type|Description|
 |---|---|---|---|---|
-|studyAreaId|true|query|string|The GUID for the study area.|
-|cropTypeId|true|query|string|The GUID for the crop type.|
-|imageCharacteristicId|true|query|string|The GUID for the image characteristic.|
+|studyAreaId|true|query|integer|The GUID for the study area.|
+|startYear|true|query|integer|The (starting) year for which crop types are requested in the area.|
+|endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
+|cropTypeId|true|query|string|The name of the crop type.|
+|imageCharacteristicId|true|query|string|The name of the image characteristic.|
+|firstBand|false|query|integer|The first band for the statistic. Requires a second band parameter also.|
+|secondBand|false|query|integer|The second band for the statistic.|
 
 ##### Success 200 (object)
 |Name|Type|Description|
