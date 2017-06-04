@@ -301,8 +301,8 @@ Get time series data for a specific image characteristics (spectral or textural)
 |endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
 |cropTypeId|true|query|string|The name of the crop type.|
 |imageCharacteristicId|true|query|list of integer|A list of one or more GUIDs of image characteristics. These should all have the same name, but the list may ask for the image characteristic coming from different sensors.|
-|firstParameter|false|query|integer|The first parameter for the statistic. If statistic is _textural_, then this parameter provides the lag distance (1-4 pixels) over which texture is computed. If statistic is _spectral_, and no secondParameter is provided, then this parameter is interpreted as the image band number.  In this case, the statistic is either reflectance_zeroth_moment (aka, reflectance mean) or reflectance_third_moment (aka, reflectance skew).|
-|secondParameter|false|query|integer|The second parameter for the statistic. Only used for _spectral_ statistic of reflectance_covariance (aka, reflectance_second_moment), and then this parameter is interpreted as second image band number.  When firstParameter=secondParameter, one is asking for the reflectance variance of that band.|
+|firstParameter|false|query|integer|The first parameter for the statistic. If statistic is _textural_, then this parameter provides the lag distance (1-4 pixels) over which texture is computed. If statistic is _spectral_, and no secondParameter is provided, then this parameter is interpreted as the image band number.  In this case, the statistic is either reflectance_zeroth_moment (aka reflectance mean) or reflectance_third_moment (aka reflectance skew).|
+|secondParameter|false|query|integer|The second parameter for the statistic. Only used for _spectral_ statistic of reflectance_covariance (aka reflectance_second_moment), and then this parameter is interpreted as second image band number.  When firstParameter=secondParameter, one is asking for the reflectance variance of that band.|
 
 ##### Success 200 (object)
 |Name|Type|Description|
