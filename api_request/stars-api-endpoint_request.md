@@ -324,44 +324,33 @@ Get time series data for a specific image characteristics (spectral or textural)
 
 
 ##### Example Request:
-```
-http://stars/timeseries/<studyAreaId>/<cropTypeId>/<imageCharacteristicId>
+``` Simplest version:
+http://stars/timeseries/<studyAreaId>/<startYear>/<cropTypeId>/<imageCharacteristicId>/<sensorList>
 
 or
 
-http://stars/timeseries?studyAreaId=234BCD567&cropTypeId=2BC2DEF3&imageCharacteristicId=2SDFG56
+http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCharacteristicId=17&sensorList=1050,1070
 ```
 
 ##### Sample Response:
 ````
 {
 	"message":"success",
-	"results": [
-		{
-			"time": "2013-08-01 22:23:00",
-			"ndvi": 0.9
-		},
-		{
-			"time": "2013-08-14 22:23:00",
-			"ndvi": 0.8
-		},
-		{
-			"time": "2013-09-01 22:23:00",
-			"ndvi": 0.7
-		},
-		{
-			"time": "2013-09-14 22:23:00",
-			"ndvi": 0.6
-		},
-		{
-			"time": "2013-10-01 22:23:00",
-			"ndvi": 0.2
-		},
-		{
-			"time": "2013-10-14 22:23:00",
-			"ndvi": 0.1
-		}
-	]
+	"results": "[
+	            { "series": [
+		                { "acquisition_date":"2014-05-22",
+				  "avgvalue":0.121761924028397,
+				  "n":10
+				},
+				{ "acquisition_date":"2014-05-30",
+				  "avgvalue":0.120824810862541,
+				  "n":10
+				},
+				{ "acquisition_date":"2014-06-26",
+				  "avgvalue":0.162523852288723,
+				  "n":10
+				} ]
+		      } ]"
 }
 
 ````
