@@ -258,7 +258,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 				"parameter1": "bandNumber : 1..8"
 			},
 			{
-				"oid": 29,
+				"id": 29,
 				"name": "reflectance_covariance",
 				"interpretation": "The (co)variance of reflectance values between band $1 and band $2",
 				"sensor": "QuickBird_MS",
@@ -270,7 +270,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 		],
 		"texturalCharacteristics": [
 			{
-				"oid": 30,
+				"id": 30,
 				"name": "reflectance_zeroth_moment_texture",
 				"interpretation": "The number of relevant textural pixels spatially within the field, excluding cloud and tree-masked pixels",
 				"sensor": "WorldView-3_PAN",
@@ -278,7 +278,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 				"datatype": "integer"
 			},
 			{
-				"oid": 51,
+				"id": 51,
 				"name": "homogeneity_q64",
 				"interpretation": "Local homogeneity (aka inverse difference moment) averaged over all eight angles, for 64 quantization levels",
 				"sensor": "QuickBird_PAN",
