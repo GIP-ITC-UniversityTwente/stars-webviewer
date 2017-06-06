@@ -243,7 +243,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"id": 1,
 				"name": "reflectance_zeroth_moment",
-				"interpretation": "The number of relevant spectral pixels spatially within the field, excluding cloud and tree-masked pixels"
+				"interpretation": "The number of relevant spectral pixels spatially within the field, excluding cloud and tree-masked pixels",
 				"sensor": "WorldView-2_MS",
 				"variabletype": "s",
 				"datatype": "integer"
@@ -265,14 +265,14 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 				"variabletype": "s",
 				"datatype": "float",
 				"parameter1": "bandNumber : 1..4",
-				"parameter2", "bandNumber : 1..4"
+				"parameter2": "bandNumber : 1..4"
 			}
 		],
 		"texturalCharacteristics": [
 			{
 				"oid": 30,
 				"name": "reflectance_zeroth_moment_texture",
-				"interpretation": "The number of relevant textural pixels spatially within the field, excluding cloud and tree-masked pixels"
+				"interpretation": "The number of relevant textural pixels spatially within the field, excluding cloud and tree-masked pixels",
 				"sensor": "WorldView-3_PAN",
 				"variabletype": "t",
 				"datatype": "integer"
@@ -280,7 +280,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"oid": 51,
 				"name": "homogeneity_q64",
-				"interpretation": "Local homogeneity (aka inverse difference moment) averaged over all eight angles, for 64 quantization levels"
+				"interpretation": "Local homogeneity (aka inverse difference moment) averaged over all eight angles, for 64 quantization levels",
 				"sensor": "QuickBird_PAN",
 				"variabletype": "t",
 				"datatype": "float",
