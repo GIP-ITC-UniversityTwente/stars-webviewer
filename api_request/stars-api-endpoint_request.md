@@ -233,54 +233,58 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 	"results": {
 		"spectralCharacteristics": [
 			{
-				"id": 1345,
-				"name": "mean reflectance",
-				"datatype": "float",
+				"id":	1,
+				"name":	"reflectance_zeroth_moment",
+				"interpretation": "The number of relevant spectral pixels spatially within the field, excluding cloud and tree-masked pixels",
+				"sensor": "GeoEye-1_MS",
+				"variabletype":	"s",
+				"datatype": "integer"
 			},
 			{
-				"id": 256,
-				"name": "ndvi",
-				"datatype": "float"
+				"id": 1,
+				"name": "reflectance_zeroth_moment",
+				"interpretation": "The number of relevant spectral pixels spatially within the field, excluding cloud and tree-masked pixels"
+				"sensor": "WorldView-2_MS",
+				"variabletype": "s",
+				"datatype": "integer"
 			},
 			{
-				"id": 378,
-				"name": "ndvi-green",
-				"datatype": "float"
-			},
-			{
-				"id": 489,
+				"id": 21,
 				"name": "reflectance_first_moment",
+				"interpretation": "The mean reflectance value for band $1 on the sensor platform",
+				"sensor": "WorldView-2_MS",
+				"variabletype": "s",
 				"datatype": "float",
 				"parameter1": "bandNumber : 1..8"
 			},
 			{
-				"id": 590,
+				"oid": 29,
 				"name": "reflectance_covariance",
+				"interpretation": "The (co)variance of reflectance values between band $1 and band $2",
+				"sensor": "QuickBird_MS",
+				"variabletype": "s",
 				"datatype": "float",
-				"parameter1": "bandNumber : 1..8",
-				"parameter2": "bandNumber : 1..8"
+				"parameter1": "bandNumber : 1..4",
+				"parameter2", "bandNumber : 1..4"
 			}
 		],
 		"texturalCharacteristics": [
 			{
-				"id": 112,
-				"name": "angular second moment"
+				"oid": 30,
+				"name": "reflectance_zeroth_moment_texture",
+				"interpretation": "The number of relevant textural pixels spatially within the field, excluding cloud and tree-masked pixels"
+				"sensor": "WorldView-3_PAN",
+				"variabletype": "t",
+				"datatype": "integer"
 			},
 			{
-				"id": 223,
-				"name": "contrast"
-			},
-			{
-				"id": 734,
-				"name": "correlation"
-			},
-			{
-				"id": 445,
-				"name": "energy (uniformity)"
-			},
-			{
-				"id": 556,
-				"name": "entropy"
+				"oid": 51,
+				"name": "homogeneity_q64",
+				"interpretation": "Local homogeneity (aka inverse difference moment) averaged over all eight angles, for 64 quantization levels"
+				"sensor": "QuickBird_PAN",
+				"variabletype": "t",
+				"datatype": "float",
+				"parameter1": "lagDistance : 1..4"
 			}
 		]
 	}
@@ -301,9 +305,18 @@ Get time series data for a specific image characteristics (spectral or textural)
 |endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
 |cropTypeId|true|query|string|The name of the crop type.|
 |imageCharacteristicId|true|query|integer|The GUID of the image characteristic.|
-|sensorList|true|query|list of integer|A list of one or more sensor IDs to match with the image characteristic. This allows selectiveness for the image characteristic coming from a number of sensors.|
+|sensorList|true|query|list of string|A list of one or more sensor names to match with the image characteristic. This allows selectiveness for the image characteristic coming from a number of sensors.|
 |firstParameter|false|query|integer|The first parameter for the statistic. If statistic is _textural_, then this parameter provides the lag distance (1-4 pixels) over which texture is computed. If statistic is _spectral_, and no secondParameter is provided, then this parameter is interpreted as the image band number.  In this case, the statistic is either reflectance_zeroth_moment (aka reflectance mean) or reflectance_third_moment (aka reflectance skew).|
 |secondParameter|false|query|integer|The second parameter for the statistic. Only used for _spectral_ statistic of reflectance_covariance (aka reflectance_second_moment), and then this parameter is interpreted as second image band number.  When firstParameter=secondParameter, one is asking for the reflectance variance of that band.|
+
+##### Discussion
+Spectral and textural characteristics are separately listed, in sequence of the variable's id.  This id and image characteristic name map one-to-one, yet a characteristic is only uniquely identified by providing one more tag.  At least also the sensor should be identified, and the reason behind this is that any variable (say, NDVI) is slightly differently measured by different sensors.  
+For instance, NDVI is a function of reflectance measured in the red and the near-infrared bands. GeoEye-1's red band is measured between 655 and 690 nm wavelengths, while near-infrared is between 780 and 920 nm.  WorldView-2's ranges are, respectively, 630 to 690 nm and 770 to 895 nm. With the same NDVI formula in place, these facts will render measurements between these two sensors somewhat differently.  Likewise, WorldView-2 and -3 differ in pixel resolution, with multispectral pixel size 184 cm in the first, and 121 cm in the second.  Again, reason for slight differences.
+All this means that one should mention with the variable chosen also specifically the sensor.  When requesting a times series for a characteristic, we actually allow listing multiple sensors, to allow studies and charts that combine measurements for a single variable from multiple sensors.
+For textural characteristics, we have compyted these for two different quantization levels, nanmely levels 64 and 256. Bt default, we use 256. If one reqyuires a textural characteristid determine on basis of 64 levels, one should use the characteristic that has postfix "_q64" in its name.  Generally, characteristics such as /asm/  and /asm_q64/ should not be combined in a chart, as they are different (though correlated) measurements.
+
+##### Consequences for the visualizations
+Given that measurements may come from different sensors, we propose that charts visualize that difference with a fixed different data point layout, to allow understanding the sensor origin of the data point.  It is in principle possible that for a single date multiple sensors have provided data, leading to two (or even more) data points for the same /x/ (time) value. In such case, we propose that all such data points are displayed, however that the chartline runs through their average /y/ value.
 
 ##### Success 200 (object)
 |Name|Type|Description|
