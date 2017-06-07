@@ -1,0 +1,17 @@
+.header {
+  height: 140px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #E6E6E6;
+}
+
+.logoSection {
+  height: 45px;
+  background-color: #B4D01C;
+}
+
+.headerTitle {
+  color: #ffffff;
+  padding-top: 10px;
+  padding-left: 170px;
+  font-size: 18px;
+}

@@ -10,10 +10,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import 'hammerjs';
 
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './header/header.component';
+import { DescriptionComponent } from './description/description.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent,
+    DescriptionComponent
   ],
   imports: [
     BrowserModule,

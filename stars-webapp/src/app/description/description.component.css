@@ -1,0 +1,17 @@
+.descriptionSection {
+  height: 190px;
+  color: #444444;
+}
+
+.descriptionSection p {
+  padding-left: 55px;
+  padding-right: 55px;
+  line-height: 1.7;
+}
+
+.descriptionTitle {
+  font-size: 30px;
+  padding-left: 55px;
+  padding-top: 30px;
+}
+
