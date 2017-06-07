@@ -19,5 +19,6 @@ This aplication uses:
 
 [__Angular-CLI__](https://github.com/angular/angular-cli) 1.1.0 Command Line Interface for project build & project scaffolding.
 
-[__Angular Material__](https://github.com/angular/material2) 2.0.0 (beta 6) for UI/UX goodness.
+[__Angular Material__](https://github.com/angular/material2) 2.0.0 for UI/UX goodness.
 
+[__Angular Flexbox CSS__](https://github.com/angular/flex-layout) 2.0.0 as the responsive engine.

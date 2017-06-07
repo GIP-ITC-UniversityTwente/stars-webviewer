@@ -1,9 +1,11 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdButtonModule, MdCheckboxModule } from '@angular/material';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MdToolbarModule, MdListModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import 'hammerjs';
 
@@ -14,11 +16,12 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserAnimationsModule,
-    MdButtonModule, MdCheckboxModule,
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    BrowserAnimationsModule,
+    MdToolbarModule, MdListModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]
