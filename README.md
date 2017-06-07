@@ -2,7 +2,7 @@
 
 Web interface of the Visualization tool for STARS
 
-## Direction Structure
+## Directory Structure
 
 At the root of this repository are two directories:
 
@@ -16,4 +16,8 @@ At the root of this repository are two directories:
 This aplication uses:
 
 [__Angular__](https://github.com/angular/angular) 4.1.3 as the web framework.
+
+[__Angular-CLI__](https://github.com/angular/angular-cli) 1.1.0 Command Line Interface for project build & project scaffolding.
+
+[__Angular Material__](https://github.com/angular/material2) 2.0.0 (beta 6) for UI/UX goodness.
 
