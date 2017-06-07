@@ -22,3 +22,26 @@ This aplication uses:
 [__Angular Material__](https://github.com/angular/material2) 2.0.0 for UI/UX goodness.
 
 [__Angular Flexbox CSS__](https://github.com/angular/flex-layout) 2.0.0 as the responsive engine.
+
+[__Plotly.js__](https://plot.ly/javascript/) 1.27.1 for Charts
+
+## Running the App
+
+To run this app, clone the repo, install node packages, and use the Angular-CLI to serve it up.  For example:
+
+````
+  npm install
+
+  ng serve
+````
+
+## Build & Deploy the App
+
+To build the web app, use Terminal to cd to the root folder of the web app on your workstation.  Then, use the Angular-CLI. 
+
+````
+  ng build --prod
+````
+
+Then deploy the contents of the __dist__ folder to the
+web server bucket. 
