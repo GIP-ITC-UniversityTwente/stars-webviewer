@@ -368,36 +368,10 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 
 ````
 
-##### Sample Response:
+#### Todo list in API for @Luis and @Rolf 
+(@Rolf just tick the points when you finish your part, I will remove them after I deploy them in the API)
 
-#### Requirement 1b
-
-TBD
-
-#### Requirement 2
-
-TBD
-
-#### Requirement 3
-
-TBD
-
-#### Requirement 4
-
-TBD
-
-#### Requirement 5
-
-TBD
-
-#### Requirement 6
-
-TBD
-
-#### Requirement 7
-
-TBD
-
-#### Requirement 8
-
-TBD
+- [ ] Provide an alias property in the /imagecharacteristics endpoint with a friendly name.
+- [ ] Create a new endpoint /formfields PLease check the above document
+- [ ] In the /timeseries endpoint, change the functions to alow to pass an array of crop ids instead of only one crop.
+- [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
