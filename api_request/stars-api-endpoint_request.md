@@ -372,6 +372,6 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 (@Rolf just tick the points when you finish your part, I will remove them after I deploy them in the API)
 
 - [ ] Provide an alias property in the /imagecharacteristics endpoint with a friendly name.
-- [ ] Create a new endpoint /formfields PLease check the above document
+- [ ] Create a new endpoint /farmfields Please check the above document
 - [ ] In the /timeseries endpoint, change the functions to alow to pass an array of crop ids instead of only one crop.
 - [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
