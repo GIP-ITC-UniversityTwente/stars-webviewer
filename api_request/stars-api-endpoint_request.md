@@ -4,10 +4,13 @@ The purpose of this document is to communicate what STARS API endpoints are need
 
 #### REST Endpoints for Requirement 1a
 
-To support Requirment 1a, we believe we need endpoints that will support the ability to request the following data with responses that resemble the following:
+To support Requirement 1a, we believe we need endpoints that will support the ability to request the following data with responses that resemble the following:
 
 [/studyareas](#/studyareas_get)&nbsp;&nbsp;![icon](img/get.png)
 &nbsp;&nbsp;&nbsp;&nbsp;Get all study areas that have farm field-specific data.
+
+[/farmfields](#/farmfields_get)&nbsp;&nbsp;![icon](img/get.png)
+&nbsp;&nbsp;&nbsp;&nbsp;Get all farm fields for a specific (study area, year) combination.
 
 [/croptypes](#/croptypes_get)&nbsp;&nbsp;![icon](img/get.png)
 &nbsp;&nbsp;&nbsp;&nbsp;Get all crop types for a specific (study area, year) combination or (study area, startyear, endyear) combination.
@@ -107,6 +110,105 @@ http://stars/studyareas
 ```
 <br/>
 
+#### <a id="/farmfields_get">/farmfields</a>&nbsp;&nbsp;![icon](img/get.png)
+
+Get all farm fields for a specific (study area, year) combination.
+
+##### Parameters
+|Name|Required|In|Type|Description|
+|---|---|---|---|---|
+|studyAreaId|true|query|integer|The GUID for the study area you are requesting crops types for.|
+|startYear|true|query|integer|The (starting) year for which crop types are requested in the area.|
+|endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
+
+
+##### Success 200 (object)
+|Name|Optional|Type|Description|
+|---|---|---|---|
+|message|false|string|Success message.|
+|results|false|object||
+|-&nbsp;type|false|string|JSON object type; ='Feature'|
+|-&nbsp;properties|false|Object|Properties of the feature|
+|*&nbsp;id|false|integer|GUID of study area.|
+|*&nbsp;crop|true|string|Name of study area.|
+|*&nbsp;fieldwork|false|boolean|If a crop was measured on the field|
+|*&nbsp;year|false|integer|Year when the field was used|
+|-&nbsp;geometry|false|GeoJSON Object|Spatial geometry for the study area.|
+
+##### Error 500 (Object)
+|Name|Type|Description|
+|---|---|---|
+|message|string||
+|error|object||
+|-&nbsp;name|string||
+|-&nbsp;message|string||
+|-&nbsp;status|integer||
+
+
+##### Example Requests:
+```
+http://stars/farmfields/<studyAreaId>/<startYear>
+http://stars/farmfields/<studyAreaId>/<startYear>/<endYear>
+
+or
+
+http://stars/farmfields?studyAreaId=234567?startYear=2014
+http://stars/farmfields?studyAreaId=234567?startYear=2014?endYear=2015
+```
+
+##### Sample Response:
+```json
+{
+	"message":"success",
+	"results":[
+		{
+			"type": "Feature",
+			"properties": {
+				"id": 1000,
+				"crop": "Cotton",
+				"fieldwork": true,
+				"year": 2014
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[-5.143373, 12.13132],
+						[-5.235212, 12.130594],
+						[-5.235968, 12.220957],
+						[-5.144098, 12.221689],
+						[-5.143373, 12.13132]
+					]
+				]
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"id": 1001,
+				"crop": "Groundnut",
+				"fieldwork": true,
+				"year": 2015
+			},
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[-5.143373, 12.13132],
+						[-5.235212, 12.130594],
+						[-5.235968, 12.220957],
+						[-5.144098, 12.221689],
+						[-5.143373, 12.13132]
+					]
+				]
+			}
+		}
+	]
+}
+```
+<br/>
+
+
 #### <a id="/croptypes_get">/croptypes</a>&nbsp;&nbsp;![icon](img/get.png)
 
 Get all crop types for a specific study area for the given year(s).  This is an overloaded endpoint.  
@@ -190,6 +292,7 @@ Get all image characteristics (spectral and textural) associated with a given st
 |-&nbsp;spectralCharacteristics|array|Collection of spectral characteristics.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id|string|The GUID for the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name|string|Name of the characteristic.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;alias|string|Friendlier name of the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;description|string|Description of the characteristic.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;sensor|string|Name of the sensor from which image obtained.|
 |&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;datatype|string|The data type of its values.|
@@ -235,6 +338,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"id":	1,
 				"name":	"reflectance_zeroth_moment",
+				"alias": "Reflectance Zeroth Moment",
 				"interpretation": "The number of relevant spectral pixels spatially within the field, excluding cloud and tree-masked pixels",
 				"sensor": "GeoEye-1_MS",
 				"variabletype":	"s",
@@ -243,6 +347,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"id": 1,
 				"name": "reflectance_zeroth_moment",
+				"alias": "Reflectance Zeroth Moment",
 				"interpretation": "The number of relevant spectral pixels spatially within the field, excluding cloud and tree-masked pixels",
 				"sensor": "WorldView-2_MS",
 				"variabletype": "s",
@@ -251,6 +356,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"id": 21,
 				"name": "reflectance_first_moment",
+				"alias": "Reflectance First Moment",
 				"interpretation": "The mean reflectance value for band $1 on the sensor platform",
 				"sensor": "WorldView-2_MS",
 				"variabletype": "s",
@@ -260,6 +366,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"id": 29,
 				"name": "reflectance_covariance",
+				"alias": "Reflectance Covariance",
 				"interpretation": "The (co)variance of reflectance values between band $1 and band $2",
 				"sensor": "QuickBird_MS",
 				"variabletype": "s",
@@ -272,6 +379,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"id": 30,
 				"name": "reflectance_zeroth_moment_texture",
+				"alias": "Reflectance zeroth moment texture",
 				"interpretation": "The number of relevant textural pixels spatially within the field, excluding cloud and tree-masked pixels",
 				"sensor": "WorldView-3_PAN",
 				"variabletype": "t",
@@ -280,6 +388,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 			{
 				"id": 51,
 				"name": "homogeneity_q64",
+				"alias": "Homogeneity 64",
 				"interpretation": "Local homogeneity (aka inverse difference moment) averaged over all eight angles, for 64 quantization levels",
 				"sensor": "QuickBird_PAN",
 				"variabletype": "t",
