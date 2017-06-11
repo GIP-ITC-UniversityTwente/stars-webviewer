@@ -461,15 +461,15 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 	"results": "[
 	            { "series": [
 		                { "acquisition_date":"2014-05-22",
-				  "avgvalue":0.121761924028397,
+				  "avgvalue":0.1218,
 				  "n":10
 				},
 				{ "acquisition_date":"2014-05-30",
-				  "avgvalue":0.120824810862541,
+				  "avgvalue":0.1208,
 				  "n":10
 				},
 				{ "acquisition_date":"2014-06-26",
-				  "avgvalue":0.162523852288723,
+				  "avgvalue":0.1625,
 				  "n":10
 				} ]
 		      } ]"
@@ -484,4 +484,4 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 - [ ] Create a new endpoint /farmfields Please check the above document
 - [ ] In the /timeseries endpoint, change the functions to alow to pass an array of crop ids instead of only one crop.
 - [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
-- [ ] Four decimals will be good enough precision on the /timeseries values
+- [X] Four decimals will be good enough precision on the /timeseries values
