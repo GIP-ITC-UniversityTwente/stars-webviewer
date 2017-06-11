@@ -18,6 +18,9 @@ To support Requirement 1a, we believe we need endpoints that will support the ab
 [/imagecharacteristics](#/imagecharacteristics_get)&nbsp;&nbsp;![icon](img/get.png)
 &nbsp;&nbsp;&nbsp;&nbsp;Get all image characteristics (spectral and textural) associated with a given (study area, year) or (study area, startyear, endyear) combination.
 
+[/fieldcharacteristics](#/fieldcharacteristics_get)&nbsp;&nbsp;![icon](img/get.png)
+&nbsp;&nbsp;&nbsp;&nbsp;Get all constant field characteristics associated with a given (study area, year) or (study area, startyear, endyear) combination. Would it not be logical to have this one too?
+
 [/timeseries](#/timeseries_get)&nbsp;&nbsp;![icon](img/get.png)
 &nbsp;&nbsp;&nbsp;&nbsp;Get time series data for a specific image characteristics (spectral or textural) associated with a given study area and crop type.
 
@@ -480,8 +483,8 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 #### Todo list in API for @Luis and @Rolf 
 (@Rolf just tick the points when you finish your part, I will remove them after I deploy them in the API)
 
-- [ ] Provide an alias property in the /imagecharacteristics endpoint with a friendly name.
-- [ ] Create a new endpoint /farmfields Please check the above document
-- [ ] In the /timeseries endpoint, change the functions to alow to pass an array of crop ids instead of only one crop.
+- [X] Provide an alias property in the /imagecharacteristics endpoint with a friendly name.
+- [ ] Create a new endpoint /farmfields. Please check the above document
+- [ ] In the /timeseries endpoint, change the functions to allow to pass an array of crop ids instead of only one crop.
 - [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
-- [X] Four decimals will be good enough precision on the /timeseries values
+- [X] Four decimals will be good enough precision on the /timeseries values.
