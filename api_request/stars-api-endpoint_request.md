@@ -135,7 +135,7 @@ Get all farm fields for a specific (study area, year) combination.
 |*&nbsp;oid|false|integer|GUID of farm field (fmu).|
 |*&nbsp;crop|true|string|Name of the crop.|
 |*&nbsp;fieldwork|false|boolean|Whether fueldwork was conducted in this field.|
-|*&nbsp;year|false|integer|Year when the field under study.|
+|*&nbsp;year|false|integer|Year when the field was under study.|
 |-&nbsp;geometry|false|GeoJSON Object|Spatial geometry of the field in given year.|
 
 ##### Error 500 (Object)
