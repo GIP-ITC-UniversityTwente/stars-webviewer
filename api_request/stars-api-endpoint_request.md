@@ -132,11 +132,11 @@ Get all farm fields for a specific (study area, year) combination.
 |results|false|object||
 |-&nbsp;type|false|string|JSON object type; ='Feature'|
 |-&nbsp;properties|false|Object|Properties of the feature|
-|*&nbsp;id|false|integer|GUID of study area.|
-|*&nbsp;crop|true|string|Name of study area.|
-|*&nbsp;fieldwork|false|boolean|If a crop was measured on the field|
-|*&nbsp;year|false|integer|Year when the field was used|
-|-&nbsp;geometry|false|GeoJSON Object|Spatial geometry for the study area.|
+|*&nbsp;oid|false|integer|GUID of farm field (fmu).|
+|*&nbsp;crop|true|string|Name of the crop.|
+|*&nbsp;fieldwork|false|boolean|Whether fueldwork was conducted in this field.|
+|*&nbsp;year|false|integer|Year when the field under study.|
+|-&nbsp;geometry|false|GeoJSON Object|Spatial geometry of the field in given year.|
 
 ##### Error 500 (Object)
 |Name|Type|Description|
@@ -484,7 +484,7 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 (@Rolf just tick the points when you finish your part, I will remove them after I deploy them in the API)
 
 - [X] Provide an alias property in the /imagecharacteristics endpoint with a friendly name.
-- [ ] Create a new endpoint /farmfields. Please check the above document
+- [X] Create a new endpoint /farmfields. Please check the above document
 - [ ] In the /timeseries endpoint, change the functions to allow to pass an array of crop ids instead of only one crop.
 - [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
 - [X] Four decimals will be good enough precision on the /timeseries values.
