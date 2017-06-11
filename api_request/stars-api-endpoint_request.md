@@ -484,3 +484,4 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 - [ ] Create a new endpoint /farmfields Please check the above document
 - [ ] In the /timeseries endpoint, change the functions to alow to pass an array of crop ids instead of only one crop.
 - [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
+- [ ] Four decimals will be good enough precision on the /timeseries values
