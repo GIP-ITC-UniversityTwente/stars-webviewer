@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdToolbarModule, MdListModule } from '@angular/material';
+import { MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import 'hammerjs';
@@ -24,7 +24,7 @@ import { DescriptionComponent } from './description/description.component';
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
-    MdToolbarModule, MdListModule,
+    MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule,
     FlexLayoutModule
   ],
   providers: [],
