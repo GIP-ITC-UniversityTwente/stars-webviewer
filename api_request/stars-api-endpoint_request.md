@@ -485,6 +485,6 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 
 - [X] Provide an alias property in the /imagecharacteristics endpoint with a friendly name.
 - [X] Create a new endpoint /farmfields. Please check the above document
-- [ ] In the /timeseries endpoint, change the functions to allow to pass an array of crop ids instead of only one crop.
+- [X] In the /timeseries endpoint, change the functions to allow to pass an array of crop ids instead of only one crop.  REMARK: the old option of passing just a single cropname has now disappeared.  You always pass an array of names.
 - [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
 - [X] Four decimals will be good enough precision on the /timeseries values.
