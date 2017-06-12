@@ -415,7 +415,7 @@ Get time series data for a specific image characteristics (spectral or textural)
 |studyAreaId|true|query|integer|The GUID for the study area.|
 |startYear|true|query|integer|The (starting) year for which crop types are requested in the area.|
 |endYear|false|query|integer|The (optional) ending year for which type are requested in the area.|
-|cropTypeId|true|query|string|The name of the crop type.|
+|cropNames|true|query|list of string|The names of the crop types.|
 |imageCharacteristicId|true|query|integer|The GUID of the image characteristic.|
 |sensorList|true|query|list of string|A list of one or more sensor names to match with the image characteristic. This allows selectiveness for the image characteristic coming from a number of sensors.|
 |firstParameter|false|query|integer|The first parameter for the statistic. If statistic is _textural_, then this parameter provides the lag distance (1-4 pixels) over which texture is computed. If statistic is _spectral_, and no secondParameter is provided, then this parameter is interpreted as the image band number.  In this case, the statistic is either reflectance_zeroth_moment (aka reflectance mean) or reflectance_third_moment (aka reflectance skew).|
