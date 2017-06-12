@@ -461,7 +461,7 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 ```
 
 ##### Sample Response:
-````
+````json
 {
 	"message": "success",
 	"results": [{
