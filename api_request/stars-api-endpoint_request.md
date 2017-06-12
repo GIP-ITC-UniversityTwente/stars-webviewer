@@ -407,7 +407,7 @@ http://stars/imagecharacteristics?studyAreaId=234567&startYear=2014&endYear=2015
 
 #### <a id="/timeseries_get">/timeseries</a>&nbsp;&nbsp;![icon](img/get.png)
 
-Get time series data for a specific image characteristics (spectral or textural) associated with a given study area, given year(s) and crop type.
+Get time series data for a specific image characteristic (spectral or textural) associated with a given study area, given year(s) and crop type. OPEN DISCUSSION: should not also fieldwork-based time series be provided through this means?
 
 ##### Parameters
 |Name|Required|In|Type|Description|
