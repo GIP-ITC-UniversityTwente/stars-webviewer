@@ -435,8 +435,11 @@ Given that measurements may come from different sensors, we propose that charts 
 |---|---|---|
 |message|string|Success message.|
 |results|array|A collection of objects.|
-|-&nbsp;time|string|Date time stamp.|
-|-&nbsp;characteristicName|string|Name of the characteristic.|
+|-&nbsp;crop|string|Crop name.|
+|&nbsp;&nbsp;&nbsp;-&nbsp;sensor|string|Name of the sensor.|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;acquisition_date|string|Acquisition date.|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;avgvalue|float|Average value.|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;n|integer|N value, Number of fields used to calculate the average.|
 
 ##### Error 500 (Object)
 |Name|Type|Description|
@@ -460,22 +463,82 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 ##### Sample Response:
 ````
 {
-	"message":"success",
-	"results": "[
-	            { "series": [
-		                { "acquisition_date":"2014-05-22",
-				  "avgvalue":0.1218,
-				  "n":10
+	"message": "success",
+	"results": [{
+		"Millet": [{
+			"GeoEye-1_MS": [{
+					"acquisition_date": "2014-05-22",
+					"avgvalue": 0.1218,
+					"n": 10
 				},
-				{ "acquisition_date":"2014-05-30",
-				  "avgvalue":0.1208,
-				  "n":10
+				{
+					"acquisition_date": "2014-05-30",
+					"avgvalue": 0.1208,
+					"n": 10
 				},
-				{ "acquisition_date":"2014-06-26",
-				  "avgvalue":0.1625,
-				  "n":10
-				} ]
-		      } ]"
+				{
+					"acquisition_date": "2014-06-26",
+					"avgvalue": 0.1625,
+					"n": 10
+				}
+			]
+		}, {
+			"QuickBird_MS": [{
+					"acquisition_date": "2014-05-22",
+					"avgvalue": 0.1218,
+					"n": 10
+				},
+				{
+					"acquisition_date": "2014-05-30",
+					"avgvalue": 0.1208,
+					"n": 10
+				},
+				{
+					"acquisition_date": "2014-06-26",
+					"avgvalue": 0.1625,
+					"n": 10
+				}
+			]
+
+		}]
+	}, {
+		"Maize": [{
+			"GeoEye-1_MS": [{
+					"acquisition_date": "2014-05-22",
+					"avgvalue": 0.1218,
+					"n": 10
+				},
+				{
+					"acquisition_date": "2014-05-30",
+					"avgvalue": 0.1208,
+					"n": 10
+				},
+				{
+					"acquisition_date": "2014-06-26",
+					"avgvalue": 0.1625,
+					"n": 10
+				}
+			]
+		}, {
+			"WorldView-2_MS": [{
+					"acquisition_date": "2014-05-22",
+					"avgvalue": 0.1218,
+					"n": 10
+				},
+				{
+					"acquisition_date": "2014-05-30",
+					"avgvalue": 0.1208,
+					"n": 10
+				},
+				{
+					"acquisition_date": "2014-06-26",
+					"avgvalue": 0.1625,
+					"n": 10
+				}
+			]
+
+		}]
+	}]
 }
 
 ````
