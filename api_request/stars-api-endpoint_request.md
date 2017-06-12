@@ -132,10 +132,10 @@ Get all farm fields for a specific (study area, year) combination.
 |results|false|object||
 |-&nbsp;type|false|string|JSON object type; ='Feature'|
 |-&nbsp;properties|false|Object|Properties of the feature|
-|*&nbsp;oid|false|integer|GUID of farm field (fmu).|
-|*&nbsp;crop|true|string|Name of the crop.|
-|*&nbsp;fieldwork|false|boolean|Whether fueldwork was conducted in this field.|
-|*&nbsp;year|false|integer|Year when the field was under study.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;oid|false|integer|GUID of farm field (fmu).|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;crop|true|string|Name of the crop.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;fieldwork|false|boolean|Whether fueldwork was conducted in this field.|
+|&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;year|false|integer|Year when the field was under study.|
 |-&nbsp;geometry|false|GeoJSON Object|Spatial geometry of the field in given year.|
 
 ##### Error 500 (Object)
