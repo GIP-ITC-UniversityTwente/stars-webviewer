@@ -1,13 +1,62 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* Angular Material Theme*/
+/**
+  Angular Material Theme
+*/
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
+/**
+  Applies globally to all
+ */
 body {
   padding:0;
   margin:0;
   font-family: Verdana, Geneva, sans-serif;
-  background-color: #ECF1F4;
+  background-color: #E9EFF2;
+}
+
+/**
+  Used between different components
+ */
+.chartSectionOuter {
+  width: 100%;
+  text-align: center;
+  padding-top: 18px;
+}
+
+.chartSectionInner {
+  display: inline-block;
+  padding-bottom: 15px;
+  background-color: #ffffff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.chartHeader {
+  height: 65px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.chartWrapper {
+  float: left;
+  border: #C3C3C3 1px solid;
+  border-radius: 5px;
+  margin-right: 10px;
+  margin-left: 10px;
+  background-color: #ffffff;
+}
+
+/**
+  Gradient
+ */
+.gradient {
+  background: #F0F2F7; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(#FEFEFF, #F0F2F7); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#FEFEFF, #F0F2F7); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#FEFEFF, #F0F2F7); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#FEFEFF, #F0F2F7); /* Standard syntax */
 }
 
 

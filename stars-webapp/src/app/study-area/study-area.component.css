@@ -1,0 +1,48 @@
+/* for centering the options */
+.optionsOuter {
+  width: 100%;
+  text-align: center;
+  padding-top: 18px;
+  background-color: #ffffff;
+}
+
+/* for centering the options */
+.optionsInner {
+  display: inline-block;
+}
+
+/* parent of each individual option */
+.optionItemWrapper {
+  float: left;
+  width: 125px;
+  margin-right: 40px;
+}
+
+/* the title for each option */
+.optionTitle {
+  text-align: left;
+  float: left;
+  width: 125px;
+  color: #747575;
+  font-size: 10pt;
+  font-weight: 500;
+}
+
+/* a drop down wrapping the material select */
+.optionDropDownWrapper {
+  margin-top: 5px;
+  margin-right: 20px;
+  padding-left: 12px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  width: 125px;
+  border: #C3C3C3 1px solid;
+  border-radius: 4px;
+}
+
+.map {
+  padding-top: 50px;
+  margin-top: 20px;
+  height: 400px;
+  background-color: #a5a5a5;
+}

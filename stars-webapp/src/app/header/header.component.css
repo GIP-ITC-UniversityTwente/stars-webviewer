@@ -1,5 +1,5 @@
 .header {
-  height: 140px;
+  height: 46px;
   background-color: #ffffff;
   border-bottom: 2px solid #E6E6E6;
 }
@@ -14,51 +14,5 @@
   padding-top: 10px;
   padding-left: 170px;
   font-size: 18px;
-}
-
-/* for centering the options */
-.optionsOuter {
-  width: 100%;
-  text-align: center;
-  padding-top: 18px;
-}
-
-/* for centering the options */
-.optionsInner {
-  display: inline-block;
-}
-
-/* parent of each individual option */
-.optionItemWrapper {
-  float: left;
-  width: 125px;
-  margin-right: 40px;
-}
-
-/* the title for each option */
-.optionTitle {
-  text-align: left;
-  float: left;
-  width: 125px;
-  color: #9A9B9B;
-  font-size: 10pt;
-  font-weight: 500;
-}
-
-/* a drop down wrapping the material select */
-.optionDropDownWrapper {
-  margin-top: 5px;
-  margin-right: 20px;
-  padding-left: 12px;
-  padding-right: 5px;
-  padding-bottom: 5px;
-  width: 125px;
-  border: #C3C3C3 1px solid;
-  border-radius: 4px;
-  background: #FEFEFF; /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient(#FEFEFF, #F3F4F9); /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient(#FEFEFF, #F3F4F9); /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient(#FEFEFF, #F3F4F9); /* For Firefox 3.6 to 15 */
-  background: linear-gradient(#FEFEFF, #F3F4F9); /* Standard syntax */
 }
 
