@@ -464,80 +464,51 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 ````json
 {
 	"message": "success",
-	"results": [{
-		"Millet": [{
-			"GeoEye-1_MS": [{
-					"acquisition_date": "2014-05-22",
-					"avgvalue": 0.1218,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-05-30",
-					"avgvalue": 0.1208,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-06-26",
-					"avgvalue": 0.1625,
-					"n": 10
-				}
-			]
-		}, {
-			"QuickBird_MS": [{
-					"acquisition_date": "2014-05-22",
-					"avgvalue": 0.1218,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-05-30",
-					"avgvalue": 0.1208,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-06-26",
-					"avgvalue": 0.1625,
-					"n": 10
-				}
-			]
-
-		}]
-	}, {
-		"Maize": [{
-			"GeoEye-1_MS": [{
-					"acquisition_date": "2014-05-22",
-					"avgvalue": 0.1218,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-05-30",
-					"avgvalue": 0.1208,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-06-26",
-					"avgvalue": 0.1625,
-					"n": 10
-				}
-			]
-		}, {
-			"WorldView-2_MS": [{
-					"acquisition_date": "2014-05-22",
-					"avgvalue": 0.1218,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-05-30",
-					"avgvalue": 0.1208,
-					"n": 10
-				},
-				{
-					"acquisition_date": "2014-06-26",
-					"avgvalue": 0.1625,
-					"n": 10
-				}
-			]
-
-		}]
+	"results": {[{"crop":"Maize",
+                      "cseries":[{"sensor":"WorldView-2_MS",
+                                  "sseries":[
+			   {"acquisition_date":"2014-05-22",
+                            "minvalue":0.114027,
+                            "avgvalue":0.120612,
+                            "maxvalue":0.127197,
+                            "n":10},
+                           {"acquisition_date":"2014-05-30",
+                            "minvalue":0.102364,
+                            "avgvalue":0.118129,
+                            "maxvalue":0.133894,
+                            "n":10},
+                           {"acquisition_date":"2014-06-26",
+                            "minvalue":0.120314,
+                            "avgvalue":0.13238,
+                            "maxvalue":0.144446,
+                            "n":10},
+                           {"acquisition_date":"2014-07-29",
+                            "minvalue":0.236314,
+                            "avgvalue":0.34539,
+                            "maxvalue":0.454466,
+                            "n":10},
+                           {"acquisition_date":"2014-10-18",
+                            "minvalue":0.235889,
+                            "avgvalue":0.270242,
+                            "maxvalue":0.304595,
+                            "n":10},
+                           {"acquisition_date":"2014-11-01",
+                            "minvalue":0.183132,
+                            "avgvalue":0.212772,
+                            "maxvalue":0.242412,
+                            "n":10}]}]}],
+ [{"crop":"Millet",
+   "cseries":[{"sensor":"WorldView-2_MS",
+               "sseries":[{"acquisition_date":"2014-05-22",
+                           "minvalue":0.102672,
+                           "avgvalue":0.114502,
+                           "maxvalue":0.126332,
+                           "n":10},
+                          {"acquisition_date":"2014-05-30",
+                           "minvalue":0.101674,
+                           "avgvalue":0.113696,
+                           "maxvalue":0.125718,
+                           "n":10}}]}]}]]"
 	}]
 }
 
@@ -549,5 +520,5 @@ http://stars/timeseries?studyAreaId=1000&startYear=2014cropTypeId=Millet&imageCh
 - [X] Provide an alias property in the /imagecharacteristics endpoint with a friendly name.
 - [X] Create a new endpoint /farmfields. Please check the above document
 - [X] In the /timeseries endpoint, change the functions to allow to pass an array of crop names instead of only one crop name.  REMARK: the old option of passing just a single cropname has now disappeared.  You always pass an array of names.
-- [ ] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
+- [X] In the /timeseries endpoint, add to the response x, y-min, y, y-max for the chartline-envelope.
 - [X] Four decimals will be good enough precision on the /timeseries values.
