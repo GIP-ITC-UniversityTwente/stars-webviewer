@@ -15,6 +15,7 @@ import { DescriptionComponent } from './description/description.component';
 import { StudyAreaComponent } from './study-area/study-area.component';
 import { ImageCharacteristicSectionComponent } from './image-characteristic-section/image-characteristic-section.component';
 import { FieldCharacteristicSectionComponent } from './field-characteristic-section/field-characteristic-section.component';
+import { ClassifiedSeriesSectionComponent } from './classified-series-section/classified-series-section.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { FieldCharacteristicSectionComponent } from './field-characteristic-sect
     DescriptionComponent,
     StudyAreaComponent,
     ImageCharacteristicSectionComponent,
-    FieldCharacteristicSectionComponent
+    FieldCharacteristicSectionComponent,
+    ClassifiedSeriesSectionComponent
   ],
   imports: [
     BrowserModule,
