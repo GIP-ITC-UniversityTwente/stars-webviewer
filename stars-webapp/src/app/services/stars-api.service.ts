@@ -37,8 +37,14 @@ export class StarsAPIService {
   /**
    * Fetches crop types for the input study area and year
    */
-  fetchCropTypes(studyAreaId: number, startYear: number): Promise<any> {
-    let url = AppConfiguration.apiBaseURL + "/cropTypes?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
+  fetchCropTypes(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
+    let url: string;
+    if (endYear == null) {
+      url = AppConfiguration.apiBaseURL + "/cropTypes?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
+    }
+    else {
+      url = AppConfiguration.apiBaseURL + "/cropTypes?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+    }
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())

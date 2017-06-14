@@ -31,10 +31,19 @@ export class AppComponent {
     starsAPIService.fetchCropTypes(1000, 2014).then((response) => {
       return response;
     }).then((data) => {
-      console.log('test crop types ...');
+      console.log('test crop types one year ...');
       console.log(data);
     }).catch((error) => {
       console.log(error);
-    })
+    });
+
+    starsAPIService.fetchCropTypes(1000, 2014, 2015).then((response) => {
+      return response;
+    }).then((data) => {
+      console.log('test crop types two years ...');
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 }
