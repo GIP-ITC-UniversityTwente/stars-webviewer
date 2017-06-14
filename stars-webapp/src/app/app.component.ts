@@ -17,7 +17,10 @@ export class AppComponent {
    */
   constructor(private starsAPIService: StarsAPIService) {
 
-    // fetch the default data for first load ...
+    // TODO: fetch the default data for first load ...
+
+
+    // test study areas
 
     starsAPIService.fetchStudyAreas().then((response) => {
       return response;
@@ -27,6 +30,28 @@ export class AppComponent {
     }).catch((error) => {
       console.log(error);
     });
+
+    // test farmfield
+
+    starsAPIService.fetchFarmFields(1000, 2014).then((response) => {
+      return response;
+    }).then((data) => {
+      console.log('test farm fields one year ...');
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    starsAPIService.fetchFarmFields(1000, 2014, 2015).then((response) => {
+      return response;
+    }).then((data) => {
+      console.log('test farm fields two years ...');
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    // test crop type
 
     starsAPIService.fetchCropTypes(1000, 2014).then((response) => {
       return response;

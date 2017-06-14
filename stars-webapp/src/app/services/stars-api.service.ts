@@ -35,7 +35,28 @@ export class StarsAPIService {
   }
 
   /**
-   * Fetches crop types for the input study area and year
+   * Fetches farm fields based on input study area, start year, and optional end year
+   */
+  fetchFarmFields(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
+    let url: string;
+    if (endYear == null) {
+      url = AppConfiguration.apiBaseURL + "/farmfields?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
+    }
+    else {
+      url = AppConfiguration.apiBaseURL + "/farmfields?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+    }
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleFarmfieldsError);
+  }
+
+  private handleFarmfieldsError(error: any): Promise<any> {
+    return Promise.reject(error.message || error);
+  }
+
+  /**
+   * Fetches crop types for the input study area, start year, and optional end year
    */
   fetchCropTypes(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
     let url: string;

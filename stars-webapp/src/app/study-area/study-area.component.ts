@@ -62,10 +62,15 @@ export class StudyAreaComponent implements OnInit {
    */
   initializeMap() {
 
-    // map center and zoom
-    this.map = L.map('map').setView([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat], 3);
+    // create map with options
+    this.map = L.map('map', {
+      scrollWheelZoom: false
+    });
 
-    // define aerial
+    // zoom to default extent
+    this.map.setView([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat], 3);
+
+    // define aerial layer
     let osmAttr = '&copy; <a target="_blank" href="http://openstreetmap.org">OpenStreetMap</a>';
     let tileLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + AppConfiguration.baseMapAccessToken, {
       id: 'mapbox.satellite',
