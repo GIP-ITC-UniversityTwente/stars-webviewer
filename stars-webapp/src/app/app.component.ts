@@ -16,10 +16,22 @@ export class AppComponent {
    * @param starsAPIService - injects the STARS API service.
    */
   constructor(private starsAPIService: StarsAPIService) {
+
+    // fetch the default data for first load ...
+
     starsAPIService.fetchStudyAreas().then((response) => {
       return response;
     }).then((data) => {
-      console.log('see study areas here ...');
+      console.log('test study areas ...');
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    starsAPIService.fetchCropTypes(1000, 2014).then((response) => {
+      return response;
+    }).then((data) => {
+      console.log('test crop types ...');
       console.log(data);
     }).catch((error) => {
       console.log(error);

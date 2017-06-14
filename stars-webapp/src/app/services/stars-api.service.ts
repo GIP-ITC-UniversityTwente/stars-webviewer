@@ -20,16 +20,32 @@ export class StarsAPIService {
   }
 
   /**
-   * API methods
+   * Fetches study areas
    */
   fetchStudyAreas(): Promise<any> {
-    return this.http.get(AppConfiguration.apiBaseURL)
+    let url = AppConfiguration.apiBaseURL + "/studyareas";
+    return this.http.get(url)
       .toPromise()
       .then(response => response.json())
       .catch(this.handleStudyAreasError);
   }
 
   private handleStudyAreasError(error: any): Promise<any> {
+    return Promise.reject(error.message || error);
+  }
+
+  /**
+   * Fetches crop types for the input study area and year
+   */
+  fetchCropTypes(studyAreaId: number, startYear: number): Promise<any> {
+    let url = AppConfiguration.apiBaseURL + "/cropTypes?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleCropTypesError);
+  }
+
+  private handleCropTypesError(error: any): Promise<any> {
     return Promise.reject(error.message || error);
   }
 }

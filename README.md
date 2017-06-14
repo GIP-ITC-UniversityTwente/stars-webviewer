@@ -17,13 +17,15 @@ This aplication uses:
 
 [__Angular__](https://github.com/angular/angular) 4.1.3 as the web framework.
 
-[__Angular-CLI__](https://github.com/angular/angular-cli) 1.1.0 Command Line Interface for project build & project scaffolding.
+[__Angular-CLI__](https://github.com/angular/angular-cli) 1.1.0 Command Line Interface for project build & project scaffolding.  Note, this requires Node 6.9.0 or higher and NPM 3 or higher.
 
 [__Angular Material__](https://github.com/angular/material2) 2.0.0 for UI/UX goodness.
 
 [__Angular Flexbox CSS__](https://github.com/angular/flex-layout) 2.0.0 as the responsive engine.
 
 [__Plotly.js__](https://plot.ly/javascript/) 1.27.1 for Charts
+
+[__Leaflet__](http://leafletjs.com) 1.0.3 for the Map interface.
 
 ## Running the App
 

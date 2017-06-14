@@ -3,7 +3,7 @@ export class AppConfiguration {
   /**
    * STARS API
    */
-  static apiBaseURL = "https://stars.itc.nl/api/";
+  static apiBaseURL = "https://stars.itc.nl/api";
 
   /**
    * configuration related to Leaflet map
