@@ -19,7 +19,7 @@ export class AppComponent {
 
     // TODO: fetch the default data for first load ...
 
-
+    /*
     // test study areas
 
     starsAPIService.fetchStudyAreas().then((response) => {
@@ -70,5 +70,27 @@ export class AppComponent {
     }).catch((error) => {
       console.log(error);
     });
+
+    // test image characteristics
+
+    starsAPIService.fetchImageCharacteristics(1000, 2014).then((response) => {
+      return response;
+    }).then((data) => {
+      console.log('test image characteristics one year ...');
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    starsAPIService.fetchImageCharacteristics(1000, 2014, 2015).then((response) => {
+      return response;
+    }).then((data) => {
+      console.log('test image characteristics two years ...');
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    */
   }
 }

@@ -75,4 +75,25 @@ export class StarsAPIService {
   private handleCropTypesError(error: any): Promise<any> {
     return Promise.reject(error.message || error);
   }
+
+  /**
+   * Fetches image characteristics for the input study area, star year, and option end year
+   */
+  fetchImageCharacteristics(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
+    let url: string;
+    if (endYear == null) {
+      url = AppConfiguration.apiBaseURL + "/imagecharacteristics?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
+    }
+    else {
+      url = AppConfiguration.apiBaseURL + "/imagecharacteristics?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+    }
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleImageCharacteristicsError);
+  }
+
+  private handleImageCharacteristicsError(error: any): Promise<any> {
+    return Promise.reject(error.message || error);
+  }
 }

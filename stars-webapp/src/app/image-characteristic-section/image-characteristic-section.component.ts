@@ -22,8 +22,8 @@ export class ImageCharacteristicSectionComponent implements OnInit {
       y: [0.15, 0.15, 0.2, 0.43, 0.44, 0.31, 0.27, 0.3, 0.34, 0.48, 0.48, 0.25, 0.19, 0.17],
       fill: "tozerox",
       fillcolor: "rgba(0, 100, 80, 0.2)",
-      name: 'Maize Envelope',
-      showlegend: true,
+      name: 'Millet Envelope',
+      showlegend: false,
       type: "scatter",
       line: {color: "transparent"}
     };
@@ -33,7 +33,7 @@ export class ImageCharacteristicSectionComponent implements OnInit {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.163984678685665, 0.163497392833233, 0.224976481497288, 0.455028122663498, 0.464507251977921, 0.321201853454113, 0.28456095457077],
       mode: 'lines',
-      name: 'Maize',
+      name: 'Millet',
       line: {
         color: '#6A7F00',
         width: 3
