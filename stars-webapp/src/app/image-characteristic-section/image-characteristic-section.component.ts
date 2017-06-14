@@ -13,6 +13,21 @@ export class ImageCharacteristicSectionComponent implements OnInit {
 
   ngOnInit() {
 
+    //----------------------
+    //  CHART 1 PLACEHOLDER
+    //----------------------
+
+    let milletSpectralLineEnvelope = {
+      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d', '318d', '305d', '291d', '210d', '177d', '150d', '142d'],
+      y: [0.15, 0.15, 0.2, 0.43, 0.44, 0.31, 0.27, 0.3, 0.34, 0.48, 0.48, 0.25, 0.19, 0.17],
+      fill: "tozerox",
+      fillcolor: "rgba(0, 100, 80, 0.2)",
+      name: 'Maize Envelope',
+      showlegend: true,
+      type: "scatter",
+      line: {color: "transparent"}
+    };
+
     // data for millet spectral test sample
     let milletSpectralLine = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
@@ -22,7 +37,8 @@ export class ImageCharacteristicSectionComponent implements OnInit {
       line: {
         color: '#6A7F00',
         width: 3
-      }
+      },
+      type: "scatter"
     };
 
     // layout for millet spectral test sample
@@ -31,17 +47,25 @@ export class ImageCharacteristicSectionComponent implements OnInit {
       xaxis: {
         title: 'Time',
         showgrid: true,
-        zeroline: true
+        zeroline: true,
+        ticks: "outside",
+        showticklabels: true
       },
       yaxis: {
         title: 'NDVI',
-        showline: false
+        showline: false,
+        ticks: "outside",
+        showticklabels: true
       }
     };
 
     // spectral chart for millet
-    let milletSpectralData = [milletSpectralLine];
+    let milletSpectralData = [milletSpectralLineEnvelope, milletSpectralLine];
     Plotly.newPlot('ndviChart', milletSpectralData, milletSpectralLayout);
+
+    //----------------------
+    //  CHART 2 PLACEHOLDER
+    //----------------------
 
     // data for millet textural test sample
     let milletTexturalLine = {
