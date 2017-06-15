@@ -228,6 +228,31 @@ export class StudyAreaComponent implements OnInit {
    * Handles when a user selects a crop type option
    */
   onCropTypeChange() {
-    console.log(this.selectedCrop);
+
+    // testing to confirm with Luis
+    this.starsAPIService.fetchTimeSeries(1000, 2014, 2014, 'Millet,Maize', 23, 'GeoEye-1_MS,QuickBird_MS,WorldView-2_MS', 3, 5).then((response) => {
+      return response;
+    }).then((data) => {
+      // add farm fields geojson to map
+      if (data.results.length > 0) {
+        let timeseriesResult = data.results;
+        console.log(timeseriesResult);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+
+    // testing to confirm with Luis
+    this.starsAPIService.fetchTimeSeries(1000, 2014, null, 'Millet', 23, 'GeoEye-1_MS,QuickBird_MS,WorldView-2_MS', 3, 5).then((response) => {
+      return response;
+    }).then((data) => {
+      // add farm fields geojson to map
+      if (data.results.length > 0) {
+        let timeseriesResult = data.results;
+        console.log(timeseriesResult);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 }

@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { AppConfiguration } from '../app-configuration';
 
 import 'rxjs/add/operator/toPromise';
+import {first} from "rxjs/operator/first";
 
 @Injectable()
 export class StarsAPIService {
@@ -94,6 +95,46 @@ export class StarsAPIService {
   }
 
   private handleImageCharacteristicsError(error: any): Promise<any> {
+    return Promise.reject(error.message || error);
+  }
+
+  /**
+   * Fetches a time series for an image characteristic for the input study area id, start year, (optional) end year, crop names, characteristic id, sensor list, (optional) first parameter, and (optional) second parameter
+   */
+  fetchTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, imageCharacteristicId: number,  sensorList: string, firstParameter: number = null, secondParameter = null) {
+
+    let url: string = AppConfiguration.apiBaseURL + "/timeseries?";
+
+    url += "studyAreaId=" + studyAreaId;
+
+    if (endYear == null) {
+      url += "&startYear=" + String(startYear);
+    }
+    else {
+      url += "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+    }
+
+    url += "&cropNames=" + cropNames;
+
+    url += "&imageCharacteristicId=" + imageCharacteristicId;
+
+    url += "&sensorList=" + sensorList;
+
+    if (firstParameter != null) {
+      url += "&firstParameter=" + firstParameter;
+    }
+
+    if (secondParameter != null) {
+      url += "&secondParameter=" + secondParameter;
+    }
+
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleTimeSeriesError);
+  }
+
+  private handleTimeSeriesError(error: any): Promise<any> {
     return Promise.reject(error.message || error);
   }
 }
