@@ -5,7 +5,7 @@
       <div class="optionTitle">STUDY AREA</div>
       <br/>
       <div class="optionDropDownWrapper gradient">
-        <md-select [(ngModel)]="selectedStudyArea" name="studyArea" (change)="onStudyAreaChange()">
+        <md-select [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
           <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
             {{studyArea.properties.name}}
           </md-option>

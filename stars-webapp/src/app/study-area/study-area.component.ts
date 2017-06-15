@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
-import { GeoJsonObject } from '@types/geojson';
 
 // reference to leaflet
 declare let L: any;
@@ -19,8 +18,10 @@ export class StudyAreaComponent implements OnInit {
 
   // represents the study area options a user can choose
   studyAreas: any[] = [];
-  studyAreaMapLayer: any;
-  selectedStudyArea: string;
+  selectedStudyAreaName: string;
+  selectedStudyAreaGeoJSON: any;
+  selectedStudyAreaLayer: any;
+  selectedFarmFieldsLayer: any;
 
   // represents the start year options a user can choose
   selectedStartYear: number;
@@ -123,14 +124,6 @@ export class StudyAreaComponent implements OnInit {
     this.map.setView([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat], 3);
 
     // define aerial layer
-    let osmAttr = '&copy; <a target="_blank" href="http://openstreetmap.org">OpenStreetMap</a>';
-    let tileLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + AppConfiguration.baseMapAccessToken, {
-      id: 'mapbox.satellite',
-      attribution: osmAttr
-    });
-
-    /*
-    // define aerial layer (a second option)
     let attribution = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
     let mapLink = '<a target="_blank" href="http://www.esri.com/">Esri</a>';
     let tileLayer = L.tileLayer(
@@ -138,6 +131,14 @@ export class StudyAreaComponent implements OnInit {
         attribution: '&copy; ' + mapLink + ', ' + attribution,
         maxZoom: 18,
       });
+
+    /*
+    // define aerial layer (a second option)
+    let osmAttr = '&copy; <a target="_blank" href="http://openstreetmap.org">OpenStreetMap</a>';
+    let tileLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + AppConfiguration.baseMapAccessToken, {
+      id: 'mapbox.satellite',
+      attribution: osmAttr
+    });
     */
 
     // add layer
@@ -149,29 +150,71 @@ export class StudyAreaComponent implements OnInit {
    */
   onStudyAreaChange() {
 
-    // for the selected study area, get the associated geojson object
-    let targetStudyAreaName = this.selectedStudyArea;
-    let targetStudyAreaGeoJSON = {};
-    this.studyAreas.forEach(function(item){
-      if(item.properties.name == targetStudyAreaName) {
-        targetStudyAreaGeoJSON = item;
-      }
-    });
+    // for the selected study area name, get the associated geojson object
+    let targetStudyAreaName = this.selectedStudyAreaName;
+    this.selectedStudyAreaGeoJSON = this.findStudyAreaGeoJSON(targetStudyAreaName);
 
     // create a leaflet geojson layer and add to the map
-    if (this.studyAreaMapLayer == null) {
-      this.studyAreaMapLayer = L.geoJSON(targetStudyAreaGeoJSON).addTo(this.map);
+    if (this.selectedStudyAreaLayer == null) {
+      this.selectedStudyAreaLayer = L.geoJSON(this.selectedStudyAreaGeoJSON).addTo(this.map);
     }
 
     // zoom to the extent of the study area geojson
-    this.map.fitBounds(this.studyAreaMapLayer.getBounds());
+    this.map.fitBounds(this.selectedStudyAreaLayer.getBounds());
+  }
+
+  /**
+   * Utility for fetching the study area GeoJSON object for a study area name
+   * @param targetStudyAreaName - the name of the study area we want the associated geojson for
+   * @returns {{}} - the geojson for the study area name
+   */
+  findStudyAreaGeoJSON(targetStudyAreaName: string) {
+    let result = {};
+    this.studyAreas.forEach(function(item){
+      if(item.properties.name == targetStudyAreaName) {
+        result = item;
+      }
+    });
+    return result;
   }
 
   /**
    * Handle when a user selects a start year option
    */
   onStartYearChange() {
-    console.log(this.selectedStartYear);
+
+    // fetch farm fields asynchronously from the backend
+    let studyAreaId = this.selectedStudyAreaGeoJSON.properties.id;
+    let startYear = this.selectedStartYear;
+    this.starsAPIService.fetchFarmFields(studyAreaId, startYear).then((response) => {
+      return response;
+    }).then((data) => {
+
+      // add farm fields geojson to map
+      if (data.results.length > 0) {
+        let farmFieldsGeoJSONArray = data.results;
+
+        if (this.selectedFarmFieldsLayer == null) {
+
+          // the first time, create a Leaflet GeoJSON Layer
+          this.selectedFarmFieldsLayer = L.geoJSON(farmFieldsGeoJSONArray);
+        }
+        else {
+
+          // if the Leaflet GeoJSON Layer was previously instantiated, then update the GeoJSON with new features
+          this.selectedFarmFieldsLayer.clearLayers();
+          this.selectedFarmFieldsLayer.addData(farmFieldsGeoJSONArray);
+        }
+
+        // add the farm fields to the map
+        this.selectedFarmFieldsLayer.addTo(this.map);
+
+        // zoom the map into the extent of the farm fields geometry
+        this.map.fitBounds(this.selectedFarmFieldsLayer.getBounds());
+      }
+    }).catch((error) => {
+      console.log('There are no farmfields for study area id: ' + studyAreaId +  ' and start year: ' + startYear + ' error: ' + error);
+    });
   }
 
   /**
