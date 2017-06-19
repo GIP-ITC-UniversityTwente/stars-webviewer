@@ -39,8 +39,8 @@
       <br/>
       <div class="optionDropDownWrapper gradient">
         <md-select [(ngModel)]="selectedCrop" name="cropType" (change)="onCropTypeChange()">
-          <md-option *ngFor="let cropType of cropTypes" [value]="cropType.value">
-            {{cropType.viewValue}}
+          <md-option *ngFor="let cropName of cropNames" [value]="cropName">
+            {{cropName}}
           </md-option>
         </md-select>
       </div>

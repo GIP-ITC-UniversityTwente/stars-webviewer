@@ -28,16 +28,12 @@ export class StudyAreaComponent implements OnInit {
   startYears: number[] = [];
 
   // represents the end year options a user can choose
-  selectedEndYear: number;
+  selectedEndYear: number = null;
   endYears: number[] = [];
 
   // represents the crop options a user can choose
-  cropTypes = [
-    {value: 'cropType1', viewValue: 'Crop Type 1'},
-    {value: 'cropType2', viewValue: 'Crop Type 2'},
-    {value: 'cropType3', viewValue: 'Crop Type 3'}
-  ];
-  selectedCrop: string = "";
+  selectedCrop: string;
+  cropNames = [];
 
   // the Leaflet map
   map: any;
@@ -53,17 +49,18 @@ export class StudyAreaComponent implements OnInit {
       return response;
     }).then((data) => {
 
-      // use the study areas response as the data for the study area options
-      let results = data["results"];
+      // use the study areas response as the data for the study area options and associated start/end year options
+      let results = data.results;
       this.initializeStudyAreaOptions(results, this.studyAreas);
+      this.initializeStartYearOptions(results, this.startYears);
+      this.initializeEndYearOptions(results, this.endYears);
+
     }).catch((error) => {
       console.log(error);
     });
   }
 
   ngOnInit() {
-    this.initializeStartYearOptions();
-    this.initializeEndYearOptions();
     this.initializeMap();
   }
 
@@ -80,34 +77,24 @@ export class StudyAreaComponent implements OnInit {
 
   /**
    * For initializing the start year options a user can choose from
+   * @param results - the results from the async call to the API for study areas
+   * @param startYears - the collection of all start years
    */
-  initializeStartYearOptions() {
-
-    this.startYears = this.fetchCollectionOfPreviousYears();
+  initializeStartYearOptions(results: any, startYears: any) {
+    results.forEach(function(item) {
+      startYears.push(item.properties.year_start);
+    })
   }
 
   /**
    * For initializing the end year options a user can choose from
+   * @param results - the results from the async call to the API for study areas
+   * @param endYears - the collection of all end years
    */
-  initializeEndYearOptions() {
-
-    this.endYears = this.fetchCollectionOfPreviousYears();
-  }
-
-  /**
-   * A utility that simply returns an array of previous years starting with the current year.
-   */
-  fetchCollectionOfPreviousYears(): number[] {
-
-    let results: number[] = [];
-
-    let currentYear = new Date().getFullYear();
-    for(let i = 0; i < 14; i++) {
-      results.push(currentYear);
-      currentYear -= 1;
-    }
-
-    return results;
+  initializeEndYearOptions(results: any, endYears: any) {
+    results.forEach(function(item) {
+      endYears.push(item.properties.year_end);
+    })
   }
 
   /**
@@ -131,15 +118,6 @@ export class StudyAreaComponent implements OnInit {
         attribution: '&copy; ' + mapLink + ', ' + attribution,
         maxZoom: 18,
       });
-
-    /*
-    // define aerial layer (a second option)
-    let osmAttr = '&copy; <a target="_blank" href="http://openstreetmap.org">OpenStreetMap</a>';
-    let tileLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + AppConfiguration.baseMapAccessToken, {
-      id: 'mapbox.satellite',
-      attribution: osmAttr
-    });
-    */
 
     // add layer
     tileLayer.addTo(this.map);
@@ -183,9 +161,12 @@ export class StudyAreaComponent implements OnInit {
    */
   onStartYearChange() {
 
-    // fetch farm fields asynchronously from the backend
+    // user selections
     let studyAreaId = this.selectedStudyAreaGeoJSON.properties.id;
     let startYear = this.selectedStartYear;
+    let cropNames = this.cropNames;
+
+    // fetch farm fields
     this.starsAPIService.fetchFarmFields(studyAreaId, startYear).then((response) => {
       return response;
     }).then((data) => {
@@ -193,7 +174,6 @@ export class StudyAreaComponent implements OnInit {
       // add farm fields geojson to map
       if (data.results.length > 0) {
         let farmFieldsGeoJSONArray = data.results;
-
         if (this.selectedFarmFieldsLayer == null) {
 
           // the first time, create a Leaflet GeoJSON Layer
@@ -215,13 +195,47 @@ export class StudyAreaComponent implements OnInit {
     }).catch((error) => {
       console.log('There are no farmfields for study area id: ' + studyAreaId +  ' and start year: ' + startYear + ' error: ' + error);
     });
+
+    // fetch crops
+    this.starsAPIService.fetchCropTypes(studyAreaId, startYear, null).then((response) => {
+      return response;
+    }).then((data) => {
+      let results = data.results;
+      if (results.length > 0) {
+        results.forEach(function(item){
+          let cropName = item.name;
+          cropNames.push(cropName);
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   /**
    * Handles when a user selects an end year option
    */
   onEndYearChange() {
-    console.log(this.selectedEndYear);
+
+    // user selections
+    let studyAreaId = this.selectedStudyAreaGeoJSON.properties.id;
+    let startYear = this.selectedStartYear;
+    let endYear = this.selectedEndYear;
+    let cropNames = this.cropNames = [];
+
+    this.starsAPIService.fetchCropTypes(studyAreaId, startYear, endYear).then((response) => {
+      return response;
+    }).then((data) => {
+      let results = data.results;
+      if (results.length > 0) {
+        results.forEach(function(item){
+          let cropName = item.name;
+          cropNames.push(cropName);
+        })
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   /**
@@ -229,30 +243,21 @@ export class StudyAreaComponent implements OnInit {
    */
   onCropTypeChange() {
 
-    // testing to confirm with Luis
-    this.starsAPIService.fetchTimeSeries(1000, 2014, 2014, 'Millet,Maize', 23, 'GeoEye-1_MS,QuickBird_MS,WorldView-2_MS', 3, 5).then((response) => {
-      return response;
-    }).then((data) => {
-      // add farm fields geojson to map
-      if (data.results.length > 0) {
-        let timeseriesResult = data.results;
-        console.log(timeseriesResult);
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
+    // user selections
+    let studyAreaId = this.selectedStudyAreaGeoJSON.properties.id;
+    let startYear = this.selectedStartYear;
+    let endYear = this.selectedEndYear;
+    let crop = this.selectedCrop;
 
-    // testing to confirm with Luis
-    this.starsAPIService.fetchTimeSeries(1000, 2014, null, 'Millet', 23, 'GeoEye-1_MS,QuickBird_MS,WorldView-2_MS', 3, 5).then((response) => {
+    console.log('study area: ' + studyAreaId + ' startYear: ' + startYear + ' endYear: ' + endYear + ' crop: ' + crop);
+
+
+    this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
       return response;
     }).then((data) => {
-      // add farm fields geojson to map
-      if (data.results.length > 0) {
-        let timeseriesResult = data.results;
-        console.log(timeseriesResult);
-      }
+      console.log(data);
     }).catch((error) => {
       console.log(error);
-    });
+    })
   }
 }
