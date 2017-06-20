@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StarsAPIService } from '../services/stars-api.service';
 
 declare let Plotly: any;
 
@@ -9,9 +10,115 @@ declare let Plotly: any;
 })
 export class ImageCharacteristicSectionComponent implements OnInit {
 
-  constructor() { }
+  /**
+   * Properties
+   */
+
+  spectralOptionIsDisabled = false;
+  allSpectralCharacteristicObjects: any[] = [];
+  selectedSpectralCharacteristic: string = null;
+  spectralCharacteristics: any[] = [];
+
+  texturalOptionIsDisabled = false;
+  allTexturalCharacteristicObjects: any[] = [];
+  selectedTexturalCharacteristic: string = null;
+  texturalCharacteristics: any[] = [];
+
+  selectedSensor: string = null;
+  sensors: any[] = [];
+
+  /**
+   * Component Life-cycle methods
+   */
+  constructor(private starsAPIService: StarsAPIService) {
+
+    // TODO - REMOVE HARD-CODED TEST
+    // fetch image characteristics
+    starsAPIService.fetchImageCharacteristics(1000, 2014).then((response) => {
+      return response;
+    }).then((data) => {
+
+      let results = data.results;
+
+      //
+      console.log(results);
+
+      this.initializeSpectralCharacteristics(results);
+      this.initializeTexturalCharacteristics(results);
+
+      //this.texturalCharacteristics = results.texturalCharacteristics;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
   ngOnInit() {
+    this.createTestCharts();
+  }
+
+  initializeSpectralCharacteristics(results: any) {
+
+    // fetch all unique spectral characteristic alias names
+    this.allSpectralCharacteristicObjects = results.spectralCharacteristics;
+    let uniqueSpectralCharacteristicNames = new Set();
+    this.allSpectralCharacteristicObjects.forEach(function(item) {
+      uniqueSpectralCharacteristicNames.add(item.alias);
+    });
+    this.spectralCharacteristics = Array.from(uniqueSpectralCharacteristicNames);
+  }
+
+  initializeTexturalCharacteristics(results: any) {
+
+    // fetch all unique textural characteristics alias names
+    this.allTexturalCharacteristicObjects = results.texturalCharacteristics;
+    let uniqueTexturalCharacteristicNames = new Set();
+    this.allTexturalCharacteristicObjects.forEach(function(item) {
+      uniqueTexturalCharacteristicNames.add(item.alias);
+    });
+    this.texturalCharacteristics = Array.from(uniqueTexturalCharacteristicNames);
+  }
+
+  /**
+   * Handles when user chooses a spectral characteristic
+   */
+  onSpectralCharacteristicChange() {
+    this.texturalOptionIsDisabled = true;
+    this.sensors = this.fetchSensorsForImageCharacteristic(this.selectedSpectralCharacteristic, this.allSpectralCharacteristicObjects);
+  }
+
+  /**
+   * Handles when a user chooses a textural characteristic
+   */
+  onTexturalCharacteristicChange() {
+    this.spectralOptionIsDisabled = true;
+    this.sensors = this.fetchSensorsForImageCharacteristic(this.selectedTexturalCharacteristic, this.allTexturalCharacteristicObjects);
+  }
+
+  /**
+   * Utility for fetching a unique list of sensors for the chosen image characteristic (spectral or textural)
+   */
+  fetchSensorsForImageCharacteristic(imageCharacteristicAlias: string, allImageCharacteristics: any[]): string[] {
+
+    let results: string[] = [];
+    allImageCharacteristics.forEach(function(item) {
+      if (item.alias == imageCharacteristicAlias) {
+        results.push(item.sensor);
+      }
+    });
+    return results;
+  }
+
+  /**
+   * Handles when a user chooses a sensor
+   */
+  onSensorChange() {
+
+  }
+
+  /**
+   * Utility for testing patterns for creating chart spec
+   */
+  createTestCharts() {
 
     //----------------------
     //  CHART 1 PLACEHOLDER
