@@ -105,6 +105,7 @@ export class ImageCharacteristicSectionComponent implements OnInit {
    */
   onSensorChange() {
 
+    console.log(this.selectedSensor);
   }
 
   /**

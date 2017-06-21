@@ -108,9 +108,9 @@ export class StudyAreaComponent implements OnInit {
       target: 'map',
       view: new ol.View({
         center: ol.proj.fromLonLat([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat]),
-        zoom: AppConfiguration.mapZoom,
-        interactions: ol.interaction.defaults({mouseWheelZoom:false})
-      })
+        zoom: AppConfiguration.mapZoom
+      }),
+      interactions: ol.interaction.defaults({mouseWheelZoom:false})
     });
   }
 
