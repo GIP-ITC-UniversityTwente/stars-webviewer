@@ -3,7 +3,8 @@ import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 
 // reference to leaflet
-declare let L: any;
+//declare let L: any;
+declare let ol: any;
 
 @Component({
   selector: 'app-study-area',
@@ -19,9 +20,7 @@ export class StudyAreaComponent implements OnInit {
   // represents the study area options a user can choose
   studyAreas: any[] = [];
   selectedStudyAreaName: string;
-  selectedStudyAreaGeoJSON: any;
-  selectedStudyAreaLayer: any;
-  selectedFarmFieldsLayer: any;
+  selectedStudyAreaId: number;
 
   // represents the start year options a user can choose
   selectedStartYear: number;
@@ -41,7 +40,6 @@ export class StudyAreaComponent implements OnInit {
   /**
    * Component Life-cycle Methods
    */
-
   constructor(private starsAPIService: StarsAPIService) {
 
     // fetch study areas from the API
@@ -62,6 +60,9 @@ export class StudyAreaComponent implements OnInit {
 
   ngOnInit() {
     this.initializeMap();
+    this.addTopoMapLayer();
+    this.addAerialMapLayer();
+    this.initializeLayerVisibility(this.map);
   }
 
   /**
@@ -102,25 +103,78 @@ export class StudyAreaComponent implements OnInit {
    */
   initializeMap() {
 
-    // create map with options
-    this.map = L.map('map', {
-      scrollWheelZoom: false
+    // create map
+    this.map = new ol.Map({
+      target: 'map',
+      view: new ol.View({
+        center: ol.proj.fromLonLat([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat]),
+        zoom: AppConfiguration.mapZoom,
+        interactions: ol.interaction.defaults({mouseWheelZoom:false})
+      })
+    });
+  }
+
+  /**
+   * Utility for adding the topo layer to the map
+   */
+  addTopoMapLayer() {
+
+    let topoSource = new ol.source.XYZ({
+      url: '//{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png'
     });
 
-    // zoom to default extent
-    this.map.setView([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat], 3);
+    let topoLayer = new ol.layer.Tile({
+      source: topoSource
+    });
 
-    // define aerial layer
-    let attribution = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
-    let mapLink = '<a target="_blank" href="http://www.esri.com/">Esri</a>';
-    let tileLayer = L.tileLayer(
-      'http://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: '&copy; ' + mapLink + ', ' + attribution,
-        maxZoom: 18,
-      });
+    let mapLayersCollection = this.map.getLayers();
+    mapLayersCollection.insertAt(0, topoLayer);
+  }
 
-    // add layer
-    tileLayer.addTo(this.map);
+  /**
+   * Utility for adding the aerial layer to the map
+   */
+  addAerialMapLayer() {
+
+    let bingSource = new ol.source.BingMaps({
+      key: AppConfiguration.bingKey,
+      imagerySet: 'AerialWithLabels'
+    });
+
+    let bingLayer = new ol.layer.Tile({
+      source: bingSource
+    });
+
+    let mapLayersCollection = this.map.getLayers();
+    mapLayersCollection.insertAt(1, bingLayer);
+  }
+
+  /**
+   * Utility for handling layer visibility based on map zoom level
+   * @param map
+   */
+  initializeLayerVisibility(map: any) {
+
+    this.map.on("moveend", function(){
+
+      let zoomLevel = map.getView().getZoom();
+      let mapLayersCollection = map.getLayers();
+      let topoLayer = mapLayersCollection.item(0);
+      let aerialLayer = mapLayersCollection.item(1);
+
+      if (zoomLevel >= 9) {
+
+        // zoomed in, show aerial
+        topoLayer.setVisible(false);
+        aerialLayer.setVisible(true);
+      }
+      else {
+
+        // zoomed out, show topo
+        topoLayer.setVisible(true);
+        aerialLayer.setVisible(false);
+      }
+    })
   }
 
   /**
@@ -128,32 +182,113 @@ export class StudyAreaComponent implements OnInit {
    */
   onStudyAreaChange() {
 
-    // for the selected study area name, get the associated geojson object
+    // get selected study area name
     let targetStudyAreaName = this.selectedStudyAreaName;
-    this.selectedStudyAreaGeoJSON = this.findStudyAreaGeoJSON(targetStudyAreaName);
 
-    // create a leaflet geojson layer and add to the map
-    if (this.selectedStudyAreaLayer == null) {
-      this.selectedStudyAreaLayer = L.geoJSON(this.selectedStudyAreaGeoJSON).addTo(this.map);
-    }
+    // get strudy area Id
+    this.selectedStudyAreaId = this.fetchStudyAreaId(targetStudyAreaName);
 
-    // zoom to the extent of the study area geojson
-    this.map.fitBounds(this.selectedStudyAreaLayer.getBounds());
+    // get study area geoJSON
+    let geoJSONObject = this.createStudyAreaGeoJSON(targetStudyAreaName);
+
+    // add the study area as a map layer
+    this.addStudyAreaMapLayer(geoJSONObject);
   }
 
   /**
-   * Utility for fetching the study area GeoJSON object for a study area name
-   * @param targetStudyAreaName - the name of the study area we want the associated geojson for
-   * @returns {{}} - the geojson for the study area name
+   * Utility for fetching the study area Id for the input study area name
+   * @param targetStudyAreaName
    */
-  findStudyAreaGeoJSON(targetStudyAreaName: string) {
-    let result = {};
+  fetchStudyAreaId(targetStudyAreaName: string) {
+    let result: number = null;
     this.studyAreas.forEach(function(item){
       if(item.properties.name == targetStudyAreaName) {
-        result = item;
+        result = item.properties.id;
       }
     });
     return result;
+  }
+
+  /**
+   * Utility for creating the study area GeoJSON object for the input study area name
+   * @param targetStudyAreaName - the name of the study area we want the associated geojson for
+   * @returns {{}} - the geojson for the study area name
+   */
+  createStudyAreaGeoJSON(targetStudyAreaName: string) {
+
+    let projectedCoordinates: any[] = [];
+    this.studyAreas.forEach(function(item){
+      if(item.properties.name == targetStudyAreaName) {
+
+        // re-project STARS API coordinates from EPSG: 4326 to 3857
+        let originalCoordinates = item.geometry.coordinates[0];
+        originalCoordinates.forEach(function(item){
+          let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
+          projectedCoordinates.push(projected);
+        });
+      }
+    });
+
+    // geojson object template
+    return {
+      "type": "FeatureCollection",
+      "crs": {
+        "type": "name",
+        "properties": {
+          "name": "EPSG:3857"
+        }
+      },
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              projectedCoordinates
+            ]
+          },
+          "properties": {
+            "id": 1000
+          }
+        }
+      ]
+    };
+  }
+
+  /**
+   * Utility for adding a study area's geojson as a map layer
+   * @param studyAreaGeoJSON
+   */
+  addStudyAreaMapLayer(studyAreaGeoJSON: any) {
+
+    let geoJSON = new ol.format.GeoJSON({
+      projection: 'EPSG:3857'
+    });
+
+    let vectorSource = new ol.source.Vector({
+      features: (geoJSON).readFeatures(studyAreaGeoJSON)
+    });
+
+    let polygonStyle = new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'rgba(43, 126, 177, 1)',
+        lineDash: [4],
+        width: 4
+      }),
+      fill: new ol.style.Fill({
+        color: 'rgba(43, 126, 177, 0.1)'
+      })
+    });
+
+    let vectorLayer = new ol.layer.Vector({
+      source: vectorSource,
+      style: polygonStyle
+    });
+
+    let mapLayersCollection = this.map.getLayers();
+    mapLayersCollection.insertAt(3, vectorLayer);
+
+    this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
   }
 
   /**
@@ -162,9 +297,8 @@ export class StudyAreaComponent implements OnInit {
   onStartYearChange() {
 
     // user selections
-    let studyAreaId = this.selectedStudyAreaGeoJSON.properties.id;
+    let studyAreaId = this.selectedStudyAreaId;
     let startYear = this.selectedStartYear;
-    let cropNames = this.cropNames;
 
     // fetch farm fields
     this.starsAPIService.fetchFarmFields(studyAreaId, startYear).then((response) => {
@@ -173,30 +307,16 @@ export class StudyAreaComponent implements OnInit {
 
       // add farm fields geojson to map
       if (data.results.length > 0) {
-        let farmFieldsGeoJSONArray = data.results;
-        if (this.selectedFarmFieldsLayer == null) {
-
-          // the first time, create a Leaflet GeoJSON Layer
-          this.selectedFarmFieldsLayer = L.geoJSON(farmFieldsGeoJSONArray);
-        }
-        else {
-
-          // if the Leaflet GeoJSON Layer was previously instantiated, then update the GeoJSON with new features
-          this.selectedFarmFieldsLayer.clearLayers();
-          this.selectedFarmFieldsLayer.addData(farmFieldsGeoJSONArray);
-        }
-
-        // add the farm fields to the map
-        this.selectedFarmFieldsLayer.addTo(this.map);
-
-        // zoom the map into the extent of the farm fields geometry
-        this.map.fitBounds(this.selectedFarmFieldsLayer.getBounds());
+        let farmFieldsFeatureArray = data.results;
+        let farmFieldGeoJSON = this.createFarmFieldsGeoJson(farmFieldsFeatureArray);
+        this.addFarmFieldsMapLayer(farmFieldGeoJSON);
       }
     }).catch((error) => {
-      console.log('There are no farmfields for study area id: ' + studyAreaId +  ' and start year: ' + startYear + ' error: ' + error);
+      console.log(error);
     });
 
     // fetch crops
+    let cropNames = this.cropNames;
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, null).then((response) => {
       return response;
     }).then((data) => {
@@ -213,12 +333,102 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
+   * Utility for creating the farmfields GeoJSON
+   * @param farmFieldFeatures
+   * */
+  createFarmFieldsGeoJson(farmFieldFeatures: any) {
+
+    let geoJSONFeatures: any[] = [];
+    farmFieldFeatures.forEach(function(item){
+
+      // re-project STARS API coordinates from EPSG: 4326 to 3857
+      let originalCoordinates = item.geometry.coordinates[0];
+      let projectedCoordinates: any[] = [];
+      originalCoordinates.forEach(function(item){
+        let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
+        projectedCoordinates.push(projected);
+      });
+
+      // create feature with re-projected coordinates
+      let feature = {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            projectedCoordinates
+          ]
+        },
+        "properties": {
+          "study_area_oid": item.properties.oid,
+          "oid": item.properties.oid,
+          "croptype": item.properties.croptype,
+          "fieldwork": item.properties.fieldwork,
+          "year_start": item.properties.year_start
+        }
+      };
+      geoJSONFeatures.push(feature);
+    });
+
+    // geojson object template
+    let geoJSON =  {
+      "type": "FeatureCollection",
+      "crs": {
+        "type": "name",
+        "properties": {
+          "name": "EPSG:3857"
+        }
+      },
+      "features": geoJSONFeatures
+    };
+
+    console.log(geoJSON);
+
+    return geoJSON;
+  }
+
+  /**
+   * Utility for adding the farm field's geojson as a map layer
+   * @param farmFieldsGeoJSON
+   */
+  addFarmFieldsMapLayer(farmFieldsGeoJSON: any) {
+
+    let geoJSON = new ol.format.GeoJSON({
+      projection: 'EPSG:3857'
+    });
+
+    let vectorSource = new ol.source.Vector({
+      features: (geoJSON).readFeatures(farmFieldsGeoJSON)
+    });
+
+    let polygonStyle = new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'rgba(255, 0, 0, 1)',
+        lineDash: [4],
+        width: 4
+      }),
+      fill: new ol.style.Fill({
+        color: 'rgba(255, 0, 0, 0.1)'
+      })
+    });
+
+    let vectorLayer = new ol.layer.Vector({
+      source: vectorSource,
+      style: polygonStyle
+    });
+
+    let mapLayersCollection = this.map.getLayers();
+    mapLayersCollection.insertAt(3, vectorLayer);
+
+    this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
+  }
+
+  /**
    * Handles when a user selects an end year option
    */
   onEndYearChange() {
 
     // user selections
-    let studyAreaId = this.selectedStudyAreaGeoJSON.properties.id;
+    let studyAreaId = this.selectedStudyAreaId;
     let startYear = this.selectedStartYear;
     let endYear = this.selectedEndYear;
     let cropNames = this.cropNames = [];
@@ -244,13 +454,12 @@ export class StudyAreaComponent implements OnInit {
   onCropTypeChange() {
 
     // user selections
-    let studyAreaId = this.selectedStudyAreaGeoJSON.properties.id;
+    let studyAreaId = this.selectedStudyAreaId;
     let startYear = this.selectedStartYear;
     let endYear = this.selectedEndYear;
     let crop = this.selectedCrop;
 
     console.log('study area: ' + studyAreaId + ' startYear: ' + startYear + ' endYear: ' + endYear + ' crop: ' + crop);
-
 
     this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
       return response;

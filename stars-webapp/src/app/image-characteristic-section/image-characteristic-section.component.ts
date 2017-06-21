@@ -32,21 +32,13 @@ export class ImageCharacteristicSectionComponent implements OnInit {
    */
   constructor(private starsAPIService: StarsAPIService) {
 
-    // TODO - REMOVE HARD-CODED TEST
     // fetch image characteristics
-    starsAPIService.fetchImageCharacteristics(1000, 2014).then((response) => {
+    starsAPIService.fetchImageCharacteristics(1000, 2014).then((response) => {     // TODO - REMOVE HARD-CODED TEST
       return response;
     }).then((data) => {
-
       let results = data.results;
-
-      //
-      console.log(results);
-
       this.initializeSpectralCharacteristics(results);
       this.initializeTexturalCharacteristics(results);
-
-      //this.texturalCharacteristics = results.texturalCharacteristics;
     }).catch((error) => {
       console.log(error);
     });
