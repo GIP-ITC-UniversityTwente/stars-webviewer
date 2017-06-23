@@ -5,7 +5,7 @@
         <div class="optionTitle">SPECTRAL</div>
         <br/>
         <div class="optionDropDownWrapper gradient">
-          <md-select [disabled]="spectralOptionIsDisabled" [(ngModel)]="selectedSpectralCharacteristic" name="spectralCharacteristic" (change)="onSpectralCharacteristicChange()">
+          <md-select [disabled]="spectralOptionIsDisabled" [(ngModel)]="selectedSpectralCharacteristicName" name="spectralCharacteristic" (change)="onSpectralCharacteristicChange()">
             <md-option *ngFor="let spectralCharacteristic of spectralCharacteristics" [value]="spectralCharacteristic">
               {{spectralCharacteristic}}
             </md-option>
@@ -16,7 +16,7 @@
         <div class="optionTitle">TEXTURAL</div>
         <br/>
         <div class="optionDropDownWrapper gradient">
-          <md-select [disabled]="texturalOptionIsDisabled" [(ngModel)]="selectedTexturalCharacteristic" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
+          <md-select [disabled]="texturalOptionIsDisabled" [(ngModel)]="selectedTexturalCharacteristicName" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
             <md-option *ngFor="let texturalCharacteristic of texturalCharacteristics" [value]="texturalCharacteristic">
               {{texturalCharacteristic}}
             </md-option>
