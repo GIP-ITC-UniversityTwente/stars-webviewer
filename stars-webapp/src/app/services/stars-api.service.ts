@@ -128,6 +128,10 @@ export class StarsAPIService {
       url += "&secondParameter=" + secondParameter;
     }
 
+    //
+    console.log('the urls is: ');
+    console.log(url);
+
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())

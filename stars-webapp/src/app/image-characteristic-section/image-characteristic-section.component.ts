@@ -139,9 +139,9 @@ export class ImageCharacteristicSectionComponent implements OnInit {
   onSensorChange() {
 
     let studyArea = 1000; // TODO - REMOVE HARD-CODED TEST
-    let startYear = 2004; // TODO - REMOVE HARD-CODED TEST
-    let endYear = null; // TODO - REMOVE HARD-CODED TEST
-    let cropNames = "Cotton"; // TODO - REMOVE HARD-CODED TEST
+    let startYear = 2014; // TODO - REMOVE HARD-CODED TEST
+    let endYear = 2014; // TODO - REMOVE HARD-CODED TEST
+    let cropNames = "Millet"; // TODO - REMOVE HARD-CODED TEST
     let imageCharacteristicId = null;
     if (this.selectedSpectralCharacteristicId != null) {
       imageCharacteristicId = this.selectedSpectralCharacteristicId;
@@ -150,8 +150,8 @@ export class ImageCharacteristicSectionComponent implements OnInit {
       imageCharacteristicId = this.selectedTexturalCharacteristicId;
     }
     let sensorList = "WorldView-2_MS"; // TODO - REMOVE HARD-CODED TEST
-    let firstParameter = 1; // TODO - REMOVE HARD-CODED TEST
-    let secondParameter = 1; // TODO - REMOVE HARD-CODED TEST
+    let firstParameter = null; // TODO - REMOVE HARD-CODED TEST
+    let secondParameter = null; // TODO - REMOVE HARD-CODED TEST
 
     this.starsAPIService.fetchTimeSeries(studyArea, startYear, endYear, cropNames, imageCharacteristicId, sensorList, firstParameter, secondParameter).then((response) => {
       return response;
