@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule} from '@angular/material';
+import { MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule} from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import 'hammerjs';
@@ -32,7 +32,7 @@ import { MapComponentComponent } from './map-component/map-component.component';
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
-    MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule,
+    MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule,
     FlexLayoutModule
   ],
   providers: [],

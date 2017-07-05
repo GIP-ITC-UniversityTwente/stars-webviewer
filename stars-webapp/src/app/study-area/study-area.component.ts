@@ -27,7 +27,7 @@ export class StudyAreaComponent implements OnInit {
 
   // represents the crop options a user can choose
   selectedCrop: string;
-  cropNames = [];
+  crops: any[] = [];
 
   /**
    * Component Life-cycle Methods
@@ -129,6 +129,7 @@ export class StudyAreaComponent implements OnInit {
     // user selections
     let studyAreaId = this.selectedStudyAreaId;
     let startYear = this.selectedStartYear;
+    let crops = this.crops;
 
     // fetch farm fields
     this.starsAPIService.fetchFarmFields(studyAreaId, startYear).then((response) => {
@@ -148,15 +149,14 @@ export class StudyAreaComponent implements OnInit {
     });
 
     // fetch crops
-    let cropNames = this.cropNames;
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, null).then((response) => {
       return response;
     }).then((data) => {
       let results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
-          let cropName = item.name;
-          cropNames.push(cropName);
+          crops["isChecked"] = false;
+          crops.push(item);
         })
       }
     }).catch((error) => {
@@ -173,7 +173,7 @@ export class StudyAreaComponent implements OnInit {
     let studyAreaId = this.selectedStudyAreaId;
     let startYear = this.selectedStartYear;
     let endYear = this.selectedEndYear;
-    let cropNames = this.cropNames = [];
+    let crops = this.crops;
 
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, endYear).then((response) => {
       return response;
@@ -181,9 +181,9 @@ export class StudyAreaComponent implements OnInit {
       let results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
-          let cropName = item.name;
-          cropNames.push(cropName);
-        })
+          crops["isChecked"] = false;
+          crops.push(item);
+        });
       }
     }).catch((error) => {
       console.log(error);

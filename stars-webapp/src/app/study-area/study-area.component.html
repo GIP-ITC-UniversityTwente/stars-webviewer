@@ -25,11 +25,10 @@
 </div>
 <div class="leftSection">
   <div>Crop Type</div>
-  <md-select [(ngModel)]="selectedCrop" name="cropType" (change)="onCropTypeChange()">
-    <md-option *ngFor="let cropName of cropNames" [value]="cropName">
-      {{cropName}}
-    </md-option>
-  </md-select>
+  <div *ngFor="let crop of crops">
+    <md-checkbox [(ngModel)]="crop.isChecked">{{crop.name}}</md-checkbox>
+    <br/>
+  </div>
 </div>
 
 
