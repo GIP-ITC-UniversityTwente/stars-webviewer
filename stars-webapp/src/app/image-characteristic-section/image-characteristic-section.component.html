@@ -1,39 +1,27 @@
 <div class="chartSectionOuter">
   <div class="chartSectionInner">
     <div class="chartHeader gradient">
-      <div class="optionItemWrapper">
-        <div class="optionTitle">SPECTRAL</div>
-        <br/>
-        <div class="optionDropDownWrapper gradient">
-          <md-select [disabled]="spectralOptionIsDisabled" [(ngModel)]="selectedSpectralCharacteristicName" name="spectralCharacteristic" (change)="onSpectralCharacteristicChange()">
-            <md-option *ngFor="let spectralCharacteristic of spectralCharacteristics" [value]="spectralCharacteristic">
-              {{spectralCharacteristic}}
-            </md-option>
-          </md-select>
-        </div>
-      </div>
-      <div class="optionItemWrapper">
-        <div class="optionTitle">TEXTURAL</div>
-        <br/>
-        <div class="optionDropDownWrapper gradient">
-          <md-select [disabled]="texturalOptionIsDisabled" [(ngModel)]="selectedTexturalCharacteristicName" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
-            <md-option *ngFor="let texturalCharacteristic of texturalCharacteristics" [value]="texturalCharacteristic">
-              {{texturalCharacteristic}}
-            </md-option>
-          </md-select>
-        </div>
-      </div>
-      <div class="optionItemWrapper">
-        <div class="optionTitle">IMAGE SOURCE</div>
-        <br/>
-        <div class="optionDropDownWrapper gradient">
-          <md-select [(ngModel)]="selectedSensor" name="imageSources" (change)="onSensorChange()">
-            <md-option *ngFor="let sensor of sensors" [value]="sensor">
-              {{sensor}}
-            </md-option>
-          </md-select>
-        </div>
-      </div>
+      <div>SPECTRAL</div>
+      <br/>
+      <md-select [disabled]="spectralOptionIsDisabled" [(ngModel)]="selectedSpectralCharacteristicName" name="spectralCharacteristic" (change)="onSpectralCharacteristicChange()">
+        <md-option *ngFor="let spectralCharacteristic of spectralCharacteristics" [value]="spectralCharacteristic">
+          {{spectralCharacteristic}}
+        </md-option>
+      </md-select>
+      <div>TEXTURAL</div>
+      <br/>
+      <md-select [disabled]="texturalOptionIsDisabled" [(ngModel)]="selectedTexturalCharacteristicName" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
+        <md-option *ngFor="let texturalCharacteristic of texturalCharacteristics" [value]="texturalCharacteristic">
+          {{texturalCharacteristic}}
+        </md-option>
+      </md-select>
+      <div>IMAGE SOURCE</div>
+      <br/>
+      <md-select [(ngModel)]="selectedSensor" name="imageSources" (change)="onSensorChange()">
+        <md-option *ngFor="let sensor of sensors" [value]="sensor">
+          {{sensor}}
+        </md-option>
+      </md-select>
     </div>
     <div class="chartWrapper">
       <div id="ndviChart"></div>

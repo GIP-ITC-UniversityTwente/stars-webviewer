@@ -1,50 +1,40 @@
 <!-- section for showing global options -->
-<div class="optionsOuter">
-  <div class="optionsInner">
-    <div class="optionItemWrapper">
-      <div class="optionTitle">STUDY AREA</div>
-      <br/>
-      <div class="optionDropDownWrapper gradient">
-        <md-select [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
-          <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
-            {{studyArea.properties.name}}
-          </md-option>
-        </md-select>
-      </div>
-    </div>
-    <div class="optionItemWrapper">
-      <div class="optionTitle">START YEAR</div>
-      <br/>
-      <div class="optionDropDownWrapper gradient">
-        <md-select [(ngModel)]="selectedStartYear" name="startYear" (change)="onStartYearChange()">
-          <md-option *ngFor="let startYear of startYears" [value]="startYear">
-            {{startYear}}
-          </md-option>
-        </md-select>
-      </div>
-    </div>
-    <div class="optionItemWrapper">
-      <div class="optionTitle">END YEAR</div>
-      <br/>
-      <div class="optionDropDownWrapper gradient">
-        <md-select [(ngModel)]="selectedEndYear" name="endYear" (change)="onEndYearChange()">
-          <md-option *ngFor="let endYear of endYears" [value]="endYear">
-            {{endYear}}
-          </md-option>
-        </md-select>
-      </div>
-    </div>
-    <div class="optionItemWrapper">
-      <div class="optionTitle">CROP TYPE</div>
-      <br/>
-      <div class="optionDropDownWrapper gradient">
-        <md-select [(ngModel)]="selectedCrop" name="cropType" (change)="onCropTypeChange()">
-          <md-option *ngFor="let cropName of cropNames" [value]="cropName">
-            {{cropName}}
-          </md-option>
-        </md-select>
-      </div>
-    </div>
-  </div>
-  <div id="map" class="map"></div>
+<div class="section">
+  <div>Study Area</div>
+  <md-select [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
+    <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
+      {{studyArea.properties.name}}
+    </md-option>
+  </md-select>
 </div>
+<div class="section">
+  <div>Start Year</div>
+  <md-select [(ngModel)]="selectedStartYear" name="startYear" (change)="onStartYearChange()">
+    <md-option *ngFor="let startYear of startYears" [value]="startYear">
+      {{startYear}}
+    </md-option>
+  </md-select>
+</div>
+<div class="section">
+  <div>End Year</div>
+  <md-select [(ngModel)]="selectedEndYear" name="endYear" (change)="onEndYearChange()">
+    <md-option *ngFor="let endYear of endYears" [value]="endYear">
+      {{endYear}}
+    </md-option>
+  </md-select>
+</div>
+<div class="section">
+  <div>Crop Type</div>
+  <md-select [(ngModel)]="selectedCrop" name="cropType" (change)="onCropTypeChange()">
+    <md-option *ngFor="let cropName of cropNames" [value]="cropName">
+      {{cropName}}
+    </md-option>
+  </md-select>
+</div>
+
+
+
+
+
+
+
