@@ -1,0 +1,11 @@
+.leftContent {
+  width: 185px;
+  float: left;
+  background-color: #ffffff;
+}
+
+.rightContent {
+  margin-left:185px;
+  border-left: 1px solid #DFDFDF;
+  background-color: #E9EFF2;
+}

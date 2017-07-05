@@ -11,7 +11,6 @@ import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { DescriptionComponent } from './description/description.component';
 import { StudyAreaComponent } from './study-area/study-area.component';
 import { ImageCharacteristicSectionComponent } from './image-characteristic-section/image-characteristic-section.component';
 import { FieldCharacteristicSectionComponent } from './field-characteristic-section/field-characteristic-section.component';
@@ -21,7 +20,6 @@ import { ClassifiedSeriesSectionComponent } from './classified-series-section/cl
   declarations: [
     AppComponent,
     HeaderComponent,
-    DescriptionComponent,
     StudyAreaComponent,
     ImageCharacteristicSectionComponent,
     FieldCharacteristicSectionComponent,
