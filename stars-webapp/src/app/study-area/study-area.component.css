@@ -1,6 +1,10 @@
 .leftSection {
   padding-left: 20px;
   padding-top: 10px;
-  font-size: 9pt;
+  font-size: 8pt;
   color: #848484;
+}
+
+.cropItem {
+  padding-top: 10px;
 }
