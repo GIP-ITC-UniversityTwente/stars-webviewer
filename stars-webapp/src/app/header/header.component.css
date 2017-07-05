@@ -1,18 +1,20 @@
 .header {
-  height: 46px;
-  background-color: #ffffff;
-  /*border-bottom: 2px solid #E6E6E6;*/
-}
-
-.logoSection {
-  height: 45px;
+  height: 36px;
   background-color: #B4D01C;
+  color: #ffffff;
 }
 
 .headerTitle {
-  color: #ffffff;
   padding-top: 10px;
-  padding-left: 170px;
-  font-size: 18px;
+  padding-left: 125px;
+  float: left;
+  font-size: 13px;
+  letter-spacing: 1px;
 }
 
+.loginButton {
+  padding-right: 20px;
+  float: right;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
