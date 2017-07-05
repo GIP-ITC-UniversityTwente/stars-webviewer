@@ -1,5 +1,5 @@
 <!-- section for showing global options -->
-<div class="section">
+<div class="leftSection">
   <div>Study Area</div>
   <md-select [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
     <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
@@ -7,7 +7,7 @@
     </md-option>
   </md-select>
 </div>
-<div class="section">
+<div class="leftSection">
   <div>Start Year</div>
   <md-select [(ngModel)]="selectedStartYear" name="startYear" (change)="onStartYearChange()">
     <md-option *ngFor="let startYear of startYears" [value]="startYear">
@@ -15,7 +15,7 @@
     </md-option>
   </md-select>
 </div>
-<div class="section">
+<div class="leftSection">
   <div>End Year</div>
   <md-select [(ngModel)]="selectedEndYear" name="endYear" (change)="onEndYearChange()">
     <md-option *ngFor="let endYear of endYears" [value]="endYear">
@@ -23,7 +23,7 @@
     </md-option>
   </md-select>
 </div>
-<div class="section">
+<div class="leftSection">
   <div>Crop Type</div>
   <md-select [(ngModel)]="selectedCrop" name="cropType" (change)="onCropTypeChange()">
     <md-option *ngFor="let cropName of cropNames" [value]="cropName">

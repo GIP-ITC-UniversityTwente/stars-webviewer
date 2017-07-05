@@ -1,8 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+/**
+ You can add global styles to this file, and also import other style files
+ */
 
 /**
   Angular Material Theme
-*/
+ */
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 /**
@@ -17,6 +19,18 @@ body {
 /**
   Used between different components
  */
+
+.contentSection {
+  padding: 10px;
+  background: #ffffff;
+}
+
+.shadow {
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
+}
+
 .chartSectionOuter {
   width: 100%;
   text-align: center;
