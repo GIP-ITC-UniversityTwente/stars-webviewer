@@ -5,6 +5,9 @@
   color: #848484;
 }
 
+.selectItem {
+  width: 155px;
+}
 .cropItem {
   padding-top: 10px;
 }
