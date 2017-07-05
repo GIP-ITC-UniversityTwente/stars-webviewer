@@ -64,8 +64,13 @@ body {
 }
 
 .mat-checkbox-indeterminate.mat-warn .mat-checkbox-background, .mat-checkbox-checked.mat-warn .mat-checkbox-background {
-
   background-color: #629440;
+}
+
+.mat-option {
+  white-space: nowrap;
+  font-size: 14px;
+  font-family: Verdana, "Helvetica Neue", sans-serif;
 }
 
 /**

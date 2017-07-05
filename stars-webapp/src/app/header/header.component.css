@@ -12,6 +12,13 @@
   letter-spacing: 1px;
 }
 
+.logo {
+  position: absolute;
+  top: 9px;
+  left: 20px;
+  width: 89px;
+}
+
 .loginButton {
   padding-right: 20px;
   float: right;
