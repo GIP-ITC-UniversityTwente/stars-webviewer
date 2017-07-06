@@ -1,12 +1,21 @@
 .leftContent {
-  width: 185px;
+  width: 210px;
   float: left;
   background-color: #ffffff;
+  font-size: 8pt;
 }
 
 .rightContent {
   padding:10px;
-  margin-left:185px;
-  border-left: 1px solid #DFDFDF;
+  margin-left:210px;
   background-color: #E9EFF2;
 }
+
+.card {
+  padding: 0;
+}
+
+.cardContent {
+  box-sizing: content-box !important;
+}
+

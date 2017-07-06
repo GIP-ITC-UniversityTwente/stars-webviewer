@@ -1,5 +1,5 @@
 <!-- section for showing global options -->
-<div class="leftSection" style="padding-top:65px;">
+<div class="leftSection" style="padding-top:75px;">
   <div>Study Area</div>
   <md-select class="selectItem" [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
     <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
@@ -7,7 +7,7 @@
     </md-option>
   </md-select>
 </div>
-<div class="leftSection" style="padding-top:50px;">
+<div class="leftSection" style="padding-top:55px;">
   <div>Start Year</div>
   <md-select class="selectItem" [(ngModel)]="selectedStartYear" name="startYear" (change)="onStartYearChange()">
     <md-option *ngFor="let startYear of startYears" [value]="startYear">
@@ -15,7 +15,7 @@
     </md-option>
   </md-select>
 </div>
-<div class="leftSection" style="padding-top:22px;">
+<div class="leftSection" style="padding-top:65px;">
   <div>End Year</div>
   <md-select class="selectItem" [(ngModel)]="selectedEndYear" name="endYear" (change)="onEndYearChange()">
     <md-option *ngFor="let endYear of endYears" [value]="endYear">
@@ -23,7 +23,7 @@
     </md-option>
   </md-select>
 </div>
-<div class="leftSection" style="padding-top:50px;">
+<div class="leftSection" style="padding-top:52px;">
   <div>Crop Type</div>
   <div class="cropItem" *ngFor="let crop of crops">
     <md-checkbox color="warn" [(ngModel)]="crop.isChecked">{{crop.name}}</md-checkbox>
