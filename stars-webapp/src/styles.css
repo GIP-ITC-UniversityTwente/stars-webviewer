@@ -35,9 +35,12 @@ body {
 
 .chartWrapper {
   float: left;
-  border-right: 1px solid #DFDFDF;
   background-color: #ffffff;
-  width:48%;
+  width:49.5%;
+}
+
+.multiChartDivider {
+  border-right: 1px solid #DFDFDF;
 }
 
 .chartHeader {
