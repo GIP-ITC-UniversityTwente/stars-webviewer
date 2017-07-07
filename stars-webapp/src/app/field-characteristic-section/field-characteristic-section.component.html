@@ -1,6 +1,14 @@
 <div class="cardHeader">
   <div class="cardHeaderTitle">FIELD MEASUREMENT</div>
   <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" (click)="handleInfoButtonTap()"/>
+    <div class="parameterOption" style="padding-top: 9px;float:right;">
+      <div class="parameterOptionTitle">Field Characteristic</div><br/>
+      <md-select [(ngModel)]="selectedFieldCharacteristic" (change)="onChart1ImageTypeChange()">
+        <md-option *ngFor="let fieldCharacteristic of fieldCharacteristics" [value]="fieldCharacteristic">
+          {{fieldCharacteristic}}
+        </md-option>
+      </md-select>
+    </div>
 </div>
 <div class="chartWrapper">
   <div id="histogram"></div>

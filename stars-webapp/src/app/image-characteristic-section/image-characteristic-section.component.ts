@@ -28,7 +28,8 @@ export class ImageCharacteristicSectionComponent implements OnInit {
   selectedTexturalCharacteristicId: number = null;
   texturalCharacteristics: any[] = [];
 
-  selectedSensor: string = null;
+  selectedChart1Sensor: string = null;
+  selectedChart2Sensor: string = null;
   sensors: any[] = [];
 
   /**

@@ -50,8 +50,6 @@ body {
 }
 
 .chartHeader {
-  font-size: 9pt;
-  color: #878484;
   height: 60px;
   padding-left: 20px;
   padding-top: 15px;
@@ -61,6 +59,9 @@ body {
 .parameterOption {
   float: left;
   margin-right: 20px;
+  font-size: 9pt;
+  color: #878484;
+  font-weight: 400;
 }
 
 .parameterOptionTitle {

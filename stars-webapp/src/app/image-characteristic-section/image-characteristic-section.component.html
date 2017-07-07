@@ -23,7 +23,7 @@
     </div>
     <div class="parameterOption">
       <div class="parameterOptionTitle">Image Source</div><br/>
-      <md-select [(ngModel)]="selectedSensor" name="imageSources" (change)="onSensorChange()">
+      <md-select [(ngModel)]="selectedChart1Sensor" name="imageSources" (change)="onSensorChange()">
         <md-option *ngFor="let sensor of sensors" [value]="sensor">
           {{sensor}}
         </md-option>
@@ -53,7 +53,7 @@
     </div>
     <div class="parameterOption">
       <div class="parameterOptionTitle">Image Source</div><br/>
-      <md-select [(ngModel)]="selectedSensor" name="imageSources" (change)="onSensorChange()">
+      <md-select [(ngModel)]="selectedChart2Sensor" name="imageSources" (change)="onSensorChange()">
         <md-option *ngFor="let sensor of sensors" [value]="sensor">
           {{sensor}}
         </md-option>

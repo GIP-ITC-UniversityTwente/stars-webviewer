@@ -9,6 +9,15 @@ declare let Plotly: any;
 })
 export class FieldCharacteristicSectionComponent implements OnInit {
 
+  /**
+   * Properties
+   */
+  selectedFieldCharacteristic: string = null;
+  fieldCharacteristics: string[] = ["Field Size"];
+
+  /**
+   * Component Life-cyle methods
+   */
   constructor() { }
 
   ngOnInit() {
