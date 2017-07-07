@@ -14,13 +14,15 @@ export class ImageCharacteristicSectionComponent implements OnInit {
    * Properties
    */
 
-  spectralOptionIsDisabled = false;
+  imageTypes: string[] = ["Spectral", "Textural"];
+  selectedChart1ImageType: string = null;
+  selectedChart2ImageType: string = null;
+
   allSpectralCharacteristicObjects: any[] = [];
   selectedSpectralCharacteristicName: string = null;
   selectedSpectralCharacteristicId: number = null;
   spectralCharacteristics: any[] = [];
 
-  texturalOptionIsDisabled = false;
   allTexturalCharacteristicObjects: any[] = [];
   selectedTexturalCharacteristicName: string = null;
   selectedTexturalCharacteristicId: number = null;
@@ -81,10 +83,24 @@ export class ImageCharacteristicSectionComponent implements OnInit {
   }
 
   /**
+   * Handles when user chooses an image type for Chart 1
+   */
+  onChart1ImageTypeChange() {
+
+    console.log("User chose image type: " + this.selectedChart1ImageType + " for chart 1");
+  }
+
+  /**
+   * Handles when user chooses an image type for Chart 2
+   */
+  onChart2ImageTypeChange() {
+    console.log("User chose image type: " + this.selectedChart2ImageType + " for chart 2");
+  }
+
+  /**
    * Handles when user chooses a spectral characteristic
    */
   onSpectralCharacteristicChange() {
-    this.texturalOptionIsDisabled = true;
     this.selectedSpectralCharacteristicId = this.fetchImageCharacteristicId(this.selectedSpectralCharacteristicName, this.allSpectralCharacteristicObjects);
     this.sensors = this.fetchSensorsForImageCharacteristic(this.selectedSpectralCharacteristicName, this.allSpectralCharacteristicObjects);
 
@@ -96,7 +112,6 @@ export class ImageCharacteristicSectionComponent implements OnInit {
    * Handles when a user chooses a textural characteristic
    */
   onTexturalCharacteristicChange() {
-    this.spectralOptionIsDisabled = true;
     this.sensors = this.fetchSensorsForImageCharacteristic(this.selectedTexturalCharacteristicName, this.allTexturalCharacteristicObjects);
   }
 
@@ -198,7 +213,7 @@ export class ImageCharacteristicSectionComponent implements OnInit {
 
     // layout for millet spectral test sample
     let milletSpectralLayout = {
-      title: "Spectral Time Series",
+      title: "SPECTRAL TIME SERIES",
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -207,7 +222,7 @@ export class ImageCharacteristicSectionComponent implements OnInit {
         showticklabels: true
       },
       yaxis: {
-        title: 'NDVI',
+        title: 'NDVI average',
         showline: false,
         ticks: "outside",
         showticklabels: true
@@ -236,14 +251,14 @@ export class ImageCharacteristicSectionComponent implements OnInit {
 
     // layout for millet textural test sample
     let milletTexturalLayout = {
-      title: "Textural Time Series",
+      title: "TEXTURAL TIME SERIES",
       xaxis: {
         title: 'Time',
         showgrid: true,
         zeroline: true
       },
       yaxis: {
-        title: 'Homogeneity',
+        title: 'Homogeneity at distance D',
         showline: false
       }
     };

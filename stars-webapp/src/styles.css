@@ -18,7 +18,7 @@ body {
   color: #000000;
   padding-left: 25px;
   border-bottom: 1px solid #DFDFDF;
-  font-size: 11pt;
+  font-size: 12pt;
 }
 
 .cardHeaderTitle {
@@ -28,8 +28,8 @@ body {
 
 .cardInfoButton {
   position: relative;
-  top: 20px;
-  left: 2px;
+  top: 21px;
+  left: 3px;
   cursor: pointer;
 }
 
@@ -50,10 +50,12 @@ body {
 }
 
 .chartHeader {
-  font-size: 8pt;
-  height: 55px;
+  font-size: 9pt;
+  color: #878484;
+  height: 60px;
   padding-left: 20px;
-  padding-top: 10px;
+  padding-top: 15px;
+  border-bottom: 1px solid #dfdfdf;
 }
 
 .parameterOption {

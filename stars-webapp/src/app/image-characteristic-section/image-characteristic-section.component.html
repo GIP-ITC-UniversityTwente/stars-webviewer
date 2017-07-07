@@ -6,18 +6,18 @@
 <div class="chartWrapper multiChartDivider">
   <div class="chartHeader">
     <div class="parameterOption">
-      <div class="parameterOptionTitle">Spectral</div><br/>
-      <md-select [disabled]="spectralOptionIsDisabled" [(ngModel)]="selectedSpectralCharacteristicName" name="spectralCharacteristic" (change)="onSpectralCharacteristicChange()">
-        <md-option *ngFor="let spectralCharacteristic of spectralCharacteristics" [value]="spectralCharacteristic">
-          {{spectralCharacteristic}}
+      <div class="parameterOptionTitle">Image Type</div><br/>
+      <md-select [(ngModel)]="selectedChart1ImageType" (change)="onChart1ImageTypeChange()">
+        <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
+          {{imageType}}
         </md-option>
       </md-select>
     </div>
     <div class="parameterOption">
-      <div class="parameterOptionTitle">Textural</div><br/>
-      <md-select [disabled]="texturalOptionIsDisabled" [(ngModel)]="selectedTexturalCharacteristicName" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
-        <md-option *ngFor="let texturalCharacteristic of texturalCharacteristics" [value]="texturalCharacteristic">
-          {{texturalCharacteristic}}
+      <div class="parameterOptionTitle">Spectral</div><br/>
+      <md-select [(ngModel)]="selectedSpectralCharacteristicName" name="spectralCharacteristic" (change)="onSpectralCharacteristicChange()">
+        <md-option *ngFor="let spectralCharacteristic of spectralCharacteristics" [value]="spectralCharacteristic">
+          {{spectralCharacteristic}}
         </md-option>
       </md-select>
     </div>
@@ -36,16 +36,16 @@
 <div class="chartWrapper">
   <div class="chartHeader">
     <div class="parameterOption">
-      <div class="parameterOptionTitle">Spectral</div><br/>
-      <md-select [disabled]="spectralOptionIsDisabled" [(ngModel)]="selectedSpectralCharacteristicName" name="spectralCharacteristic" (change)="onSpectralCharacteristicChange()">
-        <md-option *ngFor="let spectralCharacteristic of spectralCharacteristics" [value]="spectralCharacteristic">
-          {{spectralCharacteristic}}
+      <div class="parameterOptionTitle">Image Type</div><br/>
+      <md-select [(ngModel)]="selectedChart2ImageType" (change)="onChart2ImageTypeChange()">
+        <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
+          {{imageType}}
         </md-option>
       </md-select>
     </div>
     <div class="parameterOption">
       <div class="parameterOptionTitle">Textural</div><br/>
-      <md-select [disabled]="texturalOptionIsDisabled" [(ngModel)]="selectedTexturalCharacteristicName" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
+      <md-select [(ngModel)]="selectedTexturalCharacteristicName" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
         <md-option *ngFor="let texturalCharacteristic of texturalCharacteristics" [value]="texturalCharacteristic">
           {{texturalCharacteristic}}
         </md-option>
