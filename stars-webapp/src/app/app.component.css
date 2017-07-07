@@ -7,13 +7,14 @@
 }
 
 .rightContent {
+  margin-top: 35px;
   padding:20px;
   margin-left:210px;
   background-color: #eeeeee;
 }
 
 .card {
-  padding:0px;
+  padding:0;
 }
 
 .cardContent {

@@ -1,7 +1,11 @@
 .header {
+  position: fixed;
+  top: 0px;
+  width: 100%;
   height: 36px;
   background-color: #B4D01C;
   color: #ffffff;
+  z-index:1;
 }
 
 .headerTitle {
