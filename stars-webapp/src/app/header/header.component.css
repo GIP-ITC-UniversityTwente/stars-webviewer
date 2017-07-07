@@ -6,15 +6,15 @@
 
 .headerTitle {
   padding-top: 7px;
-  padding-left: 125px;
+  padding-left: 145px;
   float: left;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .logo {
   position: absolute;
   top: 9px;
-  left: 20px;
+  left: 45px;
   width: 89px;
 }
 
