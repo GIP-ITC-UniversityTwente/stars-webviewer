@@ -12,20 +12,21 @@ body {
   Used between different components
  */
 
-/*
-.contentSection {
-  background: #ffffff;
-}
-*/
-
 .cardHeader {
-  height: 35px;
+  height: 42px;
   font-weight: 500;
   color: #000000;
-  padding-top: 20px;
+  padding-top: 18px;
   padding-left: 25px;
   border-bottom: 1px solid #DFDFDF;
   font-size: 11pt;
+}
+
+.cardInfoButton {
+  position: relative;
+  top: 1px;
+  left: 2px;
+  cursor: pointer;
 }
 
 .shadow {

@@ -152,4 +152,11 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
     let milletTexturalData = [texturalLarge, texturalMedium, texturalSmall];
     Plotly.newPlot('texturalVsSizeChart', milletTexturalData, milletTexturalLayout);
   }
+
+  /**
+   * For handling when a user taps the info button for the classified section
+   */
+  handleInfoButtonTap() {
+    console.log('show info for classified section...')
+  }
 }

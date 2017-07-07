@@ -251,4 +251,11 @@ export class ImageCharacteristicSectionComponent implements OnInit {
     let milletTexturalData = [milletTexturalLine];
     Plotly.newPlot('texturalChart', milletTexturalData, milletTexturalLayout);
   }
+
+  /**
+   * Handles when user taps on info icon for Image Characteristics
+   */
+  handleInfoButtonTap() {
+    console.log('show info for image characteristics...');
+  }
 }

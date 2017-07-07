@@ -85,4 +85,11 @@ export class FieldCharacteristicSectionComponent implements OnInit {
 
     Plotly.newPlot('histogram', data, layout);
   }
+
+  /**
+   * For handling when a user taps the info button for field characteristics
+   */
+  handleInfoButtonTap() {
+    console.log('show info for field characteristics')
+  }
 }
