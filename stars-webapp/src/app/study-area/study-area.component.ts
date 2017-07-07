@@ -211,4 +211,18 @@ export class StudyAreaComponent implements OnInit {
       console.log(error);
     })
   }
+
+  /**
+   * Handles when a user taps on the study area info
+   */
+  handleInfoTapForStudyArea() {
+    console.log("show study area info");
+  }
+
+  /**
+   * Handles when a user taps on the crop type
+   */
+  handleInfoTapForCropType() {
+    console.log("show crop type info");
+  }
 }

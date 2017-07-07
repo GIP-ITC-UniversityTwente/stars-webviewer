@@ -1,13 +1,16 @@
 <!-- section for showing global options -->
-<div class="leftSection" style="position:fixed;top:100px;">
-  <div>Study Area</div>
+<div class="parameterSection" style="position:fixed;top:99px;">
+  <div class="parameterTitle">Study Area</div>
+  <div class="parameterInfo" (click)="handleInfoTapForStudyArea()">
+    <img src="../../assets/icon_info.svg" alt="info"/>
+  </div>
   <md-select class="selectItem" [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
     <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
       {{studyArea.properties.name}}
     </md-option>
   </md-select>
 </div>
-<div class="leftSection" style="position:fixed;top:205px;">
+<div class="parameterSection" style="position:fixed;top:206px;">
   <div>Start Year</div>
   <md-select class="selectItem" [(ngModel)]="selectedStartYear" name="startYear" (change)="onStartYearChange()">
     <md-option *ngFor="let startYear of startYears" [value]="startYear">
@@ -15,7 +18,7 @@
     </md-option>
   </md-select>
 </div>
-<div class="leftSection" style="position:fixed;top:318px;">
+<div class="parameterSection" style="position:fixed;top:320px;">
   <div>End Year</div>
   <md-select class="selectItem" [(ngModel)]="selectedEndYear" name="endYear" (change)="onEndYearChange()">
     <md-option *ngFor="let endYear of endYears" [value]="endYear">
@@ -23,8 +26,12 @@
     </md-option>
   </md-select>
 </div>
-<div class="leftSection" style="position:fixed;top:420px;">
-  <div>Crop Type</div>
+<div class="parameterSection" style="position:fixed;top:429px;">
+  <div class="parameterTitle">Crop Type</div>
+  <div class="parameterInfo" (click)="handleInfoTapForCropType()" style="float:left;">
+    <img src="../../assets/icon_info.svg" alt="info"/>
+  </div>
+  <br/>
   <div class="cropItem" *ngFor="let crop of crops">
     <md-checkbox color="warn" [(ngModel)]="crop.isChecked">{{crop.name}}</md-checkbox>
     <br/>

@@ -1,13 +1,25 @@
-.leftSection {
+.parameterSection {
   padding-left: 28px;
   padding-top: 10px;
-  font-size: 8pt;
+  font-size: 11pt;
   color: #848484;
+}
+
+.parameterTitle {
+  float: left;
+}
+
+.parameterInfo {
+  position: relative;
+  top: 1px;
+  left: 2px;
+  cursor: pointer;
 }
 
 .selectItem {
   width: 165px;
 }
+
 .cropItem {
   padding-top: 16px;
 }

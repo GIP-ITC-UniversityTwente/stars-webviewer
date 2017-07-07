@@ -62,7 +62,11 @@ body {
   Overrides Material
  */
 .mat-select-value-text {
-  font-size: 9pt;
+  font-size: 10pt;
+}
+
+.mat-select-value {
+  color: #629440;
 }
 
 .mat-checkbox-indeterminate.mat-warn .mat-checkbox-background, .mat-checkbox-checked.mat-warn .mat-checkbox-background {
