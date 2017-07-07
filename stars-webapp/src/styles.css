@@ -12,11 +12,13 @@ body {
   Used between different components
  */
 
+/*
 .contentSection {
   background: #ffffff;
 }
+*/
 
-.contentSectionHeader {
+.cardHeader {
   height: 35px;
   font-weight: 500;
   color: #000000;
