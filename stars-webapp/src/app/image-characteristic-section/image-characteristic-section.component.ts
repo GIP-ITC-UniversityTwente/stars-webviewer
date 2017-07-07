@@ -258,4 +258,11 @@ export class ImageCharacteristicSectionComponent implements OnInit {
   handleInfoButtonTap() {
     console.log('show info for image characteristics...');
   }
+
+  /**
+   * Handles when user taps on the 'add a chart' button
+   */
+  handleAddChartButtonTap() {
+    console.log('add a chart ...');
+  }
 }

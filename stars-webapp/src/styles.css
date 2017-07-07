@@ -13,18 +13,22 @@ body {
  */
 
 .cardHeader {
-  height: 42px;
+  height: 60px;
   font-weight: 500;
   color: #000000;
-  padding-top: 18px;
   padding-left: 25px;
   border-bottom: 1px solid #DFDFDF;
   font-size: 11pt;
 }
 
+.cardHeaderTitle {
+  padding-top:22px;
+  float:left;
+}
+
 .cardInfoButton {
   position: relative;
-  top: 1px;
+  top: 20px;
   left: 2px;
   cursor: pointer;
 }
