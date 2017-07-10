@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppConfiguration } from '../app-configuration';
+import { Subscription } from 'rxjs/Subscription';
+import { UserSelectionService } from '../services/user-selection.service';
 
 declare let ol: any;
 
@@ -8,7 +10,7 @@ declare let ol: any;
   templateUrl: './map-component.component.html',
   styleUrls: ['./map-component.component.css']
 })
-export class MapComponentComponent implements OnInit {
+export class MapComponentComponent implements OnInit, OnDestroy {
 
   /**
    Properties
@@ -16,11 +18,26 @@ export class MapComponentComponent implements OnInit {
 
   // the Leaflet map
   map: any;
+  subscriptionToSelectedStudyArea: Subscription;
+  selectedStudyArea: any;
 
   /**
    * Component Life-cycle Methods
    */
-  constructor() { }
+  constructor(private userSelectionService: UserSelectionService) {
+
+    // subscribe to changes to UserSelectionService.studyArea
+    this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
+      studyArea => {
+
+        console.log("hello...");
+
+        this.selectedStudyArea = studyArea;
+
+        console.log("THE MAP COMPONENT KNOWS THAT THE STUDY AREA IS: " + this.selectedStudyArea);
+      }
+    );
+  }
 
   ngOnInit() {
 
@@ -28,6 +45,10 @@ export class MapComponentComponent implements OnInit {
     this.addTopoMapLayer();
     this.addAerialMapLayer();
     this.initializeLayerVisibility(this.map);
+  }
+
+  ngOnDestroy() {
+    this.subscriptionToSelectedStudyArea.unsubscribe();
   }
 
   /**

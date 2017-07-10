@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
+import { UserSelectionService } from '../services/user-selection.service';
 
 @Component({
   selector: 'app-study-area',
@@ -32,7 +33,7 @@ export class StudyAreaComponent implements OnInit {
   /**
    * Component Life-cycle Methods
    */
-  constructor(private starsAPIService: StarsAPIService) {
+  constructor(private starsAPIService: StarsAPIService, private userSelectionService: UserSelectionService) {
 
     // fetch study areas from the API
     starsAPIService.fetchStudyAreas().then((response) => {
@@ -90,36 +91,26 @@ export class StudyAreaComponent implements OnInit {
    */
   onStudyAreaChange() {
 
+    //
+    console.log('onStudyAreaChange');
+
     // get selected study area name
     let targetStudyAreaName = this.selectedStudyAreaName;
+    //
+    console.log(targetStudyAreaName);
+    //
+    console.log(this.studyAreas);
 
-    // get study area Id
-    this.selectedStudyAreaId = this.fetchStudyAreaId(targetStudyAreaName);
+    for(let studyArea of this.studyAreas) {
+      if(studyArea.properties.name == targetStudyAreaName) {
 
-    /*
-    // get study area geoJSON
-    let geoJSONObject = this.createStudyAreaGeoJSON(targetStudyAreaName);
-
-    // add the study area as a map layer
-    this.addStudyAreaMapLayer(geoJSONObject);
-    */
-  }
-
-  /**
-   * Utility for fetching the study area Id for the input study area name
-   * @param targetStudyAreaName
-   */
-  fetchStudyAreaId(targetStudyAreaName: string) {
-    let result: number = null;
-    this.studyAreas.forEach(function(item){
-      if(item.properties.name == targetStudyAreaName) {
-        result = item.properties.id;
+        //
+        console.log(this.studyAreas);
+        this.userSelectionService.updateStudyArea(studyArea);
+        console.log("updated the study area in study-area-component");
       }
-    });
-    return result;
+    }
   }
-
-
 
   /**
    * Handle when a user selects a start year option

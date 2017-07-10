@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { StarsAPIService } from './services/stars-api.service';
+import { UserSelectionService } from './services/user-selection.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers: [
-    StarsAPIService
+    StarsAPIService, UserSelectionService
   ]
 })
 export class AppComponent {
@@ -15,7 +16,7 @@ export class AppComponent {
    * Component Life-cycle methods
    * @param starsAPIService - injects the STARS API service.
    */
-  constructor(private starsAPIService: StarsAPIService) {
+  constructor() {
 
     // TODO: fetch the default data for first load ...
   }
