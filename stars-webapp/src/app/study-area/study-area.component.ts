@@ -27,7 +27,7 @@ export class StudyAreaComponent implements OnInit {
   endYears: number[] = [];
 
   // represents the crop options a user can choose
-  selectedCrop: string;
+  selectedCrops: string[] = [];
   crops: any[] = [];
 
   /**
@@ -137,8 +137,10 @@ export class StudyAreaComponent implements OnInit {
       let results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
-          crops["isChecked"] = false;
-          crops.push(item);
+          if(item["name"] != null) {
+            item["isChecked"] = false;
+            crops.push(item);
+          }
         })
       }
     }).catch((error) => {
@@ -151,20 +153,29 @@ export class StudyAreaComponent implements OnInit {
    */
   onEndYearChange() {
 
+    // clear any previous
+    this.crops = [];
+
     // user selections
     let studyAreaId = this.selectedStudyAreaId;
     let startYear = this.selectedStartYear;
     let endYear = this.selectedEndYear;
     let crops = this.crops;
 
+    // inform other components that the end year has been declared
+    this.userSelectionService.updateEndYear(endYear);
+
+    // get crop types
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, endYear).then((response) => {
       return response;
     }).then((data) => {
       let results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
-          crops["isChecked"] = false;
-          crops.push(item);
+          if(item["name"] != null) {
+            item["isChecked"] = false;
+            crops.push(item);
+          }
         });
       }
     }).catch((error) => {
@@ -177,21 +188,18 @@ export class StudyAreaComponent implements OnInit {
    */
   onCropTypeChange() {
 
-    // user selections
-    let studyAreaId = this.selectedStudyAreaId;
-    let startYear = this.selectedStartYear;
-    let endYear = this.selectedEndYear;
-    let crop = this.selectedCrop;
+    // clear previous
+    this.selectedCrops = [];
 
-    console.log('study area: ' + studyAreaId + ' startYear: ' + startYear + ' endYear: ' + endYear + ' crop: ' + crop);
+    // get the crops that are checked
+    for(let crop of this.crops) {
+      if(crop["isChecked"] == true) {
+        this.selectedCrops.push(crop["name"]);
+      }
+    }
 
-    this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
-      return response;
-    }).then((data) => {
-      console.log(data);
-    }).catch((error) => {
-      console.log(error);
-    })
+    // inform other components that the crop types are declared
+    this.userSelectionService.updateCropTypes(this.selectedCrops);
   }
 
   /**

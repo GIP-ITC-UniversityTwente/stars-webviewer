@@ -22,13 +22,17 @@ export class MapComponentComponent implements OnInit, OnDestroy {
   selectedStudyArea: JSON;
   subscriptionToSelectedStartYear: Subscription;
   startYear: number;
+  subscriptionToSelectedEndYear: Subscription;
+  endYear: number;
+  subscriptionToSelectedCropTypes: Subscription;
+  cropTypes: string[];
 
   /**
    * Component Life-cycle Methods
    */
   constructor(private userSelectionService: UserSelectionService) {
 
-    // subscribe to changes to UserSelectionService.studyArea
+    // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
         this.selectedStudyArea = studyArea;
@@ -40,13 +44,30 @@ export class MapComponentComponent implements OnInit, OnDestroy {
       }
     );
 
-    // subscribe to changes to UserSelectionService.startYear
+    // subscribe to the start year selection by the user
     this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
       startYear => {
         this.startYear = startYear;
         console.log("THE MAP COMPONENT KNOWS THAT THE START YEAR IS: " + this.startYear);
       }
     );
+
+    // subscribe to the end year selection by the user
+    this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
+      endYear => {
+        this.endYear = endYear;
+        console.log("THE MAP COMPONENT KNOWS THAT THE END YEAR IS: " + this.endYear);
+      }
+    );
+
+    // subscribe to crop types selections by the user
+    this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
+      cropTypes => {
+        this.cropTypes = cropTypes;
+        console.log("THE MAP COMPONENT KNOWS THAT THE CROP TYPES ARE: " + this.cropTypes);
+      }
+    );
+
   }
 
   ngOnInit() {

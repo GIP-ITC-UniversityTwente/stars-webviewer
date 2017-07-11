@@ -33,7 +33,7 @@
   </div>
   <br/>
   <div class="cropItem" *ngFor="let crop of crops">
-    <md-checkbox color="warn" [(ngModel)]="crop.isChecked">{{crop.name}}</md-checkbox>
+    <md-checkbox color="warn" [(ngModel)]="crop.isChecked" (change)="onCropTypeChange()">{{crop.name}}</md-checkbox>
     <br/>
   </div>
 </div>
