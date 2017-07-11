@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppConfiguration } from '../app-configuration';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
+import { StarsAPIService } from "../services/stars-api.service";
 
 declare let ol: any;
 
@@ -30,16 +31,12 @@ export class MapComponentComponent implements OnInit, OnDestroy {
   /**
    * Component Life-cycle Methods
    */
-  constructor(private userSelectionService: UserSelectionService) {
+  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
 
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
         this.selectedStudyArea = studyArea;
-        console.log("THE MAP COMPONENT KNOWS THAT THE STUDY AREA IS: " + this.selectedStudyArea);
-        console.log("the study area");
-        console.log(this.selectedStudyArea);
-
         this.addStudyAreaAsMapLayer(this.selectedStudyArea);
       }
     );
@@ -65,6 +62,25 @@ export class MapComponentComponent implements OnInit, OnDestroy {
       cropTypes => {
         this.cropTypes = cropTypes;
         console.log("THE MAP COMPONENT KNOWS THAT THE CROP TYPES ARE: " + this.cropTypes);
+
+        // TODO ADD FARM FIELDS FOR YEAR(S) AND CROPS
+
+        /*
+        // fetch study areas from the API
+        starsAPIService.fetchStudyAreas().then((response) => {
+          return response;
+        }).then((data) => {
+
+          // use the study areas response as the data for the study area options and associated start/end year options
+          let results = data.results;
+          this.initializeStudyAreaOptions(results, this.studyAreas);
+          this.initializeStartYearOptions(results, this.startYears);
+          this.initializeEndYearOptions(results, this.endYears);
+
+        }).catch((error) => {
+          console.log(error);
+        });
+        */
       }
     );
 
