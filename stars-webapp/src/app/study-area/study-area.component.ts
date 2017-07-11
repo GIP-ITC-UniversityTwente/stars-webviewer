@@ -91,25 +91,30 @@ export class StudyAreaComponent implements OnInit {
    */
   onStudyAreaChange() {
 
-    //
-    console.log('onStudyAreaChange');
+    // get the study area id for a follow up call when needing to fetch crop types
+    this.selectedStudyAreaId = this.fetchStudyAreaId(this.selectedStudyAreaName);
 
     // get selected study area name
     let targetStudyAreaName = this.selectedStudyAreaName;
-    //
-    console.log(targetStudyAreaName);
-    //
-    console.log(this.studyAreas);
-
     for(let studyArea of this.studyAreas) {
       if(studyArea.properties.name == targetStudyAreaName) {
-
-        //
-        console.log(this.studyAreas);
         this.userSelectionService.updateStudyArea(studyArea);
-        console.log("updated the study area in study-area-component");
       }
     }
+  }
+
+  /**
+   * Utility for fetching the study area Id for the input study area name
+   * @param targetStudyAreaName
+   */
+  fetchStudyAreaId(targetStudyAreaName: string) {
+    let result: number = null;
+    this.studyAreas.forEach(function(item){
+      if(item.properties.name == targetStudyAreaName) {
+        result = item.properties.id;
+      }
+    });
+    return result;
   }
 
   /**
@@ -122,22 +127,8 @@ export class StudyAreaComponent implements OnInit {
     let startYear = this.selectedStartYear;
     let crops = this.crops;
 
-    // fetch farm fields
-    this.starsAPIService.fetchFarmFields(studyAreaId, startYear).then((response) => {
-      return response;
-    }).then((data) => {
-
-      // add farm fields geojson to map
-      if (data.results.length > 0) {
-        let farmFieldsFeatureArray = data.results;
-        /*
-        let farmFieldGeoJSON = this.createFarmFieldsGeoJson(farmFieldsFeatureArray);
-        this.addFarmFieldsMapLayer(farmFieldGeoJSON);
-        */
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
+    // inform other components that the start year has been declared
+    this.userSelectionService.updateStartYear(startYear);
 
     // fetch crops
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, null).then((response) => {

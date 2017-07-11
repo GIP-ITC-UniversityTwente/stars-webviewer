@@ -19,7 +19,9 @@ export class MapComponentComponent implements OnInit, OnDestroy {
   // the Leaflet map
   map: any;
   subscriptionToSelectedStudyArea: Subscription;
-  selectedStudyArea: any;
+  selectedStudyArea: JSON;
+  subscriptionToSelectedStartYear: Subscription;
+  startYear: number;
 
   /**
    * Component Life-cycle Methods
@@ -29,12 +31,20 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     // subscribe to changes to UserSelectionService.studyArea
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
-
-        console.log("hello...");
-
         this.selectedStudyArea = studyArea;
-
         console.log("THE MAP COMPONENT KNOWS THAT THE STUDY AREA IS: " + this.selectedStudyArea);
+        console.log("the study area");
+        console.log(this.selectedStudyArea);
+
+        this.addStudyAreaAsMapLayer(this.selectedStudyArea);
+      }
+    );
+
+    // subscribe to changes to UserSelectionService.startYear
+    this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
+      startYear => {
+        this.startYear = startYear;
+        console.log("THE MAP COMPONENT KNOWS THAT THE START YEAR IS: " + this.startYear);
       }
     );
   }
@@ -132,23 +142,17 @@ export class MapComponentComponent implements OnInit, OnDestroy {
 
   /**
    * Utility for creating the study area GeoJSON object for the input study area name
-   * @param targetStudyAreaName - the name of the study area we want the associated geojson for
+   * @param studyAreaJSON - the JSON representation of the Study Area
    * @returns {{}} - the geojson for the study area name
    */
-  createStudyAreaGeoJSON(targetStudyAreaName: string) {
+  createStudyAreaGeoJSON(studyAreaJSON: JSON) {
 
-    /*
+    // re-project STARS API coordinates from EPSG: 4326 to 3857
     let projectedCoordinates: any[] = [];
-    this.studyAreas.forEach(function(item){
-      if(item.properties.name == targetStudyAreaName) {
-
-        // re-project STARS API coordinates from EPSG: 4326 to 3857
-        let originalCoordinates = item.geometry.coordinates[0];
-        originalCoordinates.forEach(function(item){
-          let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
-          projectedCoordinates.push(projected);
-        });
-      }
+    let originalCoordinates = studyAreaJSON["geometry"]["coordinates"][0];
+    originalCoordinates.forEach(function(item){
+      let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
+      projectedCoordinates.push(projected);
     });
 
     // geojson object template
@@ -175,14 +179,15 @@ export class MapComponentComponent implements OnInit, OnDestroy {
         }
       ]
     };
-    */
   }
 
   /**
    * Utility for adding a study area's geojson as a map layer
-   * @param studyAreaGeoJSON
+   * @param studyAreaJSON
    */
-  addStudyAreaMapLayer(studyAreaGeoJSON: any) {
+  addStudyAreaAsMapLayer(studyAreaJSON: JSON) {
+
+    let studyAreaGeoJSON = this.createStudyAreaGeoJSON(studyAreaJSON);
 
     let geoJSON = new ol.format.GeoJSON({
       projection: 'EPSG:3857'
@@ -218,13 +223,13 @@ export class MapComponentComponent implements OnInit, OnDestroy {
    * Utility for creating the farmfields GeoJSON
    * @param farmFieldFeatures
    * */
-  createFarmFieldsGeoJson(farmFieldFeatures: any) {
+  createFarmFieldsGeoJson(farmFieldFeatures: JSON) {
 
     let geoJSONFeatures: any[] = [];
-    farmFieldFeatures.forEach(function(item){
 
+    for (let item in farmFieldFeatures) {
       // re-project STARS API coordinates from EPSG: 4326 to 3857
-      let originalCoordinates = item.geometry.coordinates[0];
+      let originalCoordinates = item["geometry"]["coordinates"][0];
       let projectedCoordinates: any[] = [];
       originalCoordinates.forEach(function(item){
         let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
@@ -241,15 +246,15 @@ export class MapComponentComponent implements OnInit, OnDestroy {
           ]
         },
         "properties": {
-          "study_area_oid": item.properties.oid,
-          "oid": item.properties.oid,
-          "croptype": item.properties.croptype,
-          "fieldwork": item.properties.fieldwork,
-          "year_start": item.properties.year_start
+          "study_area_oid": item["properties"].oid,
+          "oid": item["properties"].oid,
+          "croptype": item["properties"].croptype,
+          "fieldwork": item["properties"].fieldwork,
+          "year_start": item["properties"].year_start
         }
       };
       geoJSONFeatures.push(feature);
-    });
+    }
 
     // geojson object template
     let geoJSON =  {

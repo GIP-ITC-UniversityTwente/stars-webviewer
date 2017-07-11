@@ -14,7 +14,6 @@ export class AppComponent {
 
   /**
    * Component Life-cycle methods
-   * @param starsAPIService - injects the STARS API service.
    */
   constructor() {
 
