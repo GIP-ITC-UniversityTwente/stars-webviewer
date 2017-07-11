@@ -22,11 +22,11 @@ export class MapComponentComponent implements OnInit, OnDestroy {
   subscriptionToSelectedStudyArea: Subscription;
   selectedStudyArea: JSON;
   subscriptionToSelectedStartYear: Subscription;
-  startYear: number;
+  startYear: number = null;
   subscriptionToSelectedEndYear: Subscription;
-  endYear: number;
+  endYear: number = null;
   subscriptionToSelectedCropTypes: Subscription;
-  cropTypes: string[];
+  cropTypes: string[] = [];
 
   /**
    * Component Life-cycle Methods
@@ -63,27 +63,16 @@ export class MapComponentComponent implements OnInit, OnDestroy {
         this.cropTypes = cropTypes;
         console.log("THE MAP COMPONENT KNOWS THAT THE CROP TYPES ARE: " + this.cropTypes);
 
-        // TODO ADD FARM FIELDS FOR YEAR(S) AND CROPS
-
-        /*
-        // fetch study areas from the API
-        starsAPIService.fetchStudyAreas().then((response) => {
+        // Add farmfields to map
+        starsAPIService.fetchFarmFields(this.selectedStudyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
-
-          // use the study areas response as the data for the study area options and associated start/end year options
-          let results = data.results;
-          this.initializeStudyAreaOptions(results, this.studyAreas);
-          this.initializeStartYearOptions(results, this.startYears);
-          this.initializeEndYearOptions(results, this.endYears);
-
-        }).catch((error) => {
-          console.log(error);
+          let results = data["results"];
+          let features = this.createFarmFieldsGeoJson(results);
+          this.addFarmFieldsMapLayer(features);
         });
-        */
       }
     );
-
   }
 
   ngOnInit() {
@@ -187,7 +176,7 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     // re-project STARS API coordinates from EPSG: 4326 to 3857
     let projectedCoordinates: any[] = [];
     let originalCoordinates = studyAreaJSON["geometry"]["coordinates"][0];
-    originalCoordinates.forEach(function(item){
+    originalCoordinates.forEach(function(item) {
       let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
       projectedCoordinates.push(projected);
     });
@@ -258,17 +247,16 @@ export class MapComponentComponent implements OnInit, OnDestroy {
 
   /**
    * Utility for creating the farmfields GeoJSON
-   * @param farmFieldFeatures
-   * */
-  createFarmFieldsGeoJson(farmFieldFeatures: JSON) {
+   */
+  createFarmFieldsGeoJson(farmFieldFeatures) {
 
     let geoJSONFeatures: any[] = [];
+    for (let item of farmFieldFeatures) {
 
-    for (let item in farmFieldFeatures) {
       // re-project STARS API coordinates from EPSG: 4326 to 3857
-      let originalCoordinates = item["geometry"]["coordinates"][0];
       let projectedCoordinates: any[] = [];
-      originalCoordinates.forEach(function(item){
+      let originalCoordinates = item["geometry"]["coordinates"][0];
+      originalCoordinates.forEach(function(item) {
         let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
         projectedCoordinates.push(projected);
       });
@@ -304,8 +292,6 @@ export class MapComponentComponent implements OnInit, OnDestroy {
       },
       "features": geoJSONFeatures
     };
-
-    console.log(geoJSON);
 
     return geoJSON;
   }
