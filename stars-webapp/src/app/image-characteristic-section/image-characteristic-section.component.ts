@@ -25,8 +25,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   subscriptionToSelectedCropTypes: Subscription;
   cropTypes: string[] = [];
 
-  imageTypes: string[] = ["Spectral", "Textural"];
-
+  imageTypes: string[] = [];
   allSpectralCharacteristicObjects: any[] = [];
   allTexturalCharacteristicObjects: any[] = [];
 
@@ -102,11 +101,15 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         this.cropTypes = cropTypes;
         //
         console.log('image characteristic section knows crop types are: ' + this.cropTypes);
+
+        this.imageTypes = ["Spectral", "Textural"];
       }
     );
   }
 
   ngOnInit() {
+
+    // fill out charts with test data
     this.createTestCharts();
   }
 
@@ -399,7 +402,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
 
     // spectral chart for millet
     let milletSpectralData = [milletSpectralLineEnvelope, milletSpectralLine];
-    Plotly.newPlot('ndviChart', milletSpectralData, milletSpectralLayout);
+    Plotly.newPlot('chart1', milletSpectralData, milletSpectralLayout);
 
     //----------------------
     //  CHART 2 PLACEHOLDER
@@ -432,7 +435,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     };
 
     let milletTexturalData = [milletTexturalLine];
-    Plotly.newPlot('texturalChart', milletTexturalData, milletTexturalLayout);
+    Plotly.newPlot('chart2', milletTexturalData, milletTexturalLayout);
   }
 
   /**
@@ -446,6 +449,18 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * Handles when user taps on the 'add a chart' button
    */
   handleAddChartButtonTap() {
-    console.log('add a chart ...');
+
+    /*
+    if(this.chart2IsVisible) {
+      this.chart2IsVisible = false;
+      this.chart1Width = 100;
+      this.chart2Width = 0;
+    }
+    else {
+      this.chart2IsVisible = true;
+      this.chart1Width = 49.5;
+      this.chart2Width = 49.5;
+    }
+    */
   }
 }
