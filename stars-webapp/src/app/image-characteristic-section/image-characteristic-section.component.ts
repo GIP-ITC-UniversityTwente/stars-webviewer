@@ -23,7 +23,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   subscriptionToSelectedEndYear: Subscription;
   endYear: number = null;
   subscriptionToSelectedCropTypes: Subscription;
-  cropTypes: string[] = [];
+  cropTypes: string = null;
 
   imageTypes: string[] = [];
   allSpectralCharacteristicObjects: any[] = [];
@@ -98,7 +98,18 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     // subscribe to crop types selections by the user
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
-        this.cropTypes = cropTypes;
+
+        let cropList: string = "";
+        for(let i = 0, il = cropTypes.length; i < il; i++) {
+          if(i == cropTypes.length) {
+            cropList += cropTypes[i];
+          }
+          else {
+            cropList += cropTypes[i] + ",";
+          }
+        }
+        this.cropTypes = cropList;
+
         //
         console.log('image characteristic section knows crop types are: ' + this.cropTypes);
 
@@ -168,6 +179,85 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Utility for fetching a random color for drawing lines
+   * @returns {string}
+   */
+  fetchRandomColor() {
+    let colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0', '#7C89C0'];
+    let randomIndex = Math.floor(Math.random() * 6) + 1;
+    let randomColor = "'" + colors[randomIndex] + "'";
+    return randomColor;
+  }
+
+  /**
+   * Utility for rendering the image characteristics chart for the time series response
+   * @param results
+   */
+  renderTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
+
+    let chartData = [];
+    for(let item of results) {
+
+      let cropName = item.crop;
+      for(let crop of item.cseries) {
+
+        let dateCollection = [];
+        let avgValueCollection = [];
+        let maxValueCollection = [];
+        let minValueCollection = [];
+        for(let sensor of crop.sseries) {
+
+          dateCollection.push(sensor.acquisition_date);
+          avgValueCollection.push(sensor.avgvalue);
+          maxValueCollection.push(sensor.maxvalue);
+          minValueCollection.push(sensor.minvalue);
+        }
+        /*
+         console.log(dateCollection);
+         console.log(avgValueCollection);
+         console.log(maxValueCollection);
+         console.log(minValueCollection);
+         console.log(crop);
+         */
+
+        let lineDataObject = {
+          x: dateCollection,
+          y: avgValueCollection,
+          mode: 'lines',
+          name: cropName,
+          line: {
+            color: this.fetchRandomColor(),
+            width: 3
+          },
+          type: 'scatter'
+        };
+
+        chartData.push(lineDataObject);
+      }
+    }
+
+    // layout for millet spectral test sample
+    let layout = {
+      title: xAxisTitle + " Time Series",
+      xaxis: {
+        title: 'Time',
+        showgrid: true,
+        zeroline: true,
+        ticks: "outside",
+        showticklabels: true
+      },
+      yaxis: {
+        title: yAxisTitle,
+        showline: false,
+        ticks: "outside",
+        showticklabels: true
+      }
+    };
+
+    Plotly.newPlot(targetDivId, chartData, layout);
+  }
+
+  /**
    * Handles when user chooses an image type for Chart 1
    */
   onChart1ImageTypeChange() {
@@ -224,38 +314,21 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   onChart1SensorChange() {
 
     console.log("The following parameters will be sent to the time series endpoint: ");
-    console.log("study area: " + this.studyArea["properties"]["name"]);
+    console.log("study id: " + this.studyArea["properties"]["id"]);
     console.log("start year: " + this.startYear);
     console.log("end Year: " + this.endYear);
+    console.log("crop types: " + this.cropTypes);
     console.log("chart1 image characteristic name: " + this.chart1SelectedImageCharacteristicName);
     console.log("chart1 image characteristic id: " + this.chart1SelectedImageCharacteristicId);
     console.log("chart1 sensor: " + this.selectedChart1Sensor);
+    console.log(this.allSpectralCharacteristicObjects);
 
-    /*
-     let studyArea = 1000; // TODO - REMOVE HARD-CODED TEST
-     let startYear = 2014; // TODO - REMOVE HARD-CODED TEST
-     let endYear = 2014; // TODO - REMOVE HARD-CODED TEST
-     let cropNames = "Millet"; // TODO - REMOVE HARD-CODED TEST
-     let imageCharacteristicId = null;
-     if (this.selectedSpectralCharacteristicId != null) {
-     imageCharacteristicId = this.selectedSpectralCharacteristicId;
-     }
-     else {
-     imageCharacteristicId = this.selectedTexturalCharacteristicId;
-     }
-     let sensorList = "WorldView-2_MS"; // TODO - REMOVE HARD-CODED TEST
-     let firstParameter = null; // TODO - REMOVE HARD-CODED TEST
-     let secondParameter = null; // TODO - REMOVE HARD-CODED TEST
-
-     this.starsAPIService.fetchTimeSeries(studyArea, startYear, endYear, cropNames, imageCharacteristicId, sensorList, firstParameter, secondParameter).then((response) => {
-     return response;
-     }).then((data) => {
-     console.log('time series');
-     console.log(data);
-     }).catch((error) => {
-     console.log(error);
-     });
-     */
+    this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, null, null).then((response) => {
+      return response;
+    }).then((data) => {
+      let results = data.results;
+      this.renderTimeSeriesChart(results, this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, 'chart1');
+    });
   }
 
   /**
@@ -322,31 +395,27 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     console.log("chart2 image characteristic id: " + this.chart2SelectedImageCharacteristicId);
     console.log("chart2 sensor: " + this.selectedChart2Sensor);
 
-    /*
-     let studyArea = 1000; // TODO - REMOVE HARD-CODED TEST
-     let startYear = 2014; // TODO - REMOVE HARD-CODED TEST
-     let endYear = 2014; // TODO - REMOVE HARD-CODED TEST
-     let cropNames = "Millet"; // TODO - REMOVE HARD-CODED TEST
-     let imageCharacteristicId = null;
-     if (this.selectedSpectralCharacteristicId != null) {
-     imageCharacteristicId = this.selectedSpectralCharacteristicId;
-     }
-     else {
-     imageCharacteristicId = this.selectedTexturalCharacteristicId;
-     }
-     let sensorList = "WorldView-2_MS"; // TODO - REMOVE HARD-CODED TEST
-     let firstParameter = null; // TODO - REMOVE HARD-CODED TEST
-     let secondParameter = null; // TODO - REMOVE HARD-CODED TEST
+    this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, null, null).then((response) => {
+      return response;
+    }).then((data) => {
+      let results = data.results;
+      this.renderTimeSeriesChart(results, this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName, 'chart2');
+    });
+  }
 
-     this.starsAPIService.fetchTimeSeries(studyArea, startYear, endYear, cropNames, imageCharacteristicId, sensorList, firstParameter, secondParameter).then((response) => {
-     return response;
-     }).then((data) => {
-     console.log('time series');
-     console.log(data);
-     }).catch((error) => {
-     console.log(error);
-     });
-     */
+  /**
+   * Handles when user taps on info icon for Image Characteristics
+   */
+  handleInfoButtonTap() {
+    console.log('show info for image characteristics...');
+  }
+
+  /**
+   * Handles when user taps on the 'add a chart' button
+   */
+  handleAddChartButtonTap() {
+
+    //TODO ADD SECOND CHART
   }
 
   /**
@@ -436,31 +505,5 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
 
     let milletTexturalData = [milletTexturalLine];
     Plotly.newPlot('chart2', milletTexturalData, milletTexturalLayout);
-  }
-
-  /**
-   * Handles when user taps on info icon for Image Characteristics
-   */
-  handleInfoButtonTap() {
-    console.log('show info for image characteristics...');
-  }
-
-  /**
-   * Handles when user taps on the 'add a chart' button
-   */
-  handleAddChartButtonTap() {
-
-    /*
-    if(this.chart2IsVisible) {
-      this.chart2IsVisible = false;
-      this.chart1Width = 100;
-      this.chart2Width = 0;
-    }
-    else {
-      this.chart2IsVisible = true;
-      this.chart1Width = 49.5;
-      this.chart2Width = 49.5;
-    }
-    */
   }
 }
