@@ -26,40 +26,31 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   cropTypes: string[] = [];
 
   imageTypes: string[] = ["Spectral", "Textural"];
-  selectedChart1ImageType: string = null;
-  selectedChart2ImageType: string = null;
 
   allSpectralCharacteristicObjects: any[] = [];
-  selectedSpectralCharacteristicName: string = null;
-  selectedSpectralCharacteristicId: number = null;
-  spectralCharacteristics: any[] = [];
-
   allTexturalCharacteristicObjects: any[] = [];
-  selectedTexturalCharacteristicName: string = null;
-  selectedTexturalCharacteristicId: number = null;
-  texturalCharacteristics: any[] = [];
 
+  chart1SelectedImageType: string = null;
+  chart1ImageCharacteristics: any[] = [];
+  chart1SelectedImageCharacteristicName: string = null;
+  chart1SelectedImageCharacteristicId: number = null;
+  chart1Sensors: any[] = [];
   selectedChart1Sensor: string = null;
+
+  chart2SelectedImageType: string = null;
+  chart2SpectralCharacteristics: any[] = [];
+  chart2SelectedSpectralCharacteristicName: string = null;
+  chart2SelectedSpectralCharacteristicId: number = null;
+  chart2TexturalCharacteristics: any[] = [];
+  chart2SelectedTexturalCharacteristicName: string = null;
+  chart2SelectedTexturalCharacteristicId: number = null;
+  chart2Sensors: any[] = [];
   selectedChart2Sensor: string = null;
-  sensors: any[] = [];
 
   /**
    * Component Life-cycle methods
    */
   constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
-
-    /*
-    // fetch image characteristics
-    starsAPIService.fetchImageCharacteristics(1000, 2014).then((response) => {     // TODO - REMOVE HARD-CODED TEST
-      return response;
-    }).then((data) => {
-      let results = data.results;
-      this.initializeSpectralCharacteristics(results);
-      this.initializeTexturalCharacteristics(results);
-    }).catch((error) => {
-      console.log(error);
-    });
-    */
 
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
@@ -76,6 +67,16 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         this.startYear = startYear;
         //
         console.log('image characteristic section knows start year is: ' + this.startYear);
+
+        starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
+          return response;
+        }).then((data) => {
+          let results = data.results;
+          this.allSpectralCharacteristicObjects = results.spectralCharacteristics;
+          this.allTexturalCharacteristicObjects = results.texturalCharacteristics;
+        }).catch((error) => {
+          console.log(error);
+        });
       }
     );
 
@@ -85,6 +86,16 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         this.endYear = endYear;
         //
         console.log('image characteristic section knows end year is: ' + this.endYear);
+
+        starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear ,this.endYear).then((response) => {
+          return response;
+        }).then((data) => {
+          let results = data.results;
+          this.allSpectralCharacteristicObjects = results.spectralCharacteristics;
+          this.allTexturalCharacteristicObjects = results.texturalCharacteristics;
+        }).catch((error) => {
+          console.log(error);
+        });
       }
     );
 
@@ -109,34 +120,19 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedCropTypes.unsubscribe();
   }
 
-  /**
-   * Utility that creates a unique set of spectral characteristic names
-   * @param results
-   */
-  initializeSpectralCharacteristics(results: any) {
-
-    // fetch all unique spectral characteristic alias names
-    this.allSpectralCharacteristicObjects = results.spectralCharacteristics;
-    let uniqueSpectralCharacteristicNames = new Set();
-    this.allSpectralCharacteristicObjects.forEach(function(item) {
-      uniqueSpectralCharacteristicNames.add(item.alias);
-    });
-    this.spectralCharacteristics = Array.from(uniqueSpectralCharacteristicNames);
-  }
 
   /**
-   * Utility that creates a unique set of textural characteristic names
-   * @param results
+   * Utility for creating a unique set of image characteristic names
+   * @param imageCharacteristics
    */
-  initializeTexturalCharacteristics(results: any) {
+  createSetOfCharacteristicNames(imageCharacteristics: any[]) {
 
-    // fetch all unique textural characteristics alias names
-    this.allTexturalCharacteristicObjects = results.texturalCharacteristics;
-    let uniqueTexturalCharacteristicNames = new Set();
-    this.allTexturalCharacteristicObjects.forEach(function(item) {
-      uniqueTexturalCharacteristicNames.add(item.alias);
+    let uniqueCharacteristicNames = new Set();
+    imageCharacteristics.forEach(function(item) {
+      uniqueCharacteristicNames.add(item.alias);
     });
-    this.texturalCharacteristics = Array.from(uniqueTexturalCharacteristicNames);
+
+    return Array.from(uniqueCharacteristicNames);
   }
 
   /**
@@ -144,36 +140,116 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   onChart1ImageTypeChange() {
 
-    console.log("User chose image type: " + this.selectedChart1ImageType + " for chart 1");
+    // clear previous dependent selections for image characteristic and sensor
+    if(this.chart1SelectedImageCharacteristicName != null) {
+      this.chart1SelectedImageCharacteristicName = null;
+    }
+    if(this.selectedChart1Sensor != null) {
+      this.selectedChart1Sensor = null;
+    }
+
+    // add image characteristic drop down items
+    if(this.chart1SelectedImageType == "Spectral") {
+      this.chart1ImageCharacteristics = this.createSetOfCharacteristicNames(this.allSpectralCharacteristicObjects);
+    }
+    else {
+      this.chart1ImageCharacteristics = this.createSetOfCharacteristicNames(this.allTexturalCharacteristicObjects);
+    }
+  }
+
+  /**
+   * Handles when user chooses an image characteristic for Chart 1
+   */
+  onChart1ImageCharacteristicChange() {
+
+    // clear previous dependent selection for sensor
+    if(this.selectedChart1Sensor != null) {
+      this.selectedChart1Sensor = null;
+    }
+
+    // add sensor drop down items
+    if(this.chart1SelectedImageType == "Spectral") {
+
+      // load sensor drop down options
+      this.chart1Sensors = this.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+
+      // for fetching a time series after a sensor is chosen
+      this.chart1SelectedImageCharacteristicId  = this.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+    }
+    else {
+
+      // load sensor drop down options
+      this.chart1Sensors = this.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
+
+      // for fetching a time series after a sensor is chosen
+      this.chart1SelectedImageCharacteristicId  = this.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
+    }
+  }
+
+  /**
+   * Handles when a user chooses a sensor for Chart 1
+   */
+  onChart1SensorChange() {
+
+    console.log("The following parameters will be sent to the time series endpoint: ");
+    console.log("study area: " + this.studyArea["properties"]["name"]);
+    console.log("start year: " + this.startYear);
+    console.log("end Year: " + this.endYear);
+    console.log("chart1 image characteristic name: " + this.chart1SelectedImageCharacteristicName);
+    console.log("chart1 image characteristic id: " + this.chart1SelectedImageCharacteristicId);
+    console.log("chart 1 sensor: " + this.selectedChart1Sensor);
+
+    /*
+     let studyArea = 1000; // TODO - REMOVE HARD-CODED TEST
+     let startYear = 2014; // TODO - REMOVE HARD-CODED TEST
+     let endYear = 2014; // TODO - REMOVE HARD-CODED TEST
+     let cropNames = "Millet"; // TODO - REMOVE HARD-CODED TEST
+     let imageCharacteristicId = null;
+     if (this.selectedSpectralCharacteristicId != null) {
+     imageCharacteristicId = this.selectedSpectralCharacteristicId;
+     }
+     else {
+     imageCharacteristicId = this.selectedTexturalCharacteristicId;
+     }
+     let sensorList = "WorldView-2_MS"; // TODO - REMOVE HARD-CODED TEST
+     let firstParameter = null; // TODO - REMOVE HARD-CODED TEST
+     let secondParameter = null; // TODO - REMOVE HARD-CODED TEST
+
+     this.starsAPIService.fetchTimeSeries(studyArea, startYear, endYear, cropNames, imageCharacteristicId, sensorList, firstParameter, secondParameter).then((response) => {
+     return response;
+     }).then((data) => {
+     console.log('time series');
+     console.log(data);
+     }).catch((error) => {
+     console.log(error);
+     });
+     */
   }
 
   /**
    * Handles when user chooses an image type for Chart 2
    */
   onChart2ImageTypeChange() {
-    console.log("User chose image type: " + this.selectedChart2ImageType + " for chart 2");
-  }
-
-  /**
-   * Handles when user chooses a spectral characteristic
-   */
-  onSpectralCharacteristicChange() {
-    this.selectedSpectralCharacteristicId = this.fetchImageCharacteristicId(this.selectedSpectralCharacteristicName, this.allSpectralCharacteristicObjects);
-    this.sensors = this.fetchSensorsForImageCharacteristic(this.selectedSpectralCharacteristicName, this.allSpectralCharacteristicObjects);
-
-    //
-    console.log(this.allSpectralCharacteristicObjects);
+    console.log("User chose image type: " + this.chart2SelectedImageType + " for chart 2");
+    if(this.chart2SelectedImageType == "Spectral") {
+      // load spectral characteristics
+    }
+    else {
+      // load textural characteristics
+    }
   }
 
   /**
    * Handles when a user chooses a textural characteristic
    */
   onTexturalCharacteristicChange() {
+    /*
     this.sensors = this.fetchSensorsForImageCharacteristic(this.selectedTexturalCharacteristicName, this.allTexturalCharacteristicObjects);
+    */
   }
 
   /**
-   * Utility for fetching the spectral characteristic id associated with the input spectral characteristic
+   * Utility for fetching the image characteristic id associated with the input image characteristic name
    * @param imageCharacteristicName
    * @param allImageCharacteristics
    * @returns {number}
@@ -203,36 +279,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       }
     });
     return results;
-  }
-
-  /**
-   * Handles when a user chooses a sensor
-   */
-  onSensorChange() {
-
-    let studyArea = 1000; // TODO - REMOVE HARD-CODED TEST
-    let startYear = 2014; // TODO - REMOVE HARD-CODED TEST
-    let endYear = 2014; // TODO - REMOVE HARD-CODED TEST
-    let cropNames = "Millet"; // TODO - REMOVE HARD-CODED TEST
-    let imageCharacteristicId = null;
-    if (this.selectedSpectralCharacteristicId != null) {
-      imageCharacteristicId = this.selectedSpectralCharacteristicId;
-    }
-    else {
-      imageCharacteristicId = this.selectedTexturalCharacteristicId;
-    }
-    let sensorList = "WorldView-2_MS"; // TODO - REMOVE HARD-CODED TEST
-    let firstParameter = null; // TODO - REMOVE HARD-CODED TEST
-    let secondParameter = null; // TODO - REMOVE HARD-CODED TEST
-
-    this.starsAPIService.fetchTimeSeries(studyArea, startYear, endYear, cropNames, imageCharacteristicId, sensorList, firstParameter, secondParameter).then((response) => {
-      return response;
-    }).then((data) => {
-      console.log('time series');
-      console.log(data);
-    }).catch((error) => {
-      console.log(error);
-    });
   }
 
   /**

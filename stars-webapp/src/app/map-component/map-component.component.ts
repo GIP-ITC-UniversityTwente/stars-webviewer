@@ -347,13 +347,11 @@ export class MapComponentComponent implements OnInit, OnDestroy {
       this.map.removeLayer(farmFieldsLayer);
     }
 
-    // because the API returns ALL farmfields, filter for the crops chosen by the user
+    // because the API returns ALL farm fields, filter for the crops chosen by the user
     let cropTypes = this.cropTypes;
     let targetCropFeatures = [];
     farmFieldFeatures.forEach(function(item){
       if(cropTypes.includes(item["properties"]["croptype"])) {
-        //
-        console.log('added ...' + item["properties"]["croptype"]);
         targetCropFeatures.push(item);
       }
     });
@@ -364,9 +362,11 @@ export class MapComponentComponent implements OnInit, OnDestroy {
       let geoJSON = new ol.format.GeoJSON({
         projection: 'EPSG:3857'
       });
+
       let vectorSource = new ol.source.Vector({
         features: (geoJSON).readFeatures(farmFieldsGeoJSON)
       });
+
       let polygonStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({
           color: 'rgba(102, 153, 67, 1.0)',
@@ -377,10 +377,12 @@ export class MapComponentComponent implements OnInit, OnDestroy {
           color: 'rgba(102, 153, 67, 0.1)'
         })
       });
+
       let vectorLayer = new ol.layer.Vector({
         source: vectorSource,
         style: polygonStyle
       });
+
       mapLayersCollection.insertAt(3, vectorLayer);
       this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
     }
