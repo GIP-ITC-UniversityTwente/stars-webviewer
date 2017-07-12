@@ -16,14 +16,14 @@
     <div class="parameterOption">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
       <md-select [(ngModel)]="chart1SelectedImageCharacteristicName" (change)="onChart1ImageCharacteristicChange()">
-        <md-option *ngFor="let chart1Characteristic of chart1ImageCharacteristics" [value]="chart1Characteristic">
-          {{chart1Characteristic}}
+        <md-option *ngFor="let chart1ImageCharacteristic of chart1ImageCharacteristics" [value]="chart1ImageCharacteristic">
+          {{chart1ImageCharacteristic}}
         </md-option>
       </md-select>
     </div>
     <div class="parameterOption">
       <div class="parameterOptionTitle">Image Source</div><br/>
-      <md-select [(ngModel)]="selectedChart1Sensor" name="imageSources" (change)="onChart1SensorChange()">
+      <md-select [(ngModel)]="selectedChart1Sensor" (change)="onChart1SensorChange()">
         <md-option *ngFor="let chart1Sensor of chart1Sensors" [value]="chart1Sensor">
           {{chart1Sensor}}
         </md-option>
@@ -45,17 +45,17 @@
     </div>
     <div class="parameterOption">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
-      <md-select [(ngModel)]="selectedTexturalCharacteristicName" name="texturalCharacteristic" (change)="onTexturalCharacteristicChange()">
-        <md-option *ngFor="let texturalCharacteristic of texturalCharacteristics" [value]="texturalCharacteristic">
-          {{texturalCharacteristic}}
+      <md-select [(ngModel)]="chart2SelectedImageCharacteristicName" name="texturalCharacteristic" (change)="onChart2ImageCharacteristicChange()">
+        <md-option *ngFor="let chart2ImageCharacteristic of chart2ImageCharacteristics" [value]="chart2ImageCharacteristic">
+          {{chart2ImageCharacteristic}}
         </md-option>
       </md-select>
     </div>
     <div class="parameterOption">
       <div class="parameterOptionTitle">Image Source</div><br/>
-      <md-select [(ngModel)]="selectedChart2Sensor" name="imageSources" (change)="onSensorChange()">
-        <md-option *ngFor="let sensor of sensors" [value]="sensor">
-          {{sensor}}
+      <md-select [(ngModel)]="selectedChart2Sensor" (change)="onChart2SensorChange()">
+        <md-option *ngFor="let chart2Sensor of chart2Sensors" [value]="chart2Sensor">
+          {{chart2Sensor}}
         </md-option>
       </md-select>
     </div>
