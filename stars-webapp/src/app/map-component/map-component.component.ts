@@ -3,6 +3,7 @@ import { AppConfiguration } from '../app-configuration';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
 import { StarsAPIService } from "../services/stars-api.service";
+import { isUndefined } from "util";
 
 declare let ol: any;
 
@@ -68,8 +69,7 @@ export class MapComponentComponent implements OnInit, OnDestroy {
           return response;
         }).then((data) => {
           let results = data["results"];
-          let features = this.createFarmFieldsGeoJson(results);
-          this.addFarmFieldsMapLayer(features);
+          this.addFarmFieldsAsMapLayer(results);
         });
       }
     );
@@ -95,6 +95,9 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     // create map
     this.map = new ol.Map({
       target: 'map',
+      controls: ol.control.defaults().extend([
+        new ol.control.FullScreen()
+      ]),
       view: new ol.View({
         center: ol.proj.fromLonLat([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat]),
         zoom: AppConfiguration.mapZoom
@@ -225,12 +228,12 @@ export class MapComponentComponent implements OnInit, OnDestroy {
 
     let polygonStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: 'rgba(43, 126, 177, 1)',
+        color: 'rgba(102, 153, 67, 1.0)',
         lineDash: [4],
         width: 4
       }),
       fill: new ol.style.Fill({
-        color: 'rgba(43, 126, 177, 0.1)'
+        color: 'rgba(102, 153, 67, 0.0)' //clear
       })
     });
 
@@ -240,7 +243,7 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     });
 
     let mapLayersCollection = this.map.getLayers();
-    mapLayersCollection.insertAt(3, vectorLayer);
+    mapLayersCollection.insertAt(2, vectorLayer);
 
     this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
   }
@@ -298,9 +301,26 @@ export class MapComponentComponent implements OnInit, OnDestroy {
 
   /**
    * Utility for adding the farm field's geojson as a map layer
-   * @param farmFieldsGeoJSON
+   * @param features
    */
-  addFarmFieldsMapLayer(farmFieldsGeoJSON: any) {
+  addFarmFieldsAsMapLayer(features: JSON) {
+
+    // remove previous farm field layer
+    let mapLayersCollection = this.map.getLayers();
+    let farmFieldsLayer  = mapLayersCollection.item(3);
+    //
+    console.log(farmFieldsLayer);
+    if(farmFieldsLayer == undefined) {
+      //
+      console.log("farmFieldsLayer is undefined...");
+    }
+    else {
+      //
+      console.log("removing farmFieldsLayer from map...");
+      this.map.removeLayer(farmFieldsLayer);
+    }
+
+    let farmFieldsGeoJSON = this.createFarmFieldsGeoJson(features);
 
     let geoJSON = new ol.format.GeoJSON({
       projection: 'EPSG:3857'
@@ -312,12 +332,12 @@ export class MapComponentComponent implements OnInit, OnDestroy {
 
     let polygonStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: 'rgba(255, 0, 0, 1)',
+        color: 'rgba(102, 153, 67, 1.0)',
         lineDash: [4],
         width: 4
       }),
       fill: new ol.style.Fill({
-        color: 'rgba(255, 0, 0, 0.1)'
+        color: 'rgba(102, 153, 67, 0.1)'
       })
     });
 
@@ -326,9 +346,7 @@ export class MapComponentComponent implements OnInit, OnDestroy {
       style: polygonStyle
     });
 
-    let mapLayersCollection = this.map.getLayers();
     mapLayersCollection.insertAt(3, vectorLayer);
-
     this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
   }
 }
