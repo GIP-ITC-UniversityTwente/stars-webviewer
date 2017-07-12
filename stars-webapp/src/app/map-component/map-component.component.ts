@@ -3,7 +3,6 @@ import { AppConfiguration } from '../app-configuration';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
 import { StarsAPIService } from "../services/stars-api.service";
-import { isUndefined } from "util";
 
 declare let ol: any;
 
@@ -18,7 +17,6 @@ export class MapComponentComponent implements OnInit, OnDestroy {
    Properties
    */
 
-  // the Leaflet map
   map: any;
   subscriptionToSelectedStudyArea: Subscription;
   selectedStudyArea: JSON;
@@ -46,7 +44,6 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
       startYear => {
         this.startYear = startYear;
-        console.log("THE MAP COMPONENT KNOWS THAT THE START YEAR IS: " + this.startYear);
       }
     );
 
@@ -54,7 +51,6 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
       endYear => {
         this.endYear = endYear;
-        console.log("THE MAP COMPONENT KNOWS THAT THE END YEAR IS: " + this.endYear);
       }
     );
 
@@ -62,9 +58,8 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
         this.cropTypes = cropTypes;
-        console.log("THE MAP COMPONENT KNOWS THAT THE CROP TYPES ARE: " + this.cropTypes);
 
-        // Add farmfields to map
+        // add farm fields to map
         starsAPIService.fetchFarmFields(this.selectedStudyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
@@ -301,52 +296,53 @@ export class MapComponentComponent implements OnInit, OnDestroy {
 
   /**
    * Utility for adding the farm field's geojson as a map layer
-   * @param features
+   * @param farmFieldFeatures
    */
-  addFarmFieldsAsMapLayer(features: JSON) {
-
-    // remove previous farm field layer
+  addFarmFieldsAsMapLayer(farmFieldFeatures: any) {
+    
+    // remove any previously added farm fields on the map (as user changes the selected crops)
     let mapLayersCollection = this.map.getLayers();
     let farmFieldsLayer  = mapLayersCollection.item(3);
-    //
-    console.log(farmFieldsLayer);
-    if(farmFieldsLayer == undefined) {
-      //
-      console.log("farmFieldsLayer is undefined...");
-    }
-    else {
-      //
-      console.log("removing farmFieldsLayer from map...");
+    if(farmFieldsLayer != undefined) {
       this.map.removeLayer(farmFieldsLayer);
     }
 
-    let farmFieldsGeoJSON = this.createFarmFieldsGeoJson(features);
-
-    let geoJSON = new ol.format.GeoJSON({
-      projection: 'EPSG:3857'
+    // because the API returns ALL farmfields, filter for the crops chosen by the user
+    let cropTypes = this.cropTypes;
+    let targetCropFeatures = [];
+    farmFieldFeatures.forEach(function(item){
+      if(cropTypes.includes(item["properties"]["croptype"])) {
+        //
+        console.log('added ...' + item["properties"]["croptype"]);
+        targetCropFeatures.push(item);
+      }
     });
 
-    let vectorSource = new ol.source.Vector({
-      features: (geoJSON).readFeatures(farmFieldsGeoJSON)
-    });
-
-    let polygonStyle = new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: 'rgba(102, 153, 67, 1.0)',
-        lineDash: [4],
-        width: 4
-      }),
-      fill: new ol.style.Fill({
-        color: 'rgba(102, 153, 67, 0.1)'
-      })
-    });
-
-    let vectorLayer = new ol.layer.Vector({
-      source: vectorSource,
-      style: polygonStyle
-    });
-
-    mapLayersCollection.insertAt(3, vectorLayer);
-    this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
+    // add the farm fields to the map
+    if(targetCropFeatures.length > 0) {
+      let farmFieldsGeoJSON = this.createFarmFieldsGeoJson(targetCropFeatures);
+      let geoJSON = new ol.format.GeoJSON({
+        projection: 'EPSG:3857'
+      });
+      let vectorSource = new ol.source.Vector({
+        features: (geoJSON).readFeatures(farmFieldsGeoJSON)
+      });
+      let polygonStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: 'rgba(102, 153, 67, 1.0)',
+          lineDash: [4],
+          width: 4
+        }),
+        fill: new ol.style.Fill({
+          color: 'rgba(102, 153, 67, 0.1)'
+        })
+      });
+      let vectorLayer = new ol.layer.Vector({
+        source: vectorSource,
+        style: polygonStyle
+      });
+      mapLayersCollection.insertAt(3, vectorLayer);
+      this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
+    }
   }
 }
