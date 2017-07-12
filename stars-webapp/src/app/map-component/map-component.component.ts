@@ -19,7 +19,7 @@ export class MapComponentComponent implements OnInit, OnDestroy {
 
   map: any;
   subscriptionToSelectedStudyArea: Subscription;
-  selectedStudyArea: JSON;
+  studyArea: JSON;
   subscriptionToSelectedStartYear: Subscription;
   startYear: number = null;
   subscriptionToSelectedEndYear: Subscription;
@@ -35,8 +35,8 @@ export class MapComponentComponent implements OnInit, OnDestroy {
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
-        this.selectedStudyArea = studyArea;
-        this.addStudyAreaAsMapLayer(this.selectedStudyArea);
+        this.studyArea = studyArea;
+        this.addStudyAreaAsMapLayer(this.studyArea);
       }
     );
 
@@ -60,7 +60,7 @@ export class MapComponentComponent implements OnInit, OnDestroy {
         this.cropTypes = cropTypes;
 
         // add farm fields to map
-        starsAPIService.fetchFarmFields(this.selectedStudyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
+        starsAPIService.fetchFarmFields(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
           let results = data["results"];
@@ -71,15 +71,18 @@ export class MapComponentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.initializeMap();
     this.addTopoMapLayer();
     this.addAerialMapLayer();
     this.initializeLayerVisibility(this.map);
+    //this.initializeFeatureClick(this.map);
   }
 
   ngOnDestroy() {
     this.subscriptionToSelectedStudyArea.unsubscribe();
+    this.subscriptionToSelectedStartYear.unsubscribe();
+    this.subscriptionToSelectedEndYear.unsubscribe();
+    this.subscriptionToSelectedCropTypes.unsubscribe();
   }
 
   /**
@@ -162,6 +165,43 @@ export class MapComponentComponent implements OnInit, OnDestroy {
         aerialLayer.setVisible(false);
       }
     })
+  }
+
+  /**
+   * Utility for handling when user clicks on a map feature
+   */
+  initializeFeatureClick(map: any) {
+
+    // style for selected feature
+    let polygonStyle = new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'rgba(0, 0, 255, 1.0)',
+        width: 4
+      }),
+      fill: new ol.style.Fill({
+        color: 'rgba(0, 0, 255, 0.1)' //clear
+      })
+    });
+
+    // for the select feature interaction
+    let selectClick = new ol.interaction.Select({
+      condition: ol.events.condition.click,
+      style: polygonStyle
+    });
+
+    // click the feature, highlight on selection, and showing a popup
+    map.addInteraction(selectClick);
+    selectClick.on('select', function(evt) {
+      let features = evt.target.getFeatures();
+      let feature = features.item(0);
+      let cropType = feature.get('croptype');
+      if(cropType != undefined) {
+        console.log('Show popup that says ... ' + cropType);
+        // TODO ENDED HERE
+        // TODO ZOOM TO FARM FIELD
+        // TODO SHOW POPUP WITH CROP TYPE NAME
+      }
+    });
   }
 
   /**
@@ -299,7 +339,7 @@ export class MapComponentComponent implements OnInit, OnDestroy {
    * @param farmFieldFeatures
    */
   addFarmFieldsAsMapLayer(farmFieldFeatures: any) {
-    
+
     // remove any previously added farm fields on the map (as user changes the selected crops)
     let mapLayersCollection = this.map.getLayers();
     let farmFieldsLayer  = mapLayersCollection.item(3);

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
+import { Subscription } from 'rxjs/Subscription';
+import { UserSelectionService } from '../services/user-selection.service';
 
 declare let Plotly: any;
 
@@ -8,11 +10,20 @@ declare let Plotly: any;
   templateUrl: './image-characteristic-section.component.html',
   styleUrls: ['./image-characteristic-section.component.css']
 })
-export class ImageCharacteristicSectionComponent implements OnInit {
+export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
 
   /**
    * Properties
    */
+
+  subscriptionToSelectedStudyArea: Subscription;
+  studyArea: JSON;
+  subscriptionToSelectedStartYear: Subscription;
+  startYear: number = null;
+  subscriptionToSelectedEndYear: Subscription;
+  endYear: number = null;
+  subscriptionToSelectedCropTypes: Subscription;
+  cropTypes: string[] = [];
 
   imageTypes: string[] = ["Spectral", "Textural"];
   selectedChart1ImageType: string = null;
@@ -35,8 +46,9 @@ export class ImageCharacteristicSectionComponent implements OnInit {
   /**
    * Component Life-cycle methods
    */
-  constructor(private starsAPIService: StarsAPIService) {
+  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
 
+    /*
     // fetch image characteristics
     starsAPIService.fetchImageCharacteristics(1000, 2014).then((response) => {     // TODO - REMOVE HARD-CODED TEST
       return response;
@@ -47,10 +59,54 @@ export class ImageCharacteristicSectionComponent implements OnInit {
     }).catch((error) => {
       console.log(error);
     });
+    */
+
+    // subscribe to the study area selection by the user
+    this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
+      studyArea => {
+        this.studyArea = studyArea;
+        //
+        console.log('image characteristic section knows study area is: ' + this.studyArea);
+      }
+    );
+
+    // subscribe to the start year selection by the user
+    this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
+      startYear => {
+        this.startYear = startYear;
+        //
+        console.log('image characteristic section knows start year is: ' + this.startYear);
+      }
+    );
+
+    // subscribe to the end year selection by the user
+    this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
+      endYear => {
+        this.endYear = endYear;
+        //
+        console.log('image characteristic section knows end year is: ' + this.endYear);
+      }
+    );
+
+    // subscribe to crop types selections by the user
+    this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
+      cropTypes => {
+        this.cropTypes = cropTypes;
+        //
+        console.log('image characteristic section knows crop types are: ' + this.cropTypes);
+      }
+    );
   }
 
   ngOnInit() {
     this.createTestCharts();
+  }
+
+  ngOnDestroy() {
+    this.subscriptionToSelectedStudyArea.unsubscribe();
+    this.subscriptionToSelectedStartYear.unsubscribe();
+    this.subscriptionToSelectedEndYear.unsubscribe();
+    this.subscriptionToSelectedCropTypes.unsubscribe();
   }
 
   /**
