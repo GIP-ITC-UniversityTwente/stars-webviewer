@@ -51,25 +51,27 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
+
         this.studyArea = studyArea;
-        //
-        console.log('image characteristic section knows study area is: ' + this.studyArea);
       }
     );
 
     // subscribe to the start year selection by the user
     this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
       startYear => {
+
         this.startYear = startYear;
-        //
-        console.log('image characteristic section knows start year is: ' + this.startYear);
 
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
           return response;
         }).then((data) => {
-          let results = data.results;
-          this.allSpectralCharacteristicObjects = results.spectralCharacteristics;
-          this.allTexturalCharacteristicObjects = results.texturalCharacteristics;
+
+          this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
+          this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
+
+          // let user choose an image type after the image characteristic response arrives at the client (this takes a while)
+          this.imageTypes = ["Spectral", "Textural"];
+
         }).catch((error) => {
           console.log(error);
         });
@@ -79,16 +81,19 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     // subscribe to the end year selection by the user
     this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
       endYear => {
+
         this.endYear = endYear;
-        //
-        console.log('image characteristic section knows end year is: ' + this.endYear);
 
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear ,this.endYear).then((response) => {
           return response;
         }).then((data) => {
-          let results = data.results;
-          this.allSpectralCharacteristicObjects = results.spectralCharacteristics;
-          this.allTexturalCharacteristicObjects = results.texturalCharacteristics;
+
+          this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
+          this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
+
+          // let user choose an image type after the image characteristic response arrives at the client (this takes a while)
+          this.imageTypes = ["Spectral", "Textural"];
+
         }).catch((error) => {
           console.log(error);
         });
@@ -109,11 +114,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
           }
         }
         this.cropTypes = cropList;
-
-        //
-        console.log('image characteristic section knows crop types are: ' + this.cropTypes);
-
-        this.imageTypes = ["Spectral", "Textural"];
       }
     );
   }
@@ -183,12 +183,45 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * @returns {string}
    */
   fetchRandomColor() {
-    let colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0', '#7C89C0'];
-    let randomIndex = Math.floor(Math.random() * 6) + 1;
-    let randomColor = "'" + colors[randomIndex] + "'";
+    let colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
+    let randomIndex = this.randomIntFromInterval(0, 4);
+    console.log('random index is: ' + randomIndex);
+    let randomColor = colors[randomIndex];
     return randomColor;
   }
 
+  randomIntFromInterval(min, max) {
+    return Math.floor(Math.random()*(max-min+1)+min);
+  }
+
+  /**
+   * Utility for fetching a complimentary background color for the input line color
+   * @param lineColor
+   * @returns {any}
+   */
+  fetchBackgroundColor(lineColor) {
+
+    //let backgroundColor = '#DDDDDD';
+    let backgroundColor: string;
+
+    if(lineColor == '#6A7f00') {
+      backgroundColor = 'rgba(106, 127, 0, 0.2)';
+    }
+    else if (lineColor == '#D26F51') {
+      backgroundColor = 'rgba(210, 111, 82, 0.2)';
+    }
+    else if (lineColor == '#D59F2E') {
+      backgroundColor = 'rgba(213, 159, 46, 0.2)';
+    }
+    else if (lineColor == '#00577F') {
+      backgroundColor = 'rgba(0, 87, 127, 0.2)';
+    }
+    else if (lineColor == '#C548C0') {
+      backgroundColor = 'rgba(197, 72, 192, 0.2)';
+    }
+
+    return backgroundColor;
+  }
   /**
    * Utility for rendering the image characteristics chart for the time series response
    * @param results
@@ -212,13 +245,18 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
           maxValueCollection.push(sensor.maxvalue);
           minValueCollection.push(sensor.minvalue);
         }
+
         /*
-         console.log(dateCollection);
-         console.log(avgValueCollection);
-         console.log(maxValueCollection);
-         console.log(minValueCollection);
-         console.log(crop);
-         */
+        console.log(dateCollection);
+        console.log(avgValueCollection);
+        console.log(maxValueCollection);
+        console.log(minValueCollection);
+        console.log(crop);
+        */
+
+        // chart's line
+        let lineColor = this.fetchRandomColor();
+        console.log('the line color is: ' + lineColor);
 
         let lineDataObject = {
           x: dateCollection,
@@ -226,12 +264,43 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
           mode: 'lines',
           name: cropName,
           line: {
-            color: this.fetchRandomColor(),
+            color: lineColor,
             width: 3
           },
           type: 'scatter'
         };
 
+
+        // chart's envelope
+        let envelopeY = minValueCollection;
+        for (let i = maxValueCollection.length - 1, il = 0; i >= il; i--) {
+          envelopeY.push(maxValueCollection[i]);
+        }
+        let envelopeX = dateCollection;
+        for (let j = dateCollection.length - 1, jl = 0; j >= jl; j--) {
+          envelopeX.push(dateCollection[j]);
+        }
+
+        /*
+        console.log(envelopeX);
+        console.log(envelopeY);
+        */
+
+        let backgroundColor = this.fetchBackgroundColor(lineColor);
+        console.log('the background color is: ' + backgroundColor);
+        let envelopeDataObject = {
+          x: envelopeX,
+          y: envelopeY,
+          fill: "tozerox",
+          fillcolor: backgroundColor,
+          name: '',
+          showlegend: false,
+          type: "scatter",
+          line: {color: "transparent"}
+        };
+
+        // add line & envelope to chart data
+        chartData.push(envelopeDataObject);
         chartData.push(lineDataObject);
       }
     }
@@ -327,6 +396,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       return response;
     }).then((data) => {
       let results = data.results;
+      console.log(results);
       this.renderTimeSeriesChart(results, this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, 'chart1');
     });
   }
@@ -453,7 +523,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
 
     // layout for millet spectral test sample
     let milletSpectralLayout = {
-      title: "SPECTRAL TIME SERIES",
+      title: "Spectral Time Series",
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -491,7 +561,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
 
     // layout for millet textural test sample
     let milletTexturalLayout = {
-      title: "TEXTURAL TIME SERIES",
+      title: "Textural Time Series",
       xaxis: {
         title: 'Time',
         showgrid: true,
