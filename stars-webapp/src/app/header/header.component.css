@@ -15,16 +15,36 @@
   font-size: 17px;
 }
 
-.logo {
-  position: absolute;
-  top: 9px;
-  left: 45px;
-  width: 89px;
-}
-
 .loginButton {
   padding-right: 20px;
   float: right;
   font-size: 11px;
   letter-spacing: 1px;
+}
+
+/* for low resolution logo display */
+.logoImage {
+  background-image: url('../../assets/stars_logo.png');
+  background-size: 86px 60px;
+  height: 60px;
+  width: 86px;
+  position: absolute;
+  top: 3px;
+  left: 45px;
+}
+
+/* for high resolution logo display */
+@media only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2/1),
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-device-pixel-ratio: 2) {
+  .logoImage {
+    background: url('../../assets/stars_logo@2x.png') no-repeat;
+    background-size: 86px 60px;
+    height: 60px;
+    width: 86px;
+    position: absolute;
+    top: 3px;
+    left: 45px;
+  }
 }

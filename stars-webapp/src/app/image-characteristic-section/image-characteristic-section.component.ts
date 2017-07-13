@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 declare let Plotly: any;
 
@@ -46,7 +47,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   /**
    * Component Life-cycle methods
    */
-  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
+  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService, public dialog: MdDialog) {
 
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
@@ -478,6 +479,10 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   handleInfoButtonTap() {
     console.log('show info for image characteristics...');
+    let dialogRef = this.dialog.open(DialogResultExampleDialog);
+    dialogRef.afterClosed().subscribe(result => {
+      //this.selectedOption = result;
+    });
   }
 
   /**
@@ -576,4 +581,12 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     let milletTexturalData = [milletTexturalLine];
     Plotly.newPlot('chart2', milletTexturalData, milletTexturalLayout);
   }
+}
+
+@Component({
+  selector: 'dialog-result-example-dialog',
+  template: '<p>hello world</p>',
+})
+export class DialogResultExampleDialog {
+  constructor(public dialogRef: MdDialogRef<DialogResultExampleDialog>) {}
 }
