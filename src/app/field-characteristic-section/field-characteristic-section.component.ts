@@ -70,24 +70,21 @@ export class FieldCharacteristicSectionComponent implements OnInit {
       }
     );
 
+    // testing classybrew classification library
 
-
-    // testing classybrew
-
-    var brew = new classyBrew();
-    brew.setSeries([30.01, 14.9, 22.71, 24.96, 7.17, 15.2, 20.2, 30.4, 50.5, 70.9, 80.9, 90.1, 100]);
-    brew.setNumClasses(3);
+    let brew = new classyBrew();
+    brew.setSeries([11, 11, 11, 15, 15, 15, 19, 19, 19, 30, 30, 30, 50, 50, 50]);
+    brew.setNumClasses(4);
     brew.setColorCode("BuGn");
 
-    brew.classify('jenks');
+    brew.classify('equal');
 
-    var breaks = brew.getBreaks(); // returns [7.17,14.9,19.3,22.71,26.9,31.26]
-    var colors = brew.getColors(); // returns [rgb(237,248,251),rgb(178,226,226),rgb(102,194,164),rgb(44,162,95),rgb(0,109,44)]
-    brew.getColorInRange(7.5); // returns rgb(237,248,251)
+    let breaks = brew.getBreaks(); // returns [7.17,14.9,19.3,22.71,26.9,31.26]
+    let colors = brew.getColors(); // returns [rgb(237,248,251),rgb(178,226,226),rgb(102,194,164),rgb(44,162,95),rgb(0,109,44)]
+    //brew.getColorInRange(7.5); // returns rgb(237,248,251)
 
-    console.log(breaks);
-    console.log(colors);
-
+    console.log('the breaks are: ' + breaks);
+    console.log('the colors are: ' + colors);
   }
 
   /**

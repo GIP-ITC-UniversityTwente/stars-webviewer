@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
-import { MdDialog, MdDialogRef } from '@angular/material';
 
 declare let Plotly: any;
 
@@ -47,7 +46,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   /**
    * Component Life-cycle methods
    */
-  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService, public dialog: MdDialog) {
+  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
 
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
@@ -186,7 +185,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   fetchRandomColor() {
     let colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
     let randomIndex = this.randomIntFromInterval(0, 4);
-    console.log('random index is: ' + randomIndex);
     let randomColor = colors[randomIndex];
     return randomColor;
   }
@@ -249,8 +247,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
 
         // chart's line
         let lineColor = this.fetchRandomColor();
-        console.log('the line color is: ' + lineColor);
-
         let lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
@@ -263,7 +259,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
           type: 'scatter'
         };
 
-
         // chart's envelope
         let envelopeY = minValueCollection;
         for (let i = maxValueCollection.length - 1, il = 0; i >= il; i--) {
@@ -275,7 +270,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         }
 
         let backgroundColor = this.fetchBackgroundColor(lineColor);
-        console.log('the background color is: ' + backgroundColor);
         let envelopeDataObject = {
           x: envelopeX,
           y: envelopeY,
@@ -377,6 +371,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   onChart1SensorChange() {
 
+    /*
     console.log("The following parameters will be sent to the time series endpoint: ");
     console.log("study id: " + this.studyArea["properties"]["id"]);
     console.log("start year: " + this.startYear);
@@ -386,12 +381,12 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     console.log("chart1 image characteristic id: " + this.chart1SelectedImageCharacteristicId);
     console.log("chart1 sensor: " + this.selectedChart1Sensor);
     console.log(this.allSpectralCharacteristicObjects);
+    */
 
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, null, null).then((response) => {
       return response;
     }).then((data) => {
       let results = data.results;
-      console.log(results);
       this.renderTimeSeriesChart(results, this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, 'chart1');
     });
   }
@@ -452,6 +447,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   onChart2SensorChange() {
 
+    /*
     console.log("The following parameters will be sent to the time series endpoint: ");
     console.log("study area: " + this.studyArea["properties"]["name"]);
     console.log("start year: " + this.startYear);
@@ -459,6 +455,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     console.log("chart2 image characteristic name: " + this.chart2SelectedImageCharacteristicName);
     console.log("chart2 image characteristic id: " + this.chart2SelectedImageCharacteristicId);
     console.log("chart2 sensor: " + this.selectedChart2Sensor);
+    */
 
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, null, null).then((response) => {
       return response;
@@ -473,10 +470,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   handleInfoButtonTap() {
     console.log('show info for image characteristics...');
-    let dialogRef = this.dialog.open(DialogResultExampleDialog);
-    dialogRef.afterClosed().subscribe(result => {
-      //this.selectedOption = result;
-    });
   }
 
   /**
@@ -591,12 +584,4 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       }
     );
   }
-}
-
-@Component({
-  selector: 'dialog-result-example-dialog',
-  template: '<p>hello world</p>',
-})
-export class DialogResultExampleDialog {
-  constructor(public dialogRef: MdDialogRef<DialogResultExampleDialog>) {}
 }
