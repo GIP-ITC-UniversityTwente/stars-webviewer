@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 declare let Plotly: any;
+declare var classyBrew: any;
 
 @Component({
   selector: 'app-field-characteristic-section',
@@ -21,39 +22,6 @@ export class FieldCharacteristicSectionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
-    // field based characteristic sample histogram data
-    /*
-    let x = [4934.71018645975,
-      5906.2579128693,
-      8095.02343501385,
-      10120.3453651254,
-      10144.8072700207,
-      11606.8924657987,
-      12260.7424760228,
-      13761.5447946843,
-      19672.9027281591,
-      26305.6291728029];
-
-    let data = [
-      {
-        x: x,
-        type: 'histogram',
-        marker: {
-          color: '#ED7D31',
-        },
-      }
-    ];
-    let layout = {
-      bargap: 0.5,
-      bargroupgap: 0.5,
-      barmode: "overlay",
-      title: "Histogram",
-      xaxis: {title: "Value"},
-      yaxis: {title: "Count"}
-    };
-    Plotly.newPlot('histogram', data, layout);
-    */
 
     // field based characteristic sample classification data
     let data = [
@@ -101,6 +69,25 @@ export class FieldCharacteristicSectionComponent implements OnInit {
         modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
       }
     );
+
+
+
+    // testing classybrew
+
+    var brew = new classyBrew();
+    brew.setSeries([30.01, 14.9, 22.71, 24.96, 7.17, 15.2, 20.2, 30.4, 50.5, 70.9, 80.9, 90.1, 100]);
+    brew.setNumClasses(3);
+    brew.setColorCode("BuGn");
+
+    brew.classify('jenks');
+
+    var breaks = brew.getBreaks(); // returns [7.17,14.9,19.3,22.71,26.9,31.26]
+    var colors = brew.getColors(); // returns [rgb(237,248,251),rgb(178,226,226),rgb(102,194,164),rgb(44,162,95),rgb(0,109,44)]
+    brew.getColorInRange(7.5); // returns rgb(237,248,251)
+
+    console.log(breaks);
+    console.log(colors);
+
   }
 
   /**

@@ -2,14 +2,6 @@
 
 Web interface of the Visualization tool for STARS
 
-## Directory Structure
-
-At the root of this repository are two directories:
-
-* __api_request__ This directory contains artifacts related to communicating what API endpoints are reuqired by the STARS web viewer.  
-
-* __stars_webapp__ This directory contains the source code for the STARS web viewer.
-
 
 ## Client-Side Technology
 
@@ -21,11 +13,25 @@ This aplication uses:
 
 [__Angular Material__](https://github.com/angular/material2) 2.0.0 for UI/UX goodness.
 
+* Steps for project integration can be viewed [__here__](https://github.com/angular/material2/blob/master/guides/getting-started.md)
+
 [__Angular Flexbox CSS__](https://github.com/angular/flex-layout) 2.0.0 as the responsive engine.
+
+* Steps for project integration can be viewed [__here__](https://github.com/angular/flex-layout/wiki/Fast-Starts).  See the NPM Install steps at the top.
 
 [__Plotly.js__](https://plot.ly/javascript/) 1.27.1 for Charts
 
-[__Leaflet__](http://leafletjs.com) 1.0.3 for the Map interface.
+* Steps for project integration can be viewed in index.html.
+
+[__Open Layers__](https://openlayers.org/) 4.2.0 for the Map interface.
+
+* Steps for project integration can be viewed in index.html.
+
+[__ClassyBrews__](https://github.com/tannerjt/classybrew) 0.1.0 for client-side histogram classification.
+
+* Being a small utility library that is added to this project as a local .js file, the steps for integration included:
+	* Adding the .js file to src/assets/scripts folder
+	* Referencing in index.js
 
 ## Running the App
 
