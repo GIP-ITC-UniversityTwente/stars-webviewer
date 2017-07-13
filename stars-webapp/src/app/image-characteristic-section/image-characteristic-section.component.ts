@@ -247,14 +247,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
           minValueCollection.push(sensor.minvalue);
         }
 
-        /*
-        console.log(dateCollection);
-        console.log(avgValueCollection);
-        console.log(maxValueCollection);
-        console.log(minValueCollection);
-        console.log(crop);
-        */
-
         // chart's line
         let lineColor = this.fetchRandomColor();
         console.log('the line color is: ' + lineColor);
@@ -281,11 +273,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         for (let j = dateCollection.length - 1, jl = 0; j >= jl; j--) {
           envelopeX.push(dateCollection[j]);
         }
-
-        /*
-        console.log(envelopeX);
-        console.log(envelopeY);
-        */
 
         let backgroundColor = this.fetchBackgroundColor(lineColor);
         console.log('the background color is: ' + backgroundColor);
@@ -321,10 +308,17 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         showline: false,
         ticks: "outside",
         showticklabels: true
-      }
+      },
+      hovermode: 'closest'
     };
 
-    Plotly.newPlot(targetDivId, chartData, layout);
+    Plotly.newPlot(targetDivId,
+      chartData,
+      layout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+      });
   }
 
   /**
