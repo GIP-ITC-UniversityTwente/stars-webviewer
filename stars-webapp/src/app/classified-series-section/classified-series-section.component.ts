@@ -76,12 +76,20 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
       yaxis: {
         title: 'NDVI',
         showline: false
-      }
+      },
+      hovermode: 'closest'
     };
 
     // spectral chart for millet
     let milletSpectralData = [spectralLarge, spectralMedium, spectralSmall];
-    Plotly.newPlot('ndviVsSizeChart', milletSpectralData, milletSpectralLayout);
+    Plotly.newPlot('ndviVsSizeChart',
+      milletSpectralData,
+      milletSpectralLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+      }
+    );
 
     // data for millet textural vs size test sample
     let texturalLarge = {
@@ -146,11 +154,19 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
       yaxis: {
         title: 'Homogeneity',
         showline: false
-      }
+      },
+      hovermode: 'closest'
     };
 
     let milletTexturalData = [texturalLarge, texturalMedium, texturalSmall];
-    Plotly.newPlot('texturalVsSizeChart', milletTexturalData, milletTexturalLayout);
+    Plotly.newPlot('texturalVsSizeChart',
+      milletTexturalData,
+      milletTexturalLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+      }
+    );
   }
 
   /**

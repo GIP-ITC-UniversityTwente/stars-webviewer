@@ -89,10 +89,18 @@ export class FieldCharacteristicSectionComponent implements OnInit {
 
     let layout = {
       title: 'Histogram field size & classification',
-      bargap :0.5
+      bargap :0.5,
+      hovermode: 'closest'
     };
 
-    Plotly.newPlot('histogram', data, layout);
+    Plotly.newPlot('histogram',
+      data,
+      layout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+      }
+    );
   }
 
   /**

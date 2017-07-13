@@ -541,12 +541,20 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         showline: false,
         ticks: "outside",
         showticklabels: true
-      }
+      },
+      hovermode: 'closest'
     };
 
     // spectral chart for millet
     let milletSpectralData = [milletSpectralLineEnvelope, milletSpectralLine];
-    Plotly.newPlot('chart1', milletSpectralData, milletSpectralLayout);
+    Plotly.newPlot('chart1',
+      milletSpectralData,
+      milletSpectralLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+      }
+    );
 
     //----------------------
     //  CHART 2 PLACEHOLDER
@@ -575,11 +583,19 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       yaxis: {
         title: 'Homogeneity at distance D',
         showline: false
-      }
+      },
+      hovermode: 'closest'
     };
 
     let milletTexturalData = [milletTexturalLine];
-    Plotly.newPlot('chart2', milletTexturalData, milletTexturalLayout);
+    Plotly.newPlot('chart2',
+      milletTexturalData,
+      milletTexturalLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+      }
+    );
   }
 }
 
