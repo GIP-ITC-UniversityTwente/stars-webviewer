@@ -15,6 +15,10 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    */
   selectedFieldCharacteristic: string = null;
   fieldCharacteristics: string[] = ["Field Size"];
+  selectedClassificationMethod: string = null;
+  classificationMethods: string[] = ["Jenks", "Equal Interval", "Quantile", "Unique Values", "Standard Deviation", "Arithmetic Progression", "Geometric Progression", ];
+  selectedClassSize: number = null;
+  classSizes: number[] = [1, 2, 3, 4, 5];
 
   /**
    * Component Life-cyle methods
