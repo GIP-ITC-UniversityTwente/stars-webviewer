@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 declare let Plotly: any;
-declare var classyBrew: any;
+declare var geostats: any;
 
 @Component({
   selector: 'app-field-characteristic-section',
@@ -70,21 +70,28 @@ export class FieldCharacteristicSectionComponent implements OnInit {
       }
     );
 
-    // testing classybrew classification library
+    // ----------------------------------------
+    // testing geostats classification library
+    // ----------------------------------------
 
-    let brew = new classyBrew();
-    brew.setSeries([11, 11, 11, 15, 15, 15, 19, 19, 19, 30, 30, 30, 50, 50, 50]);
-    brew.setNumClasses(4);
-    brew.setColorCode("BuGn");
+    let series = new geostats([11.25, 11.25, 11.25, 15.25, 15.25, 15.25, 19.25, 19.25, 19.25, 30.25, 30.25, 30.25, 50.25, 50.25, 50.25]);
+    series.setPrecision(2);
+    let numberOfClasses = 5;
 
-    brew.classify('equal');
+    //series.getClassJenks(numberOfClasses);
+    //series.getClassGeometricProgression(numberOfClasses);
+    series.getClassEqInterval(numberOfClasses);
+    //series.getQuantile(numberOfClasses);
+    //series.getClassStdDeviation(numberOfClasses);
+    //series.getClassUniqueValues(numberOfClasses);
+    //series.getClassArithmeticProgression(numberOfClasses);
 
-    let breaks = brew.getBreaks(); // returns [7.17,14.9,19.3,22.71,26.9,31.26]
-    let colors = brew.getColors(); // returns [rgb(237,248,251),rgb(178,226,226),rgb(102,194,164),rgb(44,162,95),rgb(0,109,44)]
-    //brew.getColorInRange(7.5); // returns rgb(237,248,251)
-
-    console.log('the breaks are: ' + breaks);
-    console.log('the colors are: ' + colors);
+    console.log('method: ' + series.method);
+    console.log('ranges: ' + series.ranges);
+    console.log('bounds: ' + series.bounds);
+    console.log('inner ranges: ' + series.inner_ranges);
+    console.log('colors: ' + series.colors);
+    console.log('counter: ' + series.counter);
   }
 
   /**

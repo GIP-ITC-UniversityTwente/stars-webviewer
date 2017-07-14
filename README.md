@@ -21,15 +21,15 @@ This aplication uses:
 
 [__Plotly.js__](https://plot.ly/javascript/) 1.27.1 for Charts
 
-* Steps for project integration can be viewed in index.html.
+* Added to the index.html.
 
 [__Open Layers__](https://openlayers.org/) 4.2.0 for the Map interface.
 
-* Steps for project integration can be viewed in index.html.
+* Added to the index.html.
 
-[__ClassyBrews__](https://github.com/tannerjt/classybrew) 0.1.0 for client-side histogram classification.
+[__geostats__](https://github.com/simogeo/geostats) 1.6.0 for client-side histogram classification.
 
-* Being a small utility library that is added to this project as a local .js file, the steps for integration included:
+* Being a small utility library that is added to this project as a local .js file. The steps for integration included:
 	* Adding the .js file to src/assets/scripts folder
 	* Referencing in index.js
 

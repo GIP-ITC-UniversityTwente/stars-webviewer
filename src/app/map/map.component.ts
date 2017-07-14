@@ -7,11 +7,11 @@ import { StarsAPIService } from "../services/stars-api.service";
 declare let ol: any;
 
 @Component({
-  selector: 'app-map-component',
-  templateUrl: './map-component.component.html',
-  styleUrls: ['./map-component.component.css']
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.css']
 })
-export class MapComponentComponent implements OnInit, OnDestroy {
+export class MapComponent implements OnInit, OnDestroy {
 
   /**
    Properties
