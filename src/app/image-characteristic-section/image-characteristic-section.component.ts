@@ -230,21 +230,22 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   renderTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
 
     const chartData = [];
-    results.forEach(function(item){
+    for(const item of results) {
 
       const cropName = item.crop;
-      item.series.forEach(function(crop){
+      for(const crop of item.cseries) {
+
         const dateCollection = [];
         const avgValueCollection = [];
         const maxValueCollection = [];
         const minValueCollection = [];
+        for(const sensor of crop.sseries) {
 
-        crop.cropseries.forEach(function(sensor){
           dateCollection.push(sensor.acquisition_date);
           avgValueCollection.push(sensor.avgvalue);
           maxValueCollection.push(sensor.maxvalue);
           minValueCollection.push(sensor.minvalue);
-        });
+        }
 
         // chart's line
         const lineColor = this.fetchRandomColor();
@@ -265,7 +266,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         for (let i = maxValueCollection.length - 1, il = 0; i >= il; i--) {
           envelopeY.push(maxValueCollection[i]);
         }
-
         const envelopeX = dateCollection;
         for (let j = dateCollection.length - 1, jl = 0; j >= jl; j--) {
           envelopeX.push(dateCollection[j]);
@@ -286,8 +286,8 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         // add line & envelope to chart data
         chartData.push(envelopeDataObject);
         chartData.push(lineDataObject);
-      })
-    });
+      }
+    }
 
     // layout for millet spectral test sample
     const layout = {
