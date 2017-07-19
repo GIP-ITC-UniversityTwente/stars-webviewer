@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
 import { StarsAPIService } from "../services/stars-api.service";
 
-declare let ol: any;
+declare const ol: any;
 
 @Component({
   selector: 'app-map',
@@ -63,7 +63,7 @@ export class MapComponent implements OnInit, OnDestroy {
         starsAPIService.fetchFarmFields(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
-          let results = data["results"];
+          const results = data["results"];
           this.addFarmFieldsAsMapLayer(results);
         });
       }
@@ -108,16 +108,15 @@ export class MapComponent implements OnInit, OnDestroy {
    * Utility for adding the topo layer to the map
    */
   addTopoMapLayer() {
-
-    let topoSource = new ol.source.XYZ({
+    const topoSource = new ol.source.XYZ({
       url: '//{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png'
     });
 
-    let topoLayer = new ol.layer.Tile({
+    const topoLayer = new ol.layer.Tile({
       source: topoSource
     });
 
-    let mapLayersCollection = this.map.getLayers();
+    const mapLayersCollection = this.map.getLayers();
     mapLayersCollection.insertAt(0, topoLayer);
   }
 
@@ -125,17 +124,16 @@ export class MapComponent implements OnInit, OnDestroy {
    * Utility for adding the aerial layer to the map
    */
   addAerialMapLayer() {
-
-    let bingSource = new ol.source.BingMaps({
+    const bingSource = new ol.source.BingMaps({
       key: AppConfiguration.bingKey,
       imagerySet: 'AerialWithLabels'
     });
 
-    let bingLayer = new ol.layer.Tile({
+    const bingLayer = new ol.layer.Tile({
       source: bingSource
     });
 
-    let mapLayersCollection = this.map.getLayers();
+    const mapLayersCollection = this.map.getLayers();
     mapLayersCollection.insertAt(1, bingLayer);
   }
 
@@ -144,23 +142,19 @@ export class MapComponent implements OnInit, OnDestroy {
    * @param map
    */
   initializeLayerVisibility(map: any) {
-
     this.map.on("moveend", function(){
+      const zoomLevel = map.getView().getZoom();
+      const mapLayersCollection = map.getLayers();
+      const topoLayer = mapLayersCollection.item(0);
+      const aerialLayer = mapLayersCollection.item(1);
 
-      let zoomLevel = map.getView().getZoom();
-      let mapLayersCollection = map.getLayers();
-      let topoLayer = mapLayersCollection.item(0);
-      let aerialLayer = mapLayersCollection.item(1);
-
+      // zoomed in, show aerial
       if (zoomLevel >= 9) {
-
-        // zoomed in, show aerial
         topoLayer.setVisible(false);
         aerialLayer.setVisible(true);
       }
+      // zoomed out, show topo
       else {
-
-        // zoomed out, show topo
         topoLayer.setVisible(true);
         aerialLayer.setVisible(false);
       }
@@ -173,7 +167,7 @@ export class MapComponent implements OnInit, OnDestroy {
   initializeFeatureClick(map: any) {
 
     // style for selected feature
-    let polygonStyle = new ol.style.Style({
+    const polygonStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
         color: 'rgba(0, 0, 255, 1.0)',
         width: 4
@@ -184,7 +178,7 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     // for the select feature interaction
-    let selectClick = new ol.interaction.Select({
+    const selectClick = new ol.interaction.Select({
       condition: ol.events.condition.click,
       style: polygonStyle
     });
@@ -192,9 +186,9 @@ export class MapComponent implements OnInit, OnDestroy {
     // click the feature, highlight on selection, and showing a popup
     map.addInteraction(selectClick);
     selectClick.on('select', function(evt) {
-      let features = evt.target.getFeatures();
-      let feature = features.item(0);
-      let cropType = feature.get('croptype');
+      const features = evt.target.getFeatures();
+      const feature = features.item(0);
+      const cropType = feature.get('croptype');
       if(cropType != undefined) {
         console.log('Show popup that says ... ' + cropType);
         // TODO ENDED HERE
@@ -212,10 +206,10 @@ export class MapComponent implements OnInit, OnDestroy {
   createStudyAreaGeoJSON(studyAreaJSON: JSON) {
 
     // re-project STARS API coordinates from EPSG: 4326 to 3857
-    let projectedCoordinates: any[] = [];
-    let originalCoordinates = studyAreaJSON["geometry"]["coordinates"][0];
+    const projectedCoordinates: any[] = [];
+    const originalCoordinates = studyAreaJSON["geometry"]["coordinates"][0];
     originalCoordinates.forEach(function(item) {
-      let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
+      const projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
       projectedCoordinates.push(projected);
     });
 
@@ -250,18 +244,16 @@ export class MapComponent implements OnInit, OnDestroy {
    * @param studyAreaJSON
    */
   addStudyAreaAsMapLayer(studyAreaJSON: JSON) {
-
-    let studyAreaGeoJSON = this.createStudyAreaGeoJSON(studyAreaJSON);
-
-    let geoJSON = new ol.format.GeoJSON({
+    const studyAreaGeoJSON = this.createStudyAreaGeoJSON(studyAreaJSON);
+    const geoJSON = new ol.format.GeoJSON({
       projection: 'EPSG:3857'
     });
 
-    let vectorSource = new ol.source.Vector({
+    const vectorSource = new ol.source.Vector({
       features: (geoJSON).readFeatures(studyAreaGeoJSON)
     });
 
-    let polygonStyle = new ol.style.Style({
+    const polygonStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
         color: 'rgba(102, 153, 67, 1.0)',
         lineDash: [4],
@@ -272,12 +264,12 @@ export class MapComponent implements OnInit, OnDestroy {
       })
     });
 
-    let vectorLayer = new ol.layer.Vector({
+    const vectorLayer = new ol.layer.Vector({
       source: vectorSource,
       style: polygonStyle
     });
 
-    let mapLayersCollection = this.map.getLayers();
+    const mapLayersCollection = this.map.getLayers();
     mapLayersCollection.insertAt(2, vectorLayer);
 
     this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
@@ -287,20 +279,19 @@ export class MapComponent implements OnInit, OnDestroy {
    * Utility for creating the farmfields GeoJSON
    */
   createFarmFieldsGeoJson(farmFieldFeatures) {
-
-    let geoJSONFeatures: any[] = [];
-    for (let item of farmFieldFeatures) {
+    const geoJSONFeatures: any[] = [];
+    for (const item of farmFieldFeatures) {
 
       // re-project STARS API coordinates from EPSG: 4326 to 3857
-      let projectedCoordinates: any[] = [];
-      let originalCoordinates = item["geometry"]["coordinates"][0];
+      const projectedCoordinates: any[] = [];
+      const originalCoordinates = item["geometry"]["coordinates"][0];
       originalCoordinates.forEach(function(item) {
-        let projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
+        const projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
         projectedCoordinates.push(projected);
       });
 
       // create feature with re-projected coordinates
-      let feature = {
+      const feature = {
         "type": "Feature",
         "geometry": {
           "type": "Polygon",
@@ -320,7 +311,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }
 
     // geojson object template
-    let geoJSON =  {
+    const geoJSON =  {
       "type": "FeatureCollection",
       "crs": {
         "type": "name",
@@ -341,15 +332,15 @@ export class MapComponent implements OnInit, OnDestroy {
   addFarmFieldsAsMapLayer(farmFieldFeatures: any) {
 
     // remove any previously added farm fields on the map (as user changes the selected crops)
-    let mapLayersCollection = this.map.getLayers();
-    let farmFieldsLayer  = mapLayersCollection.item(3);
+    const mapLayersCollection = this.map.getLayers();
+    const farmFieldsLayer  = mapLayersCollection.item(3);
     if(farmFieldsLayer != undefined) {
       this.map.removeLayer(farmFieldsLayer);
     }
 
     // because the API returns ALL farm fields, filter for the crops chosen by the user
-    let cropTypes = this.cropTypes;
-    let targetCropFeatures = [];
+    const cropTypes = this.cropTypes;
+    const targetCropFeatures = [];
     farmFieldFeatures.forEach(function(item){
       if(cropTypes.includes(item["properties"]["croptype"])) {
         targetCropFeatures.push(item);
@@ -358,16 +349,16 @@ export class MapComponent implements OnInit, OnDestroy {
 
     // add the farm fields to the map
     if(targetCropFeatures.length > 0) {
-      let farmFieldsGeoJSON = this.createFarmFieldsGeoJson(targetCropFeatures);
-      let geoJSON = new ol.format.GeoJSON({
+      const farmFieldsGeoJSON = this.createFarmFieldsGeoJson(targetCropFeatures);
+      const geoJSON = new ol.format.GeoJSON({
         projection: 'EPSG:3857'
       });
 
-      let vectorSource = new ol.source.Vector({
+      const vectorSource = new ol.source.Vector({
         features: (geoJSON).readFeatures(farmFieldsGeoJSON)
       });
 
-      let polygonStyle = new ol.style.Style({
+      const polygonStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({
           color: 'rgba(102, 153, 67, 1.0)',
           lineDash: [4],
@@ -378,7 +369,7 @@ export class MapComponent implements OnInit, OnDestroy {
         })
       });
 
-      let vectorLayer = new ol.layer.Vector({
+      const vectorLayer = new ol.layer.Vector({
         source: vectorSource,
         style: polygonStyle
       });

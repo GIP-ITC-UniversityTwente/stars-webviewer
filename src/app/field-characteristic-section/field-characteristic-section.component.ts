@@ -28,7 +28,6 @@ export class FieldCharacteristicSectionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
     this.createTestHistogram();
   }
 
@@ -67,7 +66,6 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * For handling when a user changes the target classification when viewing the frequency data.
    */
   onClassificationChange() {
-
     if (this.selectedClassificationMethod == "Jenks") {
       this.geostatSeries.getJenks(this.selectedClassSize);
     }
@@ -102,7 +100,6 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * @param histogramData
    */
   createHistogram(histogramData: any, isShowing: boolean) {
-
     const layout = {
       title: 'Histogram',
       bargap :0.5,
@@ -129,7 +126,6 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * @returns {Array}
    */
    static fetchValuesInRange(series: number[], start: number, end: number) {
-
     const result = [];
     const lastValue = series[series.length-1];
     series.forEach((item) => {
@@ -150,7 +146,6 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * @returns {Array}
    */
   static fetchCountOfValues(values: number[]) {
-
      const result = [];
 
      // get unique values
@@ -197,10 +192,9 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * @param {number[]} series
    */
   createClassifiedHistogramDataObject(series: number[]) {
-
+    const result = [];
     const sorted = series.sort((n1,n2) => n1 - n2);
 
-    const result = [];
     if (this.selectedClassSize > 0) {
       this.geostatSeries.ranges.forEach(function(item, index){
 
@@ -253,7 +247,6 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * @param {number[]} series
    */
   createUnclassifiedHistogramDataObject(series: number[]) {
-
     const result = [];
 
     // get unique values
@@ -285,6 +278,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * Creates a test histogram to demonstrate the general code required for the chart.
    */
   createTestHistogram() {
+
     // field based characteristic sample classification data
     const data = [
       {

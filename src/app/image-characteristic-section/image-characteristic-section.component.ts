@@ -51,7 +51,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
-
         this.studyArea = studyArea;
       }
     );
@@ -61,11 +60,9 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       startYear => {
 
         this.startYear = startYear;
-
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
           return response;
         }).then((data) => {
-
           this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
           this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
 
@@ -83,11 +80,9 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       endYear => {
 
         this.endYear = endYear;
-
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear ,this.endYear).then((response) => {
           return response;
         }).then((data) => {
-
           this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
           this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
 
@@ -136,7 +131,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * @param imageCharacteristics
    */
   createSetOfCharacteristicNames(imageCharacteristics: any[]) {
-
     const uniqueCharacteristicNames = new Set();
     imageCharacteristics.forEach(function(item) {
       uniqueCharacteristicNames.add(item.alias);
@@ -152,7 +146,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * @returns {number}
    */
   fetchImageCharacteristicId(imageCharacteristicName: string, allImageCharacteristics: any[]): number {
-
     let targetId: number = null;
     allImageCharacteristics.forEach(function(item){
       if (item.alias == imageCharacteristicName) {
@@ -228,19 +221,18 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * @param {string} targetDivId
    */
   renderTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
-
     const chartData = [];
+
     for(const item of results) {
-
       const cropName = item.crop;
-      for(const crop of item.cseries) {
 
+      for(const crop of item.cseries) {
         const dateCollection = [];
         const avgValueCollection = [];
         const maxValueCollection = [];
         const minValueCollection = [];
-        for(const sensor of crop.sseries) {
 
+        for(const sensor of crop.sseries) {
           dateCollection.push(sensor.acquisition_date);
           avgValueCollection.push(sensor.avgvalue);
           maxValueCollection.push(sensor.maxvalue);
@@ -266,6 +258,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         for (let i = maxValueCollection.length - 1, il = 0; i >= il; i--) {
           envelopeY.push(maxValueCollection[i]);
         }
+
         const envelopeX = dateCollection;
         for (let j = dateCollection.length - 1, jl = 0; j >= jl; j--) {
           envelopeX.push(dateCollection[j]);
@@ -373,19 +366,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 1
    */
   onChart1SensorChange() {
-
-    /*
-    console.log("The following parameters will be sent to the time series endpoint: ");
-    console.log("study id: " + this.studyArea["properties"]["id"]);
-    console.log("start year: " + this.startYear);
-    console.log("end Year: " + this.endYear);
-    console.log("crop types: " + this.cropTypes);
-    console.log("chart1 image characteristic name: " + this.chart1SelectedImageCharacteristicName);
-    console.log("chart1 image characteristic id: " + this.chart1SelectedImageCharacteristicId);
-    console.log("chart1 sensor: " + this.selectedChart1Sensor);
-    console.log(this.allSpectralCharacteristicObjects);
-    */
-
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, null, null).then((response) => {
       return response;
     }).then((data) => {
@@ -403,6 +383,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     if(this.chart2SelectedImageCharacteristicName != null) {
       this.chart2SelectedImageCharacteristicName = null;
     }
+
     if(this.selectedChart2Sensor != null) {
       this.selectedChart2Sensor = null;
     }
@@ -449,17 +430,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 2
    */
   onChart2SensorChange() {
-
-    /*
-    console.log("The following parameters will be sent to the time series endpoint: ");
-    console.log("study area: " + this.studyArea["properties"]["name"]);
-    console.log("start year: " + this.startYear);
-    console.log("end Year: " + this.endYear);
-    console.log("chart2 image characteristic name: " + this.chart2SelectedImageCharacteristicName);
-    console.log("chart2 image characteristic id: " + this.chart2SelectedImageCharacteristicId);
-    console.log("chart2 sensor: " + this.selectedChart2Sensor);
-    */
-
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, null, null).then((response) => {
       return response;
     }).then((data) => {
@@ -479,7 +449,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * Handles when user taps on the 'add a chart' button
    */
   handleAddChartButtonTap() {
-
     //TODO ADD SECOND CHART
   }
 

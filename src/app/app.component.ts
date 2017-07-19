@@ -16,7 +16,6 @@ export class AppComponent {
    * Component Life-cycle methods
    */
   constructor() {
-
     // TODO: fetch the default data for first load ...
   }
 }
