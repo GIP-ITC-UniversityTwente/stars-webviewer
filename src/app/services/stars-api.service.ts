@@ -101,7 +101,7 @@ export class StarsAPIService {
   /**
    * Fetches a time series for an image characteristic for the input study area id, start year, (optional) end year, crop names, characteristic id, sensor list, (optional) first parameter, and (optional) second parameter
    */
-  fetchTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, imageCharacteristicId: number,  sensorList: string, firstParameter: number = null, secondParameter = null) {
+  fetchTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = null, secondParameter = null) {
 
     let url: string = AppConfiguration.apiBaseURL + "/timeseries?";
 
@@ -116,7 +116,7 @@ export class StarsAPIService {
 
     url += "&cropNames=" + cropNames;
 
-    url += "&imageCharacteristicId=" + imageCharacteristicId;
+    url += "&characteristicId=" + characteristicId;
 
     url += "&sensorList=" + sensorList;
 

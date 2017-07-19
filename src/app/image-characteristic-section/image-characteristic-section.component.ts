@@ -3,7 +3,7 @@ import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
 
-declare let Plotly: any;
+declare const Plotly: any;
 
 @Component({
   selector: 'app-image-characteristic-section',
@@ -105,14 +105,14 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       cropTypes => {
 
         let cropList: string = "";
-        for(let i = 0, il = cropTypes.length; i < il; i++) {
-          if(i == cropTypes.length) {
-            cropList += cropTypes[i];
+        cropTypes.forEach(function(item, index) {
+          if(index == cropTypes.length) {
+            cropList += cropTypes[index];
           }
           else {
-            cropList += cropTypes[i] + ",";
+            cropList += cropTypes[index] + ",";
           }
-        }
+        });
         this.cropTypes = cropList;
       }
     );
@@ -137,7 +137,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   createSetOfCharacteristicNames(imageCharacteristics: any[]) {
 
-    let uniqueCharacteristicNames = new Set();
+    const uniqueCharacteristicNames = new Set();
     imageCharacteristics.forEach(function(item) {
       uniqueCharacteristicNames.add(item.alias);
     });
@@ -169,7 +169,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * @returns {string[]}
    */
   fetchSensorsForImageCharacteristic(imageCharacteristicAlias: string, allImageCharacteristics: any[]): string[] {
-    let results: string[] = [];
+    const results: string[] = [];
     allImageCharacteristics.forEach(function(item) {
       if (item.alias == imageCharacteristicAlias) {
         results.push(item.sensor);
@@ -183,7 +183,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    * @returns {string}
    */
   fetchRandomColor() {
-    let colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
+    const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
     let randomIndex = this.randomIntFromInterval(0, 4);
     return colors[randomIndex];
   }
@@ -199,7 +199,6 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   fetchBackgroundColor(lineColor) {
 
-    //let backgroundColor = '#DDDDDD';
     let backgroundColor: string;
 
     if(lineColor == '#6A7f00') {
@@ -230,27 +229,26 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
    */
   renderTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
 
-    let chartData = [];
-    for(let item of results) {
+    const chartData = [];
+    results.forEach(function(item){
 
-      let cropName = item.crop;
-      for(let crop of item.cseries) {
+      const cropName = item.crop;
+      item.series.forEach(function(crop){
+        const dateCollection = [];
+        const avgValueCollection = [];
+        const maxValueCollection = [];
+        const minValueCollection = [];
 
-        let dateCollection = [];
-        let avgValueCollection = [];
-        let maxValueCollection = [];
-        let minValueCollection = [];
-        for(let sensor of crop.sseries) {
-
+        crop.cropseries.forEach(function(sensor){
           dateCollection.push(sensor.acquisition_date);
           avgValueCollection.push(sensor.avgvalue);
           maxValueCollection.push(sensor.maxvalue);
           minValueCollection.push(sensor.minvalue);
-        }
+        });
 
         // chart's line
-        let lineColor = this.fetchRandomColor();
-        let lineDataObject = {
+        const lineColor = this.fetchRandomColor();
+        const lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
           mode: 'lines',
@@ -263,17 +261,18 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         };
 
         // chart's envelope
-        let envelopeY = minValueCollection;
+        const envelopeY = minValueCollection;
         for (let i = maxValueCollection.length - 1, il = 0; i >= il; i--) {
           envelopeY.push(maxValueCollection[i]);
         }
-        let envelopeX = dateCollection;
+
+        const envelopeX = dateCollection;
         for (let j = dateCollection.length - 1, jl = 0; j >= jl; j--) {
           envelopeX.push(dateCollection[j]);
         }
 
-        let backgroundColor = this.fetchBackgroundColor(lineColor);
-        let envelopeDataObject = {
+        const backgroundColor = this.fetchBackgroundColor(lineColor);
+        const envelopeDataObject = {
           x: envelopeX,
           y: envelopeY,
           fill: "tozerox",
@@ -287,11 +286,11 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
         // add line & envelope to chart data
         chartData.push(envelopeDataObject);
         chartData.push(lineDataObject);
-      }
-    }
+      })
+    });
 
     // layout for millet spectral test sample
-    let layout = {
+    const layout = {
       title: xAxisTitle + " Time Series",
       xaxis: {
         title: 'Time',
@@ -390,7 +389,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, null, null).then((response) => {
       return response;
     }).then((data) => {
-      let results = data.results;
+      const results = data.results;
       this.renderTimeSeriesChart(results, this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, 'chart1');
     });
   }
@@ -464,7 +463,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, null, null).then((response) => {
       return response;
     }).then((data) => {
-      let results = data.results;
+      const results = data.results;
       this.renderTimeSeriesChart(results, this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName, 'chart2');
     });
   }
@@ -493,7 +492,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     //  CHART 1 PLACEHOLDER
     //----------------------
 
-    let milletSpectralLineEnvelope = {
+    const milletSpectralLineEnvelope = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d', '318d', '305d', '291d', '210d', '177d', '150d', '142d'],
       y: [0.15, 0.15, 0.2, 0.43, 0.44, 0.31, 0.27, 0.3, 0.34, 0.48, 0.48, 0.25, 0.19, 0.17],
       fill: "tozerox",
@@ -505,7 +504,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     };
 
     // data for millet spectral test sample
-    let milletSpectralLine = {
+    const milletSpectralLine = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.163984678685665, 0.163497392833233, 0.224976481497288, 0.455028122663498, 0.464507251977921, 0.321201853454113, 0.28456095457077],
       mode: 'lines',
@@ -518,7 +517,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     };
 
     // layout for millet spectral test sample
-    let milletSpectralLayout = {
+    const milletSpectralLayout = {
       title: "Spectral Time Series",
       xaxis: {
         title: 'Time',
@@ -537,7 +536,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     };
 
     // spectral chart for millet
-    let milletSpectralData = [milletSpectralLineEnvelope, milletSpectralLine];
+    const milletSpectralData = [milletSpectralLineEnvelope, milletSpectralLine];
     Plotly.newPlot('chart1',
       milletSpectralData,
       milletSpectralLayout,
@@ -553,7 +552,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     //----------------------
 
     // data for millet textural test sample
-    let milletTexturalLine = {
+    const milletTexturalLine = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.429646278731525, 0.471472800523043, 0.353645605966449, 0.313254946377128, 0.240355986077338, 0.235981020890176, 0.218380955606699],
       mode: 'lines',
@@ -565,7 +564,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
     };
 
     // layout for millet textural test sample
-    let milletTexturalLayout = {
+    const milletTexturalLayout = {
       title: "Textural Time Series",
       xaxis: {
         title: 'Time',
@@ -579,7 +578,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       hovermode: 'closest'
     };
 
-    let milletTexturalData = [milletTexturalLine];
+    const milletTexturalData = [milletTexturalLine];
     Plotly.newPlot('chart2',
       milletTexturalData,
       milletTexturalLayout,

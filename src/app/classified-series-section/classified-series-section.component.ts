@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-declare let Plotly: any;
+declare const Plotly: any;
 
 @Component({
   selector: 'app-classified-series-section',
@@ -14,7 +14,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
   ngOnInit() {
 
     // test sample
-    let spectralLarge = {
+    const spectralLarge = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.172186501324177,
         0.164392687380314,
@@ -31,7 +31,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
       }
     };
 
-    let spectralMedium = {
+    const spectralMedium = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.159075021743774,
         0.159485226869583,
@@ -48,7 +48,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
       }
     };
 
-    let spectralSmall = {
+    const spectralSmall = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.166699558496475,
         0.169587473074595,
@@ -66,7 +66,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
     };
 
     // layout for millet spectral test sample
-    let milletSpectralLayout = {
+    const milletSpectralLayout = {
       title: "NDVI by field size class",
       xaxis: {
         title: 'Time',
@@ -81,7 +81,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
     };
 
     // spectral chart for millet
-    let milletSpectralData = [spectralLarge, spectralMedium, spectralSmall];
+    const milletSpectralData = [spectralLarge, spectralMedium, spectralSmall];
     Plotly.newPlot('ndviVsSizeChart',
       milletSpectralData,
       milletSpectralLayout,
@@ -92,7 +92,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
     );
 
     // data for millet textural vs size test sample
-    let texturalLarge = {
+    const texturalLarge = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.415549235418439,
         0.374856048263609,
@@ -109,7 +109,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
       }
     };
 
-    let texturalMedium = {
+    const texturalMedium = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.463320282101631,
         0.536173478141427,
@@ -126,7 +126,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
       }
     };
 
-    let texturalSmall = {
+    const texturalSmall = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
       y: [0.432596058274309,
         0.374107008799911,
@@ -144,7 +144,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
     };
 
     // layout for millet textural test sample
-    let milletTexturalLayout = {
+    const milletTexturalLayout = {
       title: "Homogeneity by field size class",
       xaxis: {
         title: 'Time',
@@ -158,7 +158,7 @@ export class ClassifiedSeriesSectionComponent implements OnInit {
       hovermode: 'closest'
     };
 
-    let milletTexturalData = [texturalLarge, texturalMedium, texturalSmall];
+    const milletTexturalData = [texturalLarge, texturalMedium, texturalSmall];
     Plotly.newPlot('texturalVsSizeChart',
       milletTexturalData,
       milletTexturalLayout,

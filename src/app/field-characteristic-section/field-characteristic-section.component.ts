@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-declare let Plotly: any;
-declare let geostats: any;
+declare const Plotly: any;
+declare const geostats: any;
 
 @Component({
   selector: 'app-field-characteristic-section',
@@ -51,7 +51,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
 
     // create histogram
     this.geostatSeries = new geostats(this.frequencyData);
-    let histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
+    const histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
     this.createHistogram(histoData, false);
   }
 
@@ -91,7 +91,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
     }
 
     // create histogram
-    let histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
+    const histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
     this.createHistogram(histoData, true);
     //
     console.log('the raw freq data: ' + this.frequencyData);
@@ -103,7 +103,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    */
   createHistogram(histogramData: any, isShowing: boolean) {
 
-    let layout = {
+    const layout = {
       title: 'Histogram',
       bargap :0.5,
       hovermode: 'closest',
@@ -130,7 +130,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    */
    static fetchValuesInRange(series: number[], start: number, end: number) {
 
-    let result = [];
+    const result = [];
     const lastValue = series[series.length-1];
     series.forEach((item) => {
       if (item >= start && item < end) {
@@ -151,10 +151,10 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    */
   static fetchCountOfValues(values: number[]) {
 
-     let result = [];
+     const result = [];
 
      // get unique values
-     let uniqueValues = new Set(values);
+     const uniqueValues = new Set(values);
 
      // get count of unique values
      uniqueValues.forEach(function(currentUniqueValue) {
@@ -200,12 +200,12 @@ export class FieldCharacteristicSectionComponent implements OnInit {
 
     const sorted = series.sort((n1,n2) => n1 - n2);
 
-    let result = [];
+    const result = [];
     if (this.selectedClassSize > 0) {
       this.geostatSeries.ranges.forEach(function(item, index){
 
         // get the start and end values for the current range
-        let sliced = item.split(" - ");
+        const sliced = item.split(" - ");
         const startRange = sliced[0];
         const endRange = sliced[1];
         //
@@ -217,19 +217,19 @@ export class FieldCharacteristicSectionComponent implements OnInit {
         console.log('the values are: ' + values);
 
         // get the count for each value
-        let counts = FieldCharacteristicSectionComponent.fetchCountOfValues(values);
+        const counts = FieldCharacteristicSectionComponent.fetchCountOfValues(values);
         //
         console.log('the counts are: ' + counts);
 
         // create color array (per Plotly spec)
         const color = FieldCharacteristicSectionComponent.fetchHistogramColorForIndex(index);
-        let colorArray = [];
+        const colorArray = [];
         values.forEach(function(){
           colorArray.push(color);
         });
 
         // create a frequency data item (per Plotly spec)
-        let freqItem = {
+        const freqItem = {
           'name': 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
           'x': values,
           'y': counts,
@@ -254,14 +254,14 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    */
   createUnclassifiedHistogramDataObject(series: number[]) {
 
-    let result = [];
+    const result = [];
 
     // get unique values
-    let uniqueValues = new Set(series);
+    const uniqueValues = new Set(series);
 
     // get count of unique values
     uniqueValues.forEach(function(currentUniqueValue) {
-      let freqItem = {
+      const freqItem = {
         'name': currentUniqueValue,
         'x': [currentUniqueValue],
         'y': [0],
@@ -286,7 +286,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    */
   createTestHistogram() {
     // field based characteristic sample classification data
-    let data = [
+    const data = [
       {
         name: 'Medium Field',
         x: ['7000'],
@@ -317,7 +317,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
       }
     ];
 
-    let layout = {
+    const layout = {
       title: 'Histogram field size & classification',
       bargap :0.5,
       hovermode: 'closest'

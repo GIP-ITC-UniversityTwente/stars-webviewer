@@ -41,7 +41,7 @@ export class StudyAreaComponent implements OnInit {
     }).then((data) => {
 
       // use the study areas response as the data for the study area options and associated start/end year options
-      let results = data.results;
+      const results = data.results;
       this.initializeStudyAreaOptions(results, this.studyAreas);
       this.initializeStartYearOptions(results, this.startYears);
       this.initializeEndYearOptions(results, this.endYears);
@@ -95,8 +95,8 @@ export class StudyAreaComponent implements OnInit {
     this.selectedStudyAreaId = this.fetchStudyAreaId(this.selectedStudyAreaName);
 
     // get selected study area name
-    let targetStudyAreaName = this.selectedStudyAreaName;
-    for(let studyArea of this.studyAreas) {
+    const targetStudyAreaName = this.selectedStudyAreaName;
+    for(const studyArea of this.studyAreas) {
       if(studyArea.properties.name == targetStudyAreaName) {
         this.userSelectionService.updateStudyArea(studyArea);
       }
@@ -123,9 +123,9 @@ export class StudyAreaComponent implements OnInit {
   onStartYearChange() {
 
     // user selections
-    let studyAreaId = this.selectedStudyAreaId;
-    let startYear = this.selectedStartYear;
-    let crops = this.crops;
+    const studyAreaId = this.selectedStudyAreaId;
+    const startYear = this.selectedStartYear;
+    const crops = this.crops;
 
     // inform other components that the start year has been declared
     this.userSelectionService.updateStartYear(startYear);
@@ -134,7 +134,7 @@ export class StudyAreaComponent implements OnInit {
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, null).then((response) => {
       return response;
     }).then((data) => {
-      let results = data.results;
+      const results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
           if(item["name"] != null) {
@@ -157,10 +157,10 @@ export class StudyAreaComponent implements OnInit {
     this.crops = [];
 
     // user selections
-    let studyAreaId = this.selectedStudyAreaId;
-    let startYear = this.selectedStartYear;
-    let endYear = this.selectedEndYear;
-    let crops = this.crops;
+    const studyAreaId = this.selectedStudyAreaId;
+    const startYear = this.selectedStartYear;
+    const endYear = this.selectedEndYear;
+    const crops = this.crops;
 
     // inform other components that the end year has been declared
     this.userSelectionService.updateEndYear(endYear);
@@ -169,7 +169,7 @@ export class StudyAreaComponent implements OnInit {
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, endYear).then((response) => {
       return response;
     }).then((data) => {
-      let results = data.results;
+      const results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
           if(item["name"] != null) {
@@ -192,7 +192,7 @@ export class StudyAreaComponent implements OnInit {
     this.selectedCrops = [];
 
     // get the crops that are checked
-    for(let crop of this.crops) {
+    for (const crop of this.crops) {
       if(crop["isChecked"] == true) {
         this.selectedCrops.push(crop["name"]);
       }
