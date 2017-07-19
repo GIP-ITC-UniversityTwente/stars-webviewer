@@ -1,25 +1,25 @@
-<div class="cardHeader">
+<div class="cardHeader" style="padding-right: 135px;">
   <div class="cardHeaderTitle">FIELD MEASUREMENT</div>
   <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" (click)="handleInfoButtonTap()"/>
   <div class="fieldMeasurementOption">
-    <div class="parameterOptionTitle">Number of Classes</div><br/>
-    <md-select [(ngModel)]="selectedClassSize" (change)="onChart1ImageTypeChange()">
-      <md-option *ngFor="let classSize of classSizes" [value]="classSize">
-        {{classSize}}
-      </md-option>
-    </md-select>
-  </div>
-  <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Classification Method</div><br/>
-    <md-select [(ngModel)]="selectedClassificationMethod" (change)="onChart1ImageTypeChange()">
+    <md-select [(ngModel)]="selectedClassificationMethod" (change)="onClassificationChange()">
       <md-option *ngFor="let classificationMethod of classificationMethods" [value]="classificationMethod">
         {{classificationMethod}}
       </md-option>
     </md-select>
   </div>
   <div class="fieldMeasurementOption">
+    <div class="parameterOptionTitle">Number of Classes</div><br/>
+    <md-select [(ngModel)]="selectedClassSize" (change)="onClassSizeChange()">
+      <md-option *ngFor="let classSize of classSizes" [value]="classSize">
+        {{classSize}}
+      </md-option>
+    </md-select>
+  </div>
+  <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Field Characteristic</div><br/>
-    <md-select [(ngModel)]="selectedFieldCharacteristic" (change)="onChart1ImageTypeChange()">
+    <md-select [(ngModel)]="selectedFieldCharacteristic" (change)="onFieldCharacteristicChange()">
       <md-option *ngFor="let fieldCharacteristic of fieldCharacteristics" [value]="fieldCharacteristic">
         {{fieldCharacteristic}}
       </md-option>

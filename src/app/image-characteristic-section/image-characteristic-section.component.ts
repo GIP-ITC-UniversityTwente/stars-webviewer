@@ -185,8 +185,7 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   fetchRandomColor() {
     let colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
     let randomIndex = this.randomIntFromInterval(0, 4);
-    let randomColor = colors[randomIndex];
-    return randomColor;
+    return colors[randomIndex];
   }
 
   randomIntFromInterval(min, max) {
@@ -221,9 +220,13 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
 
     return backgroundColor;
   }
+
   /**
    * Utility for rendering the image characteristics chart for the time series response
-   * @param results
+   * @param {any[]} results
+   * @param {string} xAxisTitle
+   * @param {string} yAxisTitle
+   * @param {string} targetDivId
    */
   renderTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
 
@@ -311,7 +314,8 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       layout,
       {
         displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
       });
   }
 
@@ -539,7 +543,8 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       milletSpectralLayout,
       {
         displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
       }
     );
 
@@ -580,7 +585,8 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
       milletTexturalLayout,
       {
         displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
       }
     );
   }

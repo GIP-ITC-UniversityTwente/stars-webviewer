@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 declare let Plotly: any;
-declare var geostats: any;
+declare let geostats: any;
 
 @Component({
   selector: 'app-field-characteristic-section',
@@ -13,20 +13,278 @@ export class FieldCharacteristicSectionComponent implements OnInit {
   /**
    * Properties
    */
-  selectedFieldCharacteristic: string = null;
+  selectedFieldCharacteristic: string;
   fieldCharacteristics: string[] = ["Field Size"];
-  selectedClassificationMethod: string = null;
-  classificationMethods: string[] = ["Jenks", "Equal Interval", "Quantile", "Unique Values", "Standard Deviation", "Arithmetic Progression", "Geometric Progression", ];
-  selectedClassSize: number = null;
+  selectedClassificationMethod: string;
+  classificationMethods: string[];
+  selectedClassSize: number;
   classSizes: number[] = [1, 2, 3, 4, 5];
+  frequencyData: number[];
+  geostatSeries: any;
 
   /**
-   * Component Life-cyle methods
+   * Component Life-cycle methods
    */
   constructor() { }
 
   ngOnInit() {
 
+    this.createTestHistogram();
+  }
+
+  /**
+   * For handling when a user taps the info button for field characteristics.
+   */
+  handleInfoButtonTap() {
+    console.log('show info for field characteristics')
+  }
+
+  /**
+   * For handling when a user changes the target field characteristic.
+   */
+  onFieldCharacteristicChange() {
+
+    // TODO - call Field Characteristics API when it is ready
+
+    // simulates a call to the STARS API
+    this.frequencyData = [10.1, 10.1, 12.1, 12.1, 13.3, 13.3, 13.3, 14.4, 14.4, 14.4, 14.4, 15.5, 15.5, 15.5, 15.5, 15.5, 15.5, 16.6, 16.6, 16.6, 16.6, 17.7, 17.7, 17.7, 18.8, 18.8, 18.8, 18.8, 19.9, 19.9, 19.9, 20.1, 20.1];
+
+    // create histogram
+    this.geostatSeries = new geostats(this.frequencyData);
+    let histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
+    this.createHistogram(histoData, false);
+  }
+
+  /**
+   * For handling when a user changes the number of classes when viewing the frequency data.
+   */
+  onClassSizeChange() {
+    // Provide user classification methods.
+    this.classificationMethods = ["Jenks", "Equal Interval", "Quantile", "Unique Values", "Standard Deviation", "Arithmetic Progression", "Geometric Progression"];
+  }
+
+  /**
+   * For handling when a user changes the target classification when viewing the frequency data.
+   */
+  onClassificationChange() {
+
+    if (this.selectedClassificationMethod == "Jenks") {
+      this.geostatSeries.getJenks(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Equal Interval") {
+      this.geostatSeries.getClassEqInterval(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Quantile") {
+      this.geostatSeries.getClassQuantile(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Unique Values") {
+      this.geostatSeries.getClassUniqueValues(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Standard Deviation") {
+      this.geostatSeries.getClassStdDeviation(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Arithmetic Progression") {
+      this.geostatSeries.getClassArithmeticProgression(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Geometric Progression") {
+      this.geostatSeries.getClassGeometricProgression(this.selectedClassSize);
+    }
+
+    // create histogram
+    let histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
+    this.createHistogram(histoData, true);
+    //
+    console.log('the raw freq data: ' + this.frequencyData);
+  }
+
+  /**
+   * Utility for creating a histogram for the input series
+   * @param histogramData
+   */
+  createHistogram(histogramData: any, isShowing: boolean) {
+
+    let layout = {
+      title: 'Histogram',
+      bargap :0.5,
+      hovermode: 'closest',
+      showlegend: isShowing
+    };
+
+    Plotly.newPlot('histogram',
+      histogramData,
+      layout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      }
+    );
+  }
+
+  /**
+   * Utility for fetching numbers in the input series that are greater than or equal to the input start number and less then the input end number.
+   * @param {number[]} series
+   * @param {number} start
+   * @param {number} end
+   * @returns {Array}
+   */
+   static fetchValuesInRange(series: number[], start: number, end: number) {
+
+    let result = [];
+    const lastValue = series[series.length-1];
+    series.forEach((item) => {
+      if (item >= start && item < end) {
+        result.push(item);
+      }
+      else if (item == end && end == lastValue) {
+        result.push(item);
+      }
+    });
+
+    return result;
+  }
+
+  /**
+   * Utility for creating an array that represents the counts of each value in the input number array.
+   * @param {number[]} values
+   * @returns {Array}
+   */
+  static fetchCountOfValues(values: number[]) {
+
+     let result = [];
+
+     // get unique values
+     let uniqueValues = new Set(values);
+
+     // get count of unique values
+     uniqueValues.forEach(function(currentUniqueValue) {
+       let count = 0;
+       values.forEach(function(item) {
+         if (item == currentUniqueValue) {
+           count += 1;
+         }
+       });
+       result.push(count);
+     });
+
+     return result
+  }
+
+  /**
+   * Utility for fetching a histogram color.
+   * @param {number} index
+   */
+  static fetchHistogramColorForIndex(index: number) {
+    if (index == 0) {
+      return '#A1D99B';
+    }
+    else if (index == 1) {
+      return '#74C476';
+    }
+    else if (index == 2) {
+      return '#41AB5D';
+    }
+    else if (index == 3) {
+      return '#238B45';
+    }
+    else if (index == 4) {
+      return '005A32';
+    }
+  }
+
+  /**
+   * Utility for creating the data object for a classified histogram
+   * @param {number[]} series
+   */
+  createClassifiedHistogramDataObject(series: number[]) {
+
+    const sorted = series.sort((n1,n2) => n1 - n2);
+
+    let result = [];
+    if (this.selectedClassSize > 0) {
+      this.geostatSeries.ranges.forEach(function(item, index){
+
+        // get the start and end values for the current range
+        let sliced = item.split(" - ");
+        const startRange = sliced[0];
+        const endRange = sliced[1];
+        //
+        console.log('the range is: ' + startRange + ' to ' + endRange);
+
+        // get the values in the series for the current range
+        const values = FieldCharacteristicSectionComponent.fetchValuesInRange(sorted, startRange, endRange);
+        //
+        console.log('the values are: ' + values);
+
+        // get the count for each value
+        let counts = FieldCharacteristicSectionComponent.fetchCountOfValues(values);
+        //
+        console.log('the counts are: ' + counts);
+
+        // create color array (per Plotly spec)
+        const color = FieldCharacteristicSectionComponent.fetchHistogramColorForIndex(index);
+        let colorArray = [];
+        values.forEach(function(){
+          colorArray.push(color);
+        });
+
+        // create a frequency data item (per Plotly spec)
+        let freqItem = {
+          'name': 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
+          'x': values,
+          'y': counts,
+          type: 'bar',
+          marker: { color:  colorArray}
+        };
+
+        result.push(freqItem);
+      });
+
+      //
+      console.log('the histogram model');
+      console.log(result);
+    }
+
+    return result;
+  }
+
+  /**
+   * Utility for creating the data object for an un-classified histogram
+   * @param {number[]} series
+   */
+  createUnclassifiedHistogramDataObject(series: number[]) {
+
+    let result = [];
+
+    // get unique values
+    let uniqueValues = new Set(series);
+
+    // get count of unique values
+    uniqueValues.forEach(function(currentUniqueValue) {
+      let freqItem = {
+        'name': currentUniqueValue,
+        'x': [currentUniqueValue],
+        'y': [0],
+        type: 'bar',
+        marker: { color: ['#CDCDCD'] }
+      };
+      series.forEach(function(item) {
+        if (item == currentUniqueValue) {
+          let count = freqItem['y'][0];
+          count += 1;
+          freqItem['y'][0] = count;
+        }
+      });
+      result.push(freqItem);
+    });
+
+    return result;
+  }
+
+  /**
+   * Creates a test histogram to demonstrate the general code required for the chart.
+   */
+  createTestHistogram() {
     // field based characteristic sample classification data
     let data = [
       {
@@ -70,38 +328,9 @@ export class FieldCharacteristicSectionComponent implements OnInit {
       layout,
       {
         displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
       }
     );
-
-    // ----------------------------------------
-    // testing geostats classification library
-    // ----------------------------------------
-
-    let series = new geostats([11.25, 11.25, 11.25, 15.25, 15.25, 15.25, 19.25, 19.25, 19.25, 30.25, 30.25, 30.25, 50.25, 50.25, 50.25]);
-    series.setPrecision(2);
-    let numberOfClasses = 5;
-
-    //series.getClassJenks(numberOfClasses);
-    //series.getClassGeometricProgression(numberOfClasses);
-    series.getClassEqInterval(numberOfClasses);
-    //series.getQuantile(numberOfClasses);
-    //series.getClassStdDeviation(numberOfClasses);
-    //series.getClassUniqueValues(numberOfClasses);
-    //series.getClassArithmeticProgression(numberOfClasses);
-
-    console.log('method: ' + series.method);
-    console.log('ranges: ' + series.ranges);
-    console.log('bounds: ' + series.bounds);
-    console.log('inner ranges: ' + series.inner_ranges);
-    console.log('colors: ' + series.colors);
-    console.log('counter: ' + series.counter);
-  }
-
-  /**
-   * For handling when a user taps the info button for field characteristics
-   */
-  handleInfoButtonTap() {
-    console.log('show info for field characteristics')
   }
 }
