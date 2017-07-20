@@ -4,17 +4,17 @@ import { AppConfiguration } from "../app-configuration";
 declare const Plotly: any;
 
 @Component({
-  selector: 'app-classified-series-section',
-  templateUrl: './classified-series-section.component.html',
-  styleUrls: ['./classified-series-section.component.css']
+  selector: 'app-classified-time-series',
+  templateUrl: './classified-time-series.component.html',
+  styleUrls: ['./classified-time-series.component.css']
 })
-export class ClassifiedSeriesSectionComponent implements OnInit {
+export class ClassifiedTimeSeriesComponent implements OnInit {
 
   /**
    * Properties
    */
   toolTipPosition = "right";
-  classificationToolTip = AppConfiguration.classificationToolTip;
+  classifiedTimeSeriesToolTip = AppConfiguration.classifiedTimeSeriesToolTip;
 
   constructor() { }
 

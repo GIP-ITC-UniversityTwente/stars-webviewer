@@ -14,5 +14,5 @@ export class AppConfiguration {
   static cropTypeToolTip: string = "Enter tooltip for Crop Type in AppConfiguration";
   static timeSeriesTooltip: string = "Enter tooltip for Time Series in AppConfiguration";
   static fieldConstantsToolTip: string = "Enter tooltip for Field Constants in AppConfiguration";
-  static classificationToolTip: string = "Enter tooltip for Classification section in AppConfiguration";
+  static classifiedTimeSeriesToolTip: string = "Enter tooltip for Classified Time Series section in AppConfiguration";
 }

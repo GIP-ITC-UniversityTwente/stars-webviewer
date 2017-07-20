@@ -12,20 +12,20 @@ import 'hammerjs';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { StudyAreaComponent } from './study-area/study-area.component';
-import { ClassifiedSeriesSectionComponent } from './classified-series-section/classified-series-section.component';
 import { MapComponent } from './map/map.component';
 import { HistogramComponent } from './histogram/histogram.component';
 import { TimeSeriesComponent } from './time-series/time-series.component';
+import { ClassifiedTimeSeriesComponent } from './classified-time-series/classified-time-series.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     StudyAreaComponent,
-    ClassifiedSeriesSectionComponent,
     MapComponent,
     HistogramComponent,
-    TimeSeriesComponent
+    TimeSeriesComponent,
+    ClassifiedTimeSeriesComponent
   ],
   imports: [
     BrowserModule,
