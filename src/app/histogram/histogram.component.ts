@@ -5,11 +5,11 @@ declare const Plotly: any;
 declare const geostats: any;
 
 @Component({
-  selector: 'app-field-characteristic-section',
-  templateUrl: './field-characteristic-section.component.html',
-  styleUrls: ['./field-characteristic-section.component.css']
+  selector: 'app-histogram',
+  templateUrl: './histogram.component.html',
+  styleUrls: ['./histogram.component.css']
 })
-export class FieldCharacteristicSectionComponent implements OnInit {
+export class HistogramComponent implements OnInit {
 
   /**
    * Properties
@@ -128,7 +128,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * @param {number} end
    * @returns {Array}
    */
-   static fetchValuesInRange(series: number[], start: number, end: number) {
+  static fetchValuesInRange(series: number[], start: number, end: number) {
     const result = [];
     const lastValue = series[series.length-1];
     series.forEach((item) => {
@@ -149,23 +149,23 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * @returns {Array}
    */
   static fetchCountOfValues(values: number[]) {
-     const result = [];
+    const result = [];
 
-     // get unique values
-     const uniqueValues = new Set(values);
+    // get unique values
+    const uniqueValues = new Set(values);
 
-     // get count of unique values
-     uniqueValues.forEach(function(currentUniqueValue) {
-       let count = 0;
-       values.forEach(function(item) {
-         if (item == currentUniqueValue) {
-           count += 1;
-         }
-       });
-       result.push(count);
-     });
+    // get count of unique values
+    uniqueValues.forEach(function(currentUniqueValue) {
+      let count = 0;
+      values.forEach(function(item) {
+        if (item == currentUniqueValue) {
+          count += 1;
+        }
+      });
+      result.push(count);
+    });
 
-     return result
+    return result
   }
 
   /**
@@ -209,17 +209,17 @@ export class FieldCharacteristicSectionComponent implements OnInit {
         console.log('the range is: ' + startRange + ' to ' + endRange);
 
         // get the values in the series for the current range
-        const values = FieldCharacteristicSectionComponent.fetchValuesInRange(sorted, startRange, endRange);
+        const values = HistogramComponent.fetchValuesInRange(sorted, startRange, endRange);
         //
         console.log('the values are: ' + values);
 
         // get the count for each value
-        const counts = FieldCharacteristicSectionComponent.fetchCountOfValues(values);
+        const counts = HistogramComponent.fetchCountOfValues(values);
         //
         console.log('the counts are: ' + counts);
 
         // create color array (per Plotly spec)
-        const color = FieldCharacteristicSectionComponent.fetchHistogramColorForIndex(index);
+        const color = HistogramComponent.fetchHistogramColorForIndex(index);
         const colorArray = [];
         values.forEach(function(){
           colorArray.push(color);
@@ -315,7 +315,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
     ];
 
     const layout = {
-      title: 'Histogram field size & classification',
+      title: 'Histogram of field size',
       bargap :0.5,
       hovermode: 'closest'
     };
@@ -331,3 +331,4 @@ export class FieldCharacteristicSectionComponent implements OnInit {
     );
   }
 }
+

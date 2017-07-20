@@ -1,5 +1,5 @@
 <div class="cardHeader" style="padding-right: 135px;">
-  <div class="cardHeaderTitle">FIELD CONSTANT CHARACTERISTICS</div>
+  <div class="cardHeaderTitle">HISTOGRAM OF FIELD CONSTANTS</div>
   <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" (click)="handleInfoButtonTap()" mdTooltip={{fieldConstantsToolTip}} [mdTooltipPosition]='toolTipPosition'/>
   <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Classification Method</div><br/>
@@ -18,7 +18,7 @@
     </md-select>
   </div>
   <div class="fieldMeasurementOption">
-    <div class="parameterOptionTitle">Field Characteristic</div><br/>
+    <div class="parameterOptionTitle">Field Constant</div><br/>
     <md-select [(ngModel)]="selectedFieldCharacteristic" (change)="onFieldCharacteristicChange()">
       <md-option *ngFor="let fieldCharacteristic of fieldCharacteristics" [value]="fieldCharacteristic">
         {{fieldCharacteristic}}
