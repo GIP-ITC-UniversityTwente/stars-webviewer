@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
+import { AppConfiguration } from "../app-configuration"
 
 declare const Plotly: any;
 
@@ -42,6 +43,10 @@ export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
   chart2SelectedImageCharacteristicId: number = null;
   chart2Sensors: any[] = [];
   selectedChart2Sensor: string = null;
+
+  // tooltip
+  toolTipPosition = "right";
+  timeSeriesTooltip = AppConfiguration.timeSeriesTooltip;
 
   /**
    * Component Life-cycle methods

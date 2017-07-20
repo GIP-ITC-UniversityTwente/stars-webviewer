@@ -2,7 +2,7 @@
 <div class="parameterSection" style="position:fixed;top:99px;">
   <div class="parameterTitle">Study Area</div>
   <div class="parameterInfo" (click)="handleInfoTapForStudyArea()">
-    <img src="../../assets/icon_info.svg" alt="info"/>
+    <img src="../../assets/icon_info.svg" alt="info" mdTooltip={{studyAreaToolTip}} [mdTooltipPosition]='toolTipPosition' />
   </div>
   <md-select class="selectItem" [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
     <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
@@ -29,7 +29,7 @@
 <div class="parameterSection" style="position:fixed;top:429px;">
   <div class="parameterTitle">Crop Type</div>
   <div class="parameterInfo" (click)="handleInfoTapForCropType()" style="float:left;">
-    <img src="../../assets/icon_info.svg" alt="info"/>
+    <img src="../../assets/icon_info.svg" alt="info" mdTooltip={{cropTypeToolTip}} [mdTooltipPosition]='toolTipPosition' />
   </div>
   <br/>
   <div class="cropItem" *ngFor="let crop of crops">

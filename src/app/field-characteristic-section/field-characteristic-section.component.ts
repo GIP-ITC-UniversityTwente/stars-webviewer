@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppConfiguration } from "../app-configuration"
 
 declare const Plotly: any;
 declare const geostats: any;
@@ -21,6 +22,8 @@ export class FieldCharacteristicSectionComponent implements OnInit {
   classSizes: number[] = [1, 2, 3, 4, 5];
   frequencyData: number[];
   geostatSeries: any;
+  toolTipPosition = "right";
+  fieldConstantsToolTip = AppConfiguration.fieldConstantsToolTip;
 
   /**
    * Component Life-cycle methods
@@ -35,7 +38,7 @@ export class FieldCharacteristicSectionComponent implements OnInit {
    * For handling when a user taps the info button for field characteristics.
    */
   handleInfoButtonTap() {
-    console.log('show info for field characteristics')
+    console.log('show info for field characteristics');
   }
 
   /**

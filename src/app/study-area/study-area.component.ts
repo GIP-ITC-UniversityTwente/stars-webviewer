@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
+import { AppConfiguration } from "../app-configuration";
 
 @Component({
   selector: 'app-study-area',
@@ -29,6 +30,11 @@ export class StudyAreaComponent implements OnInit {
   // represents the crop options a user can choose
   selectedCrops: string[] = [];
   crops: any[] = [];
+
+  // tooltips
+  toolTipPosition = "right";
+  studyAreaToolTip = AppConfiguration.studyAreaToolTip;
+  cropTypeToolTip = AppConfiguration.cropTypeToolTip;
 
   /**
    * Component Life-cycle Methods

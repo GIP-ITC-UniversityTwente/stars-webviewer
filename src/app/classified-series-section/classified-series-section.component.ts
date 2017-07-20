@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppConfiguration } from "../app-configuration";
 
 declare const Plotly: any;
 
@@ -8,6 +9,12 @@ declare const Plotly: any;
   styleUrls: ['./classified-series-section.component.css']
 })
 export class ClassifiedSeriesSectionComponent implements OnInit {
+
+  /**
+   * Properties
+   */
+  toolTipPosition = "right";
+  classificationToolTip = AppConfiguration.classificationToolTip;
 
   constructor() { }
 
