@@ -15,12 +15,13 @@
   font-size: 17px;
 }
 
-.loginButton {
+.headerButton {
   padding-right: 20px;
   float: right;
   font-size: 11px;
   letter-spacing: 1px;
 }
+
 
 /* for low resolution logo display */
 .logoImage {

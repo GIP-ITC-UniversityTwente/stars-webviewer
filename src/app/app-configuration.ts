@@ -9,10 +9,13 @@ export class AppConfiguration {
   static mapZoom: number = 3;
   static bingKey: string = 'AtBPLiCjWdjtGtkHLgJbyMGfXMNtpME9EOtVBiqP7fD8sQUMMDuDfTS1To5TKVJr';
 
-  // Configuration for the Tool Tip Documentation
+  // Configuration for the Tool Tip
   static studyAreaToolTip: string = "Enter tooltip for Study Area in AppConfiguration";
   static cropTypeToolTip: string = "Enter tooltip for Crop Type in AppConfiguration";
   static timeSeriesTooltip: string = "Enter tooltip for Time Series in AppConfiguration";
   static fieldConstantsToolTip: string = "Enter tooltip for Field Constants in AppConfiguration";
   static classifiedTimeSeriesToolTip: string = "Enter tooltip for Classified Time Series section in AppConfiguration";
+
+  // Configuration for Online Help
+  static onlineHelpURL: string = "https://s3.amazonaws.com/test-kly-web/PlaceholderOnlineDoc.pdf";
 }
