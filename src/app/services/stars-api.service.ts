@@ -137,4 +137,34 @@ export class StarsAPIService {
   private handleTimeSeriesError(error: any): Promise<any> {
     return Promise.reject(error.message || error);
   }
+
+  /**
+   * Fetches the field characteristics for the input study area and time.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @returns {Promise<any | never | any>}
+   */
+  fetchFieldCharacteristics(studyAreaId: number, startYear: number, endYear: number = null) {
+
+    let url: string = AppConfiguration.apiBaseURL + "/fieldcharacteristics?";
+
+    url += "studyAreaId=" + studyAreaId;
+
+    if (endYear == null) {
+      url += "&startYear=" + String(startYear);
+    }
+    else {
+      url += "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+    }
+
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleFieldCharacteristicError);
+  }
+
+  private handleFieldCharacteristicError(error: any): Promise<any> {
+    return Promise.reject(error.message || error);
+  }
 }

@@ -29,13 +29,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   cropTypes: string;
 
   characteristicTypes: string[] = [];
+  imageOptionsAreVisible: boolean = false;
+  fieldOptionsAreVisible: boolean = false;
   imageTypes: string[] = [];
   fieldTypes: string[] = [];
   allSpectralCharacteristicObjects: any[] = [];
   allTexturalCharacteristicObjects: any[] = [];
-
-  imageOptionsAreVisible: boolean = false;
-  fieldOptionsAreVisible: boolean = false;
 
   chart1SelectedCharacteristicType: string;
   chart1SelectedImageType: string;
@@ -76,6 +75,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
       startYear => {
 
         this.startYear = startYear;
+
+        // initialize the image characteristic options (and other options)
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
           return response;
         }).then((data) => {
@@ -88,6 +89,20 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         }).catch((error) => {
           console.log(error);
         });
+
+        // initialize field characteristic options
+        this.starsAPIService.fetchFieldCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
+          return response;
+        }).then((data) => {
+
+          let fieldTypes = this.fieldTypes;
+          data.results.fieldCharacteristics.forEach(function(item){
+            const fieldCharacteristic = item.alias;
+            fieldTypes.push(fieldCharacteristic);
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
       }
     );
 
@@ -96,6 +111,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
       endYear => {
 
         this.endYear = endYear;
+
+        // initialize the image characteristic options (and other options)
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear ,this.endYear).then((response) => {
           return response;
         }).then((data) => {
@@ -105,6 +122,20 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
           this.characteristicTypes = ['Image Characteristic', 'Field Characteristic'];
           this.imageTypes = ['Spectral', 'Textural'];
 
+        }).catch((error) => {
+          console.log(error);
+        });
+
+        // initialize field characteristic options
+        this.starsAPIService.fetchFieldCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
+          return response;
+        }).then((data) => {
+
+          let fieldTypes = this.fieldTypes;
+          data.results.fieldCharacteristics.forEach(function(item){
+            const fieldCharacteristic = item.alias;
+            fieldTypes.push(fieldCharacteristic);
+          });
         }).catch((error) => {
           console.log(error);
         });
