@@ -5,13 +5,12 @@ import { UserSelectionService } from '../services/user-selection.service';
 import { AppConfiguration } from "../app-configuration"
 
 declare const Plotly: any;
-
 @Component({
-  selector: 'app-image-characteristic-section',
-  templateUrl: './image-characteristic-section.component.html',
-  styleUrls: ['./image-characteristic-section.component.css']
+  selector: 'app-time-series-section',
+  templateUrl: './time-series-section.component.html',
+  styleUrls: ['./time-series-section.component.css']
 })
-export class ImageCharacteristicSectionComponent implements OnInit, OnDestroy {
+export class TimeSeriesSectionComponent implements OnInit, OnDestroy {
 
   /**
    * Properties
