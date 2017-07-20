@@ -6,6 +6,14 @@
 <div class="chartWrapper multiChartDivider" >
   <div class="chartHeader">
     <div class="parameterOption">
+      <div class="parameterOptionTitle">Characteristic Type</div><br/>
+      <md-select [(ngModel)]="chart1SelectedCharacteristicType" (change)="onChart1CharacteristicTypeChange()">
+        <md-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
+          {{characteristicType}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Type</div><br/>
       <md-select [(ngModel)]="chart1SelectedImageType" (change)="onChart1ImageTypeChange()">
         <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
@@ -13,7 +21,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption">
+    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
       <md-select [(ngModel)]="chart1SelectedImageCharacteristicName" (change)="onChart1ImageCharacteristicChange()">
         <md-option *ngFor="let chart1ImageCharacteristic of chart1ImageCharacteristics" [value]="chart1ImageCharacteristic">
@@ -21,7 +29,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption">
+    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Source</div><br/>
       <md-select [(ngModel)]="selectedChart1Sensor" (change)="onChart1SensorChange()">
         <md-option *ngFor="let chart1Sensor of chart1Sensors" [value]="chart1Sensor">
@@ -29,13 +37,30 @@
         </md-option>
       </md-select>
     </div>
+    <div class="parameterOption" *ngIf="fieldOptionsAreVisible">
+      <div class="parameterOptionTitle">Field Characteristic</div><br/>
+      <md-select [(ngModel)]="chart1SelectFieldCharacteristic" (change)="onChart1FieldCharacteristicChange()">
+        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType">
+          {{fieldType}}
+        </md-option>
+      </md-select>
+    </div>
     <br/>
   </div>
   <div id="chart1"></div>
 </div>
+<!--<div [hidden]="!chart2IsShowing" class="chartWrapper">-->
 <div class="chartWrapper">
   <div class="chartHeader">
     <div class="parameterOption">
+      <div class="parameterOptionTitle">Characteristic Type</div><br/>
+      <md-select [(ngModel)]="chart2SelectedCharacteristicType" (change)="onChart2CharacteristicTypeChange()">
+        <md-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
+          {{characteristicType}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Type</div><br/>
       <md-select [(ngModel)]="chart2SelectedImageType" (change)="onChart2ImageTypeChange()">
         <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
@@ -43,7 +68,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption">
+    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
       <md-select [(ngModel)]="chart2SelectedImageCharacteristicName" name="texturalCharacteristic" (change)="onChart2ImageCharacteristicChange()">
         <md-option *ngFor="let chart2ImageCharacteristic of chart2ImageCharacteristics" [value]="chart2ImageCharacteristic">
@@ -51,11 +76,19 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption">
+    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Source</div><br/>
       <md-select [(ngModel)]="selectedChart2Sensor" (change)="onChart2SensorChange()">
         <md-option *ngFor="let chart2Sensor of chart2Sensors" [value]="chart2Sensor">
           {{chart2Sensor}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="parameterOption" *ngIf="fieldOptionsAreVisible">
+      <div class="parameterOptionTitle">Field Characteristic</div><br/>
+      <md-select [(ngModel)]="chart2SelectFieldCharacteristic" (change)="onChart2FieldCharacteristicChange()">
+        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType">
+          {{fieldType}}
         </md-option>
       </md-select>
     </div>

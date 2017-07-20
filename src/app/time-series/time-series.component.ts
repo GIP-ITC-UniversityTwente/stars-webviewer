@@ -17,32 +17,43 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Properties
    */
 
+  chart2IsShowing: boolean = false;
+
   subscriptionToSelectedStudyArea: Subscription;
   studyArea: JSON;
   subscriptionToSelectedStartYear: Subscription;
-  startYear: number = null;
+  startYear: number;
   subscriptionToSelectedEndYear: Subscription;
-  endYear: number = null;
+  endYear: number;
   subscriptionToSelectedCropTypes: Subscription;
-  cropTypes: string = null;
+  cropTypes: string;
 
+  characteristicTypes: string[] = [];
   imageTypes: string[] = [];
+  fieldTypes: string[] = [];
   allSpectralCharacteristicObjects: any[] = [];
   allTexturalCharacteristicObjects: any[] = [];
 
-  chart1SelectedImageType: string = null;
-  chart1ImageCharacteristics: any[] = [];
-  chart1SelectedImageCharacteristicName: string = null;
-  chart1SelectedImageCharacteristicId: number = null;
-  chart1Sensors: any[] = [];
-  selectedChart1Sensor: string = null;
+  imageOptionsAreVisible: boolean = false;
+  fieldOptionsAreVisible: boolean = false;
 
-  chart2SelectedImageType: string = null;
+  chart1SelectedCharacteristicType: string;
+  chart1SelectedImageType: string;
+  chart1ImageCharacteristics: any[] = [];
+  chart1SelectedImageCharacteristicName: string;
+  chart1SelectedImageCharacteristicId: number;
+  chart1Sensors: any[] = [];
+  selectedChart1Sensor: string;
+  chart1SelectFieldCharacteristic: string;
+
+  chart2SelectedCharacteristicType: string;
+  chart2SelectedImageType: string;
   chart2ImageCharacteristics: any[] = [];
-  chart2SelectedImageCharacteristicName: string = null;
-  chart2SelectedImageCharacteristicId: number = null;
+  chart2SelectedImageCharacteristicName: string;
+  chart2SelectedImageCharacteristicId: number;
   chart2Sensors: any[] = [];
-  selectedChart2Sensor: string = null;
+  selectedChart2Sensor: string;
+  chart2SelectFieldCharacteristic: string;
 
   // tooltip
   toolTipPosition = "right";
@@ -68,11 +79,11 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
           return response;
         }).then((data) => {
+
           this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
           this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
-
-          // let user choose an image type after the image characteristic response arrives at the client (this takes a while)
-          this.imageTypes = ["Spectral", "Textural"];
+          this.characteristicTypes = ['Image Characteristic', 'Field Characteristic'];
+          this.imageTypes = ['Spectral', 'Textural'];
 
         }).catch((error) => {
           console.log(error);
@@ -88,11 +99,11 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear ,this.endYear).then((response) => {
           return response;
         }).then((data) => {
+
           this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
           this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
-
-          // let user choose an image type after the image characteristic response arrives at the client (this takes a while)
-          this.imageTypes = ["Spectral", "Textural"];
+          this.characteristicTypes = ['Image Characteristic', 'Field Characteristic'];
+          this.imageTypes = ['Spectral', 'Textural'];
 
         }).catch((error) => {
           console.log(error);
@@ -132,7 +143,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for creating a unique set of image characteristic names
+   * Utility for creating a unique set of image characteristic names.
    * @param imageCharacteristics
    */
   createSetOfCharacteristicNames(imageCharacteristics: any[]) {
@@ -145,13 +156,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for fetching the image characteristic id associated with the input image characteristic name
+   * Utility for fetching the image characteristic id associated with the input image characteristic name.
    * @param imageCharacteristicName
    * @param allImageCharacteristics
    * @returns {number}
    */
   fetchImageCharacteristicId(imageCharacteristicName: string, allImageCharacteristics: any[]): number {
-    let targetId: number = null;
+    let targetId: number = undefined;
     allImageCharacteristics.forEach(function(item){
       if (item.alias == imageCharacteristicName) {
         targetId = item.oid;
@@ -161,7 +172,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for fetching a unique list of sensors for the chosen image characteristic (spectral or textural)
+   * Utility for fetching a unique list of sensors for the chosen image characteristic (spectral or textural).
    * @param imageCharacteristicAlias
    * @param allImageCharacteristics
    * @returns {string[]}
@@ -177,7 +188,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for fetching a random color for drawing lines
+   * Utility for fetching a random color for drawing lines.
    * @returns {string}
    */
   fetchRandomColor() {
@@ -191,7 +202,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for fetching a complimentary background color for the input line color
+   * Utility for fetching a complimentary background color for the input line color.
    * @param lineColor
    * @returns {any}
    */
@@ -219,7 +230,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for rendering the image characteristics chart for the time series response
+   * Utility for rendering the image characteristics chart for the time series response.
    * @param {any[]} results
    * @param {string} xAxisTitle
    * @param {string} yAxisTitle
@@ -317,16 +328,39 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when user chooses an image type for Chart 1
+   * Handles when user choose a characteristic type for Chart 1.
+   */
+  onChart1CharacteristicTypeChange() {
+
+    if (this.chart1SelectedCharacteristicType == this.characteristicTypes[0]) {
+
+      // show image characteristic drop down options
+      this.imageOptionsAreVisible = true;
+
+      // hide field characteristic drop down options
+      this.fieldOptionsAreVisible = false;
+    }
+    else {
+
+      // hide image characteristic drop down options
+      this.imageOptionsAreVisible = false;
+
+      // show field characteristic drop down options
+      this.fieldOptionsAreVisible = true;
+    }
+  }
+
+  /**
+   * Handles when user chooses an image type for Chart 1.
    */
   onChart1ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
-    if(this.chart1SelectedImageCharacteristicName != null) {
-      this.chart1SelectedImageCharacteristicName = null;
+    if(this.chart1SelectedImageCharacteristicName != undefined) {
+      this.chart1SelectedImageCharacteristicName = undefined;
     }
-    if(this.selectedChart1Sensor != null) {
-      this.selectedChart1Sensor = null;
+    if(this.selectedChart1Sensor != undefined) {
+      this.selectedChart1Sensor = undefined;
     }
 
     // add image characteristic drop down items
@@ -339,13 +373,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when user chooses an image characteristic for Chart 1
+   * Handles when user chooses an image characteristic for Chart 1.
    */
   onChart1ImageCharacteristicChange() {
 
     // clear previous dependent selection for sensor
-    if(this.selectedChart1Sensor != null) {
-      this.selectedChart1Sensor = null;
+    if(this.selectedChart1Sensor != undefined) {
+      this.selectedChart1Sensor = undefined;
     }
 
     // add sensor drop down items
@@ -368,7 +402,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when a user chooses a sensor for Chart 1
+   * Handles when a user chooses a sensor for Chart 1.
    */
   onChart1SensorChange() {
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, null, null).then((response) => {
@@ -380,17 +414,30 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when user chooses an image type for Chart 2
+   * Handles when a user chooses a field characteristic for Chart 1.
+   */
+  onChart1FieldCharacteristicChange() {
+    console.log(this.chart1SelectFieldCharacteristic);
+  }
+
+  /**
+   * Handles when user choose a characteristic type for Chart 2.
+   */
+  onChart2CharacteristicTypeChange() {
+  }
+
+  /**
+   * Handles when user chooses an image type for Chart 2.
    */
   onChart2ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
-    if(this.chart2SelectedImageCharacteristicName != null) {
-      this.chart2SelectedImageCharacteristicName = null;
+    if(this.chart2SelectedImageCharacteristicName != undefined) {
+      this.chart2SelectedImageCharacteristicName = undefined;
     }
 
-    if(this.selectedChart2Sensor != null) {
-      this.selectedChart2Sensor = null;
+    if(this.selectedChart2Sensor != undefined) {
+      this.selectedChart2Sensor = undefined;
     }
 
     // add image characteristic drop down items
@@ -403,13 +450,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when user chooses an image characteristic for Chart 2
+   * Handles when user chooses an image characteristic for Chart 2.
    */
   onChart2ImageCharacteristicChange() {
 
     // clear previous dependent selection for sensor
-    if(this.selectedChart2Sensor != null) {
-      this.selectedChart2Sensor = null;
+    if(this.selectedChart2Sensor != undefined) {
+      this.selectedChart2Sensor = undefined;
     }
 
     // add sensor drop down items
@@ -432,7 +479,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when a user chooses a sensor for Chart 2
+   * Handles when a user chooses a sensor for Chart 2.
    */
   onChart2SensorChange() {
     this.starsAPIService.fetchTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, null, null).then((response) => {
@@ -444,21 +491,33 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when user taps on info icon for Image Characteristics
+   * Handles when a user chooses a field characteristic for Chart 2.
+   */
+  onChart2FieldCharacteristicChange() {
+
+  }
+
+  /**
+   * Handles when user taps on info icon for Image Characteristics.
    */
   handleInfoButtonTap() {
     console.log('show info for image characteristics...');
   }
 
   /**
-   * Handles when user taps on the 'add a chart' button
+   * Handles when user taps on the 'add a chart' button.
    */
   handleAddChartButtonTap() {
-    //TODO ADD SECOND CHART
+    if (this.chart2IsShowing) {
+      this.chart2IsShowing = false;
+    }
+    else {
+      this.chart2IsShowing = true;
+    }
   }
 
   /**
-   * Utility for testing patterns for creating chart spec
+   * Utility for testing patterns for creating chart spec.
    */
   createTestCharts() {
 

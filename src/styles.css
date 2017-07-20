@@ -50,13 +50,14 @@ body {
 }
 
 .chartHeader {
-  height: 60px;
+  overflow:auto;
   padding-left: 20px;
   padding-top: 15px;
   border-bottom: 1px solid #dfdfdf;
 }
 
 .parameterOption {
+  height: 60px;
   float: left;
   margin-right: 20px;
   font-size: 9pt;
