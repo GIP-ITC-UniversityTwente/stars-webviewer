@@ -387,10 +387,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
       }
 
       //
-      console.log(dateCollection);
-      console.log(avgValueCollection);
-      console.log(maxValueCollection);
-      console.log(minValueCollection);
+      console.log('date collection: ' + dateCollection);
+      console.log('avgvalue: ' + avgValueCollection);
+      console.log('maxvalue: ' + maxValueCollection);
+      console.log('minvalue: ' + minValueCollection);
 
       // draw line and envelope
       if (avgValueCollection.length == maxValueCollection.length) {

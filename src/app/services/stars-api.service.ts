@@ -82,7 +82,7 @@ export class StarsAPIService {
    * @returns {Promise<any>}
    */
   fetchImageCharacteristics(studyAreaId: number, startYear: number, endYear: number = undefined): Promise<any> {
-    let url = AppConfiguration.apiBaseURL + `/imagecharacteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
+    let url = AppConfiguration.apiBaseURL + `/image/characteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
     if (endYear != undefined) {
       url += `&endYear=${endYear}`
     }
@@ -107,7 +107,7 @@ export class StarsAPIService {
    * @returns {Promise<any | never | any>}
    */
   fetchImageCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = undefined, secondParameter: number = undefined) {
-    let url: string = AppConfiguration.apiBaseURL + `/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&sensorList=${sensorList}&startYear=${startYear}`;
+    let url: string = AppConfiguration.apiBaseURL + `/image/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&sensorList=${sensorList}&startYear=${startYear}`;
     if (endYear != undefined) {
       url += `&endYear=${endYear}`
     }
@@ -134,7 +134,7 @@ export class StarsAPIService {
    * @returns {Promise<any | never | any>}
    */
   fetchFieldCharacteristics(studyAreaId: number, startYear: number, endYear: number = undefined) {
-    let url = `${AppConfiguration.apiBaseURL}/fieldcharacteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
+    let url = `${AppConfiguration.apiBaseURL}/field/characteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
     if (endYear != undefined) {
       url += `&endYear=${endYear}`;
     }
@@ -157,7 +157,7 @@ export class StarsAPIService {
    * @returns {Promise<any | never | any>}
    */
   fetchFieldCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, cropNames: string, characteristicId: number) {
-    let url = `${AppConfiguration.apiBaseURL}/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&startYear=${startYear}`
+    let url = `${AppConfiguration.apiBaseURL}/field/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&startYear=${startYear}`
     if (endYear != undefined) {
       url += `&endYear=${endYear}`;
     }
@@ -201,7 +201,7 @@ export class StarsAPIService {
   fetchFieldConstantData(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number) {
     let url = `${AppConfiguration.apiBaseURL}/field/constant_data?studyAreaId=${studyAreaId}&characteristicId=${characteristicId}&startYear=${startYear}`;
     if (endYear != undefined) {
-      url += `endYear=${endYear}`;
+      url += `&endYear=${endYear}`;
     }
 
     return this.http.get(url)

@@ -27,13 +27,13 @@ export class HistogramComponent implements OnInit {
   subscriptionToSelectedCropTypes: Subscription;
   cropTypes: string[] = [];
 
-  selectedFieldConstantCharacteristic: string;
+  selectedFieldConstantCharacteristicId: number;
   fieldConstantCharacteristics: any[] = [];
   selectedClassificationMethod: string;
   classificationMethods: string[];
   selectedClassSize: number;
   classSizes: number[] = [1, 2, 3, 4, 5];
-  frequencyData: number[];
+  frequencyData: number[] = [];
   geostatSeries: any;
   toolTipPosition = "right";
   fieldConstantsToolTip = AppConfiguration.fieldConstantsToolTip;
@@ -110,15 +110,24 @@ export class HistogramComponent implements OnInit {
    */
   onFieldCharacteristicChange() {
 
-    // TODO - call Field Characteristics API when it is ready
+    // fetch field constants data
+    this.starsAPIService.fetchFieldConstantData(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId).then((response) => {
+      return response;
+    }).then((data) => {
 
-    // simulates a call to the STARS API
-    this.frequencyData = [10.1, 10.1, 12.1, 12.1, 13.3, 13.3, 13.3, 14.4, 14.4, 14.4, 14.4, 15.5, 15.5, 15.5, 15.5, 15.5, 15.5, 16.6, 16.6, 16.6, 16.6, 17.7, 17.7, 17.7, 18.8, 18.8, 18.8, 18.8, 19.9, 19.9, 19.9, 20.1, 20.1];
+      // initialize frequency data
+      for (const item of data.results) {
+        this.frequencyData.push(item["v"]);
+      }
 
-    // create histogram
-    this.geostatSeries = new geostats(this.frequencyData);
-    const histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
-    this.createHistogram(histoData, false);
+      // create histogram
+      this.geostatSeries = new geostats(this.frequencyData);
+      const histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
+      this.createHistogram(histoData, false);
+
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
   /**
@@ -169,7 +178,7 @@ export class HistogramComponent implements OnInit {
   createHistogram(histogramData: any, isShowing: boolean) {
     const layout = {
       title: 'Histogram',
-      bargap :0.5,
+      bargap: 0.1,
       hovermode: 'closest',
       showlegend: isShowing
     };
@@ -269,18 +278,21 @@ export class HistogramComponent implements OnInit {
         const sliced = item.split(" - ");
         const startRange = sliced[0];
         const endRange = sliced[1];
+
         //
-        console.log('the range is: ' + startRange + ' to ' + endRange);
+        //console.log('the range is: ' + startRange + ' to ' + endRange);
 
         // get the values in the series for the current range
         const values = HistogramComponent.fetchValuesInRange(sorted, startRange, endRange);
+
         //
-        console.log('the values are: ' + values);
+        //console.log('the values are: ' + values);
 
         // get the count for each value
         const counts = HistogramComponent.fetchCountOfValues(values);
+
         //
-        console.log('the counts are: ' + counts);
+        //console.log('the counts are: ' + counts);
 
         // create color array (per Plotly spec)
         const color = HistogramComponent.fetchHistogramColorForIndex(index);
