@@ -3,6 +3,7 @@ import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
 import { AppConfiguration } from "../app-configuration"
+import {max} from "rxjs/operator/max";
 
 declare const Plotly: any;
 
@@ -365,24 +366,32 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
     for(const item of results) {
       const cropName = item.crop;
-
       const dateCollection = [];
       const avgValueCollection = [];
-      //const maxValueCollection = [];
-      //const minValueCollection = [];
+      const maxValueCollection = [];
+      const minValueCollection = [];
 
       for(const crop of item.cseries[0]) { // note variation - need to do [0]
-
         dateCollection.push(crop.acquisition_date);
         avgValueCollection.push(crop.avgvalue);
-
-        /*
-        for(const sensor of crop.sseries) { // note variation - no sensor
-          dateCollection.push(sensor.acquisition_date);
-          avgValueCollection.push(sensor.avgvalue);
-          maxValueCollection.push(sensor.maxvalue); // note variation - does not always have max and min values - only avg
-          minValueCollection.push(sensor.minvalue);
+        if (crop.hasOwnProperty('maxvalue') && crop.hasOwnProperty('minvalue')) {
+          if (crop.maxvalue != null) {
+            maxValueCollection.push(crop.maxvalue); // note variation - does not always have max and min values - only avg
+          }
+          if (crop.minvalue != null) {
+            minValueCollection.push(crop.minvalue);
+          }
         }
+      }
+
+      //
+      console.log(dateCollection);
+      console.log(avgValueCollection);
+      console.log(maxValueCollection);
+      console.log(minValueCollection);
+
+      // draw line and envelope
+      if (avgValueCollection.length == maxValueCollection.length) {
 
         // chart's line
         const lineColor = this.fetchRandomColor();
@@ -424,25 +433,27 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         // add line & envelope to chart data
         chartData.push(envelopeDataObject);
         chartData.push(lineDataObject);
-        */
       }
+      // only draw line ...
+      else {
 
-      // chart's line
-      const lineColor = this.fetchRandomColor();
-      const lineDataObject = {
-        x: dateCollection,
-        y: avgValueCollection,
-        mode: 'lines',
-        name: cropName,
-        line: {
-          color: lineColor,
-          width: 3
-        },
-        type: 'scatter'
-      };
+        // chart's line
+        const lineColor = this.fetchRandomColor();
+        const lineDataObject = {
+          x: dateCollection,
+          y: avgValueCollection,
+          mode: 'lines',
+          name: cropName,
+          line: {
+            color: lineColor,
+            width: 3
+          },
+          type: 'scatter'
+        };
 
-      // add line & envelope to chart data
-      chartData.push(lineDataObject);
+        // add line & envelope to chart data
+        chartData.push(lineDataObject);
+      }
     }
 
     // layout for millet spectral test sample
