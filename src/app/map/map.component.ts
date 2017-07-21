@@ -21,9 +21,9 @@ export class MapComponent implements OnInit, OnDestroy {
   subscriptionToSelectedStudyArea: Subscription;
   studyArea: JSON;
   subscriptionToSelectedStartYear: Subscription;
-  startYear: number = null;
+  startYear: number;
   subscriptionToSelectedEndYear: Subscription;
-  endYear: number = null;
+  endYear: number;
   subscriptionToSelectedCropTypes: Subscription;
   cropTypes: string[] = [];
 

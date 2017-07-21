@@ -137,7 +137,7 @@ export class StudyAreaComponent implements OnInit {
     this.userSelectionService.updateStartYear(startYear);
 
     // fetch crops
-    this.starsAPIService.fetchCropTypes(studyAreaId, startYear, null).then((response) => {
+    this.starsAPIService.fetchCropTypes(studyAreaId, startYear).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;

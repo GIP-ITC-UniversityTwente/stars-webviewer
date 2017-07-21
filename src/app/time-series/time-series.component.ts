@@ -3,7 +3,6 @@ import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
 import { AppConfiguration } from "../app-configuration"
-import {max} from "rxjs/operator/max";
 
 declare const Plotly: any;
 
@@ -115,7 +114,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         this.endYear = endYear;
 
         // initialize the image characteristic options (and other options)
-        starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear ,this.endYear).then((response) => {
+        starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
 
@@ -129,7 +128,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         });
 
         // initialize field characteristic options
-        this.starsAPIService.fetchFieldCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
+        this.starsAPIService.fetchFieldCharacteristics(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
 
@@ -566,7 +565,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 1.
    */
   onChart1SensorChange() {
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, null, null).then((response) => {
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -676,7 +675,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 2.
    */
   onChart2SensorChange() {
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, null, null).then((response) => {
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;

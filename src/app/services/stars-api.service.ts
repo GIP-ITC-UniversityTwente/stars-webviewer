@@ -27,11 +27,9 @@ export class StarsAPIService {
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleStudyAreasError);
-  }
-
-  private handleStudyAreasError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   /**
@@ -41,22 +39,18 @@ export class StarsAPIService {
    * @param {number} endYear
    * @returns {Promise<any>}
    */
-  fetchFarmFields(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
-    let url: string;
-    if (endYear == null) {
-      url = AppConfiguration.apiBaseURL + "/farmfields?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
+  fetchFarmFields(studyAreaId: number, startYear: number, endYear: number = undefined): Promise<any> {
+    let url = AppConfiguration.apiBaseURL + `/farmfields?studyAreaId=${studyAreaId}&startYear=${startYear}`;
+    if (endYear != undefined) {
+      url += `&endYear=${endYear}`;
     }
-    else {
-      url = AppConfiguration.apiBaseURL + "/farmfields?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
-    }
+
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleFarmfieldsError);
-  }
-
-  private handleFarmfieldsError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   /**
@@ -66,22 +60,18 @@ export class StarsAPIService {
    * @param {number} endYear
    * @returns {Promise<any>}
    */
-  fetchCropTypes(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
-    let url: string;
-    if (endYear == null) {
-      url = AppConfiguration.apiBaseURL + "/cropTypes?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
+  fetchCropTypes(studyAreaId: number, startYear: number, endYear: number = undefined): Promise<any> {
+    let url = AppConfiguration.apiBaseURL + `/cropTypes?studyAreaId=${studyAreaId}&startYear=${startYear}`;
+    if (endYear != undefined) {
+      url += `&endYear=${endYear}`;
     }
-    else {
-      url = AppConfiguration.apiBaseURL + "/cropTypes?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
-    }
+
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleCropTypesError);
-  }
-
-  private handleCropTypesError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   /**
@@ -91,22 +81,17 @@ export class StarsAPIService {
    * @param {number} endYear
    * @returns {Promise<any>}
    */
-  fetchImageCharacteristics(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
-    let url: string;
-    if (endYear == null) {
-      url = AppConfiguration.apiBaseURL + "/imagecharacteristics?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear);
-    }
-    else {
-      url = AppConfiguration.apiBaseURL + "/imagecharacteristics?studyAreaId=" + String(studyAreaId) + "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+  fetchImageCharacteristics(studyAreaId: number, startYear: number, endYear: number = undefined): Promise<any> {
+    let url = AppConfiguration.apiBaseURL + `/imagecharacteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
+    if (endYear != undefined) {
+      url += `&endYear=${endYear}`
     }
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleImageCharacteristicsError);
-  }
-
-  private handleImageCharacteristicsError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   /**
@@ -121,41 +106,24 @@ export class StarsAPIService {
    * @param {any} secondParameter
    * @returns {Promise<any | never | any>}
    */
-  fetchImageCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = null, secondParameter = null) {
-
-    let url: string = AppConfiguration.apiBaseURL + "/timeseries?";
-
-    url += "studyAreaId=" + studyAreaId;
-
-    if (endYear == null) {
-      url += "&startYear=" + String(startYear);
+  fetchImageCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = undefined, secondParameter: number = undefined) {
+    let url: string = AppConfiguration.apiBaseURL + `/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&sensorList=${sensorList}&startYear=${startYear}`;
+    if (endYear != undefined) {
+      url += `&endYear=${endYear}`
     }
-    else {
-      url += "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+    if (firstParameter != undefined) {
+      url += `&firstParameter=${firstParameter}`;
     }
-
-    url += "&cropNames=" + cropNames;
-
-    url += "&characteristicId=" + characteristicId;
-
-    url += "&sensorList=" + sensorList;
-
-    if (firstParameter != null) {
-      url += "&firstParameter=" + firstParameter;
-    }
-
-    if (secondParameter != null) {
-      url += "&secondParameter=" + secondParameter;
+    if (secondParameter != undefined) {
+      url += `&secondParameter=${secondParameter}`;
     }
 
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleImageTimeSeriesError);
-  }
-
-  private handleImageTimeSeriesError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   /**
@@ -165,27 +133,18 @@ export class StarsAPIService {
    * @param {number} endYear
    * @returns {Promise<any | never | any>}
    */
-  fetchFieldCharacteristics(studyAreaId: number, startYear: number, endYear: number = null) {
-
-    let url: string = AppConfiguration.apiBaseURL + "/fieldcharacteristics?";
-
-    url += "studyAreaId=" + studyAreaId;
-
-    if (endYear == null) {
-      url += "&startYear=" + String(startYear);
-    }
-    else {
-      url += "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+  fetchFieldCharacteristics(studyAreaId: number, startYear: number, endYear: number = undefined) {
+    let url = `${AppConfiguration.apiBaseURL}/fieldcharacteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
+    if (endYear != undefined) {
+      url += `&endYear=${endYear}`;
     }
 
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleFieldCharacteristicError);
-  }
-
-  private handleFieldCharacteristicError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
   /**
@@ -197,30 +156,59 @@ export class StarsAPIService {
    * @param {number} characteristicId
    * @returns {Promise<any | never | any>}
    */
-  fetchFieldCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, characteristicId: number) {
-
-    let url: string = AppConfiguration.apiBaseURL + "/timeseries?";
-
-    url += "studyAreaId=" + studyAreaId;
-
-    if (endYear == null) {
-      url += "&startYear=" + String(startYear);
+  fetchFieldCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, cropNames: string, characteristicId: number) {
+    let url = `${AppConfiguration.apiBaseURL}/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&startYear=${startYear}`
+    if (endYear != undefined) {
+      url += `&endYear=${endYear}`;
     }
-    else {
-      url += "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
-    }
-
-    url += "&cropNames=" + cropNames;
-
-    url += "&characteristicId=" + characteristicId;
 
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleFieldTimeSeriesError);
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 
-  private handleFieldTimeSeriesError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
+  /**
+   * Fetches a collection of field constant characteristics based on the input parameters.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   */
+  fetchFieldConstantCharacteristic(studyAreaId: number, startYear: number, endYear: number = undefined) {
+    let url = `${AppConfiguration.apiBaseURL}/field/constant_characteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
+    if (endYear != undefined) {
+      url += `&endYear=${endYear}`;
+    }
+
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }
+
+  /**
+   * Fetches a collection of field constant data based on the input parameters.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @param {number} characteristicId
+   * @returns {Promise<never | any>}
+   */
+  fetchFieldConstantData(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number) {
+    let url = `${AppConfiguration.apiBaseURL}/field/constant_data?studyAreaId=${studyAreaId}&characteristicId=${characteristicId}&startYear=${startYear}`;
+    if (endYear != undefined) {
+      url += `endYear=${endYear}`;
+    }
+
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch((error) => {
+        console.log(error.message);
+      });
   }
 }

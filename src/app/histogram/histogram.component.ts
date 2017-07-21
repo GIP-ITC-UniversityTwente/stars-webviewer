@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfiguration } from "../app-configuration"
+import { StarsAPIService } from '../services/stars-api.service';
+import { UserSelectionService } from '../services/user-selection.service';
+import { Subscription } from 'rxjs/Subscription';
 
 declare const Plotly: any;
 declare const geostats: any;
@@ -14,8 +17,18 @@ export class HistogramComponent implements OnInit {
   /**
    * Properties
    */
-  selectedFieldCharacteristic: string;
-  fieldCharacteristics: string[] = ["Field Size"];
+
+  subscriptionToSelectedStudyArea: Subscription;
+  studyArea: JSON;
+  subscriptionToSelectedStartYear: Subscription;
+  startYear: number;
+  subscriptionToSelectedEndYear: Subscription;
+  endYear: number;
+  subscriptionToSelectedCropTypes: Subscription;
+  cropTypes: string[] = [];
+
+  selectedFieldConstantCharacteristic: string;
+  fieldConstantCharacteristics: string[] = [];
   selectedClassificationMethod: string;
   classificationMethods: string[];
   selectedClassSize: number;
@@ -28,7 +41,56 @@ export class HistogramComponent implements OnInit {
   /**
    * Component Life-cycle methods
    */
-  constructor() { }
+  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
+
+    // subscribe to the study area selection by the user
+    this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
+      studyArea => {
+        this.studyArea = studyArea;
+      }
+    );
+
+    // subscribe to the start year selection by the user
+    this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
+      startYear => {
+        this.startYear = startYear;
+
+        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
+          return response;
+        }).then((data) => {
+
+          console.log(data);
+
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
+    );
+
+    // subscribe to the end year selection by the user
+    this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
+      endYear => {
+        this.endYear = endYear;
+
+        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
+          return response;
+        }).then((data) => {
+
+          console.log(data);
+
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
+    );
+
+    // subscribe to crop types selections by the user
+    this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
+      cropTypes => {
+        this.cropTypes = cropTypes;
+      }
+    );
+  }
 
   ngOnInit() {
     this.createTestHistogram();
