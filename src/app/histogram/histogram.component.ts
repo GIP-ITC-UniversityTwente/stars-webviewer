@@ -172,16 +172,35 @@ export class HistogramComponent implements OnInit {
   }
 
   /**
+   * Utility for looking up the Field Constant name (i.e. alias) for the input Field Constant id
+   * @param {number} id
+   */
+  lookUpFieldConstantName(id: number) {
+    let result: string = undefined;
+    this.fieldConstantCharacteristics.forEach(function(item) {
+      if (item.oid == id) {
+        result = item.alias;
+      }
+    });
+    return result;
+  }
+
+  /**
    * Utility for creating a histogram for the input series
    * @param histogramData
    */
   createHistogram(histogramData: any, isShowing: boolean) {
+    
     const layout = {
-      title: 'Histogram',
-      bargap: 0.1,
+      title: 'Histogram of `' + this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId) + '`',
+      yaxis: { title: "Count"},
+      bargap: 0.05,
       hovermode: 'closest',
       showlegend: isShowing
     };
+
+    //
+    console.log(histogramData);
 
     Plotly.newPlot('histogram',
       histogramData,
@@ -192,6 +211,8 @@ export class HistogramComponent implements OnInit {
         displaylogo: false
       }
     );
+
+    //Plotly.newPlot('histogram', histogramData);
   }
 
   /**
@@ -326,29 +347,12 @@ export class HistogramComponent implements OnInit {
    * @param {number[]} series
    */
   createUnclassifiedHistogramDataObject(series: number[]) {
-    const result = [];
 
-    // get unique values
-    const uniqueValues = new Set(series);
-
-    // get count of unique values
-    uniqueValues.forEach(function(currentUniqueValue) {
-      const freqItem = {
-        'name': currentUniqueValue,
-        'x': [currentUniqueValue],
-        'y': [0],
-        type: 'bar',
-        marker: { color: ['#CDCDCD'] }
-      };
-      series.forEach(function(item) {
-        if (item == currentUniqueValue) {
-          let count = freqItem['y'][0];
-          count += 1;
-          freqItem['y'][0] = count;
-        }
-      });
-      result.push(freqItem);
-    });
+    // build histogram data object per the Plotly spec
+    const result = [{
+      x: series,
+      type: 'histogram'
+    }];
 
     return result;
   }
