@@ -25,7 +25,7 @@ export class HistogramComponent implements OnInit {
   subscriptionToSelectedEndYear: Subscription;
   endYear: number;
   subscriptionToSelectedCropTypes: Subscription;
-  cropTypes: string[] = [];
+  cropTypes: string;
 
   selectedFieldConstantCharacteristicId: number;
   fieldConstantCharacteristics: any[] = [];
@@ -54,8 +54,33 @@ export class HistogramComponent implements OnInit {
     this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
       startYear => {
         this.startYear = startYear;
+      }
+    );
 
-        // fetch field constant characteristics for drop down
+    // subscribe to the end year selection by the user
+    this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
+      endYear => {
+        this.endYear = endYear;
+      }
+    );
+
+    // subscribe to crop types selections by the user
+    this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
+      cropTypes => {
+
+        // create the comma-delimited list of crops for an API request
+        let cropList: string = "";
+        cropTypes.forEach(function(item, index) {
+          if(index == cropTypes.length - 1) {
+            cropList += cropTypes[index];
+          }
+          else {
+            cropList += cropTypes[index] + ",";
+          }
+        });
+        this.cropTypes = cropList;
+
+        // fetch field constant characteristics for drop down only after crops are chosen - as they are required parameters for the histograms
         this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear).then((response) => {
           return response;
         }).then((data) => {
@@ -65,31 +90,6 @@ export class HistogramComponent implements OnInit {
         }).catch((error) => {
           console.log(error);
         });
-      }
-    );
-
-    // subscribe to the end year selection by the user
-    this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
-      endYear => {
-        this.endYear = endYear;
-
-        // fetch field constant characteristics for drop down
-        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
-          return response;
-        }).then((data) => {
-
-          this.fieldConstantCharacteristics = data.results.fieldConstants;
-
-        }).catch((error) => {
-          console.log(error);
-        });
-      }
-    );
-
-    // subscribe to crop types selections by the user
-    this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
-      cropTypes => {
-        this.cropTypes = cropTypes;
       }
     );
   }
@@ -111,19 +111,34 @@ export class HistogramComponent implements OnInit {
   onFieldCharacteristicChange() {
 
     // fetch field constants data
-    this.starsAPIService.fetchFieldConstantData(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId).then((response) => {
+    this.starsAPIService.fetchFieldConstantData(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
     }).then((data) => {
 
-      // initialize frequency data
+      // clear frequency data from a previously chosen field constant characteristic
+      if (this.frequencyData.length > 0) {
+        this.frequencyData = [];
+      }
+
+      // initialize (or update) frequency data
       for (const item of data.results) {
         this.frequencyData.push(item["v"]);
       }
 
       // create histogram
-      this.geostatSeries = new geostats(this.frequencyData);
-      const histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
-      this.createHistogram(histoData, false);
+      if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
+
+        // create a un-classified histogram
+        this.geostatSeries = new geostats(this.frequencyData);
+        const histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
+        this.createHistogram(histoData, false);
+      }
+      else {
+
+        // create a classified histogram
+        const histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
+        this.createHistogram(histoData, true);
+      }
 
     }).catch((error) => {
       console.log(error);
@@ -134,7 +149,8 @@ export class HistogramComponent implements OnInit {
    * For handling when a user changes the number of classes when viewing the frequency data.
    */
   onClassSizeChange() {
-    // Provide user classification methods.
+
+    // initialize classification methods in drop down
     this.classificationMethods = ["Jenks", "Equal Interval", "Quantile", "Unique Values", "Standard Deviation", "Arithmetic Progression", "Geometric Progression"];
   }
 
@@ -142,33 +158,10 @@ export class HistogramComponent implements OnInit {
    * For handling when a user changes the target classification when viewing the frequency data.
    */
   onClassificationChange() {
-    if (this.selectedClassificationMethod == "Jenks") {
-      this.geostatSeries.getJenks(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Equal Interval") {
-      this.geostatSeries.getClassEqInterval(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Quantile") {
-      this.geostatSeries.getClassQuantile(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Unique Values") {
-      this.geostatSeries.getClassUniqueValues(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Standard Deviation") {
-      this.geostatSeries.getClassStdDeviation(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Arithmetic Progression") {
-      this.geostatSeries.getClassArithmeticProgression(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Geometric Progression") {
-      this.geostatSeries.getClassGeometricProgression(this.selectedClassSize);
-    }
 
-    // create histogram
+    // create classified histogram
     const histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
     this.createHistogram(histoData, true);
-    //
-    console.log('the raw freq data: ' + this.frequencyData);
   }
 
   /**
@@ -286,6 +279,35 @@ export class HistogramComponent implements OnInit {
    */
   createClassifiedHistogramDataObject(series: number[]) {
     const result = [];
+
+    //
+    console.log(this.selectedClassificationMethod);
+
+    if (this.selectedClassificationMethod == "Jenks") {
+      this.geostatSeries.getJenks(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Equal Interval") {
+      this.geostatSeries.getClassEqInterval(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Quantile") {
+      this.geostatSeries.getClassQuantile(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Unique Values") {
+      this.geostatSeries.getClassUniqueValues(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Standard Deviation") {
+      this.geostatSeries.getClassStdDeviation(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Arithmetic Progression") {
+      this.geostatSeries.getClassArithmeticProgression(this.selectedClassSize);
+    }
+    else if (this.selectedClassificationMethod == "Geometric Progression") {
+      this.geostatSeries.getClassGeometricProgression(this.selectedClassSize);
+    }
+    else {
+      this.geostatSeries.getJenks(this.selectedClassSize);
+    }
+
     const sorted = series.sort((n1,n2) => n1 - n2);
 
     if (this.selectedClassSize > 0) {
@@ -297,7 +319,7 @@ export class HistogramComponent implements OnInit {
         const endRange = sliced[1];
 
         //
-        //console.log('the range is: ' + startRange + ' to ' + endRange);
+        console.log('the range is: ' + startRange + ' to ' + endRange);
 
         // get the values in the series for the current range
         const values = HistogramComponent.fetchValuesInRange(sorted, startRange, endRange);
@@ -309,7 +331,7 @@ export class HistogramComponent implements OnInit {
         const counts = HistogramComponent.fetchCountOfValues(values);
 
         //
-        //console.log('the counts are: ' + counts);
+        console.log('the counts are: ' + counts);
 
         // create color array (per Plotly spec)
         const targetColor = HistogramComponent.fetchHistogramColorForIndex(index);

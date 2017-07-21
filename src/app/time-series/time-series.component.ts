@@ -146,7 +146,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
         let cropList: string = "";
         cropTypes.forEach(function(item, index) {
-          if(index == cropTypes.length) {
+          if(index == cropTypes.length - 1) {
             cropList += cropTypes[index];
           }
           else {

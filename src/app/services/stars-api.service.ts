@@ -198,8 +198,8 @@ export class StarsAPIService {
    * @param {number} characteristicId
    * @returns {Promise<never | any>}
    */
-  fetchFieldConstantData(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number) {
-    let url = `${AppConfiguration.apiBaseURL}/field/constant_data?studyAreaId=${studyAreaId}&characteristicId=${characteristicId}&startYear=${startYear}`;
+  fetchFieldConstantData(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string) {
+    let url = `${AppConfiguration.apiBaseURL}/field/constant_data?studyAreaId=${studyAreaId}&characteristicId=${characteristicId}&cropNames=${cropNames}&startYear=${startYear}`;
     if (endYear != undefined) {
       url += `&endYear=${endYear}`;
     }
