@@ -3,7 +3,6 @@ import { Http } from '@angular/http';
 import { AppConfiguration } from '../app-configuration';
 
 import 'rxjs/add/operator/toPromise';
-import {first} from "rxjs/operator/first";
 
 @Injectable()
 export class StarsAPIService {
@@ -36,7 +35,11 @@ export class StarsAPIService {
   }
 
   /**
-   * Fetches farm fields based on input study area, start year, and optional end year
+   * Fetches farm fields based on input study area, start year, and optional end year.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @returns {Promise<any>}
    */
   fetchFarmFields(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
     let url: string;
@@ -57,7 +60,11 @@ export class StarsAPIService {
   }
 
   /**
-   * Fetches crop types for the input study area, start year, and optional end year
+   * Fetches crop types for the input study area, start year, and optional end year.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @returns {Promise<any>}
    */
   fetchCropTypes(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
     let url: string;
@@ -78,7 +85,11 @@ export class StarsAPIService {
   }
 
   /**
-   * Fetches image characteristics for the input study area, star year, and option end year
+   * Fetches image characteristics for the input study area, star year, and option end year.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @returns {Promise<any>}
    */
   fetchImageCharacteristics(studyAreaId: number, startYear: number, endYear: number = null): Promise<any> {
     let url: string;
@@ -99,9 +110,18 @@ export class StarsAPIService {
   }
 
   /**
-   * Fetches a time series for an image characteristic for the input study area id, start year, (optional) end year, crop names, characteristic id, sensor list, (optional) first parameter, and (optional) second parameter
+   * Fetches a time series for an image characteristic based on the input parameters.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @param {string} cropNames
+   * @param {number} characteristicId
+   * @param {string} sensorList
+   * @param {number} firstParameter
+   * @param {any} secondParameter
+   * @returns {Promise<any | never | any>}
    */
-  fetchTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = null, secondParameter = null) {
+  fetchImageCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = null, secondParameter = null) {
 
     let url: string = AppConfiguration.apiBaseURL + "/timeseries?";
 
@@ -131,10 +151,10 @@ export class StarsAPIService {
     return this.http.get(url)
       .toPromise()
       .then(response => response.json())
-      .catch(this.handleTimeSeriesError);
+      .catch(this.handleImageTimeSeriesError);
   }
 
-  private handleTimeSeriesError(error: any): Promise<any> {
+  private handleImageTimeSeriesError(error: any): Promise<any> {
     return Promise.reject(error.message || error);
   }
 
@@ -165,6 +185,42 @@ export class StarsAPIService {
   }
 
   private handleFieldCharacteristicError(error: any): Promise<any> {
+    return Promise.reject(error.message || error);
+  }
+
+  /**
+   * Fetches a time series for a field characteristic based on the input parameters.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @param {string} cropNames
+   * @param {number} characteristicId
+   * @returns {Promise<any | never | any>}
+   */
+  fetchFieldCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = null, cropNames: string, characteristicId: number) {
+
+    let url: string = AppConfiguration.apiBaseURL + "/timeseries?";
+
+    url += "studyAreaId=" + studyAreaId;
+
+    if (endYear == null) {
+      url += "&startYear=" + String(startYear);
+    }
+    else {
+      url += "&startYear=" + String(startYear) + "&endYear=" + String(endYear);
+    }
+
+    url += "&cropNames=" + cropNames;
+
+    url += "&characteristicId=" + characteristicId;
+
+    return this.http.get(url)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleFieldTimeSeriesError);
+  }
+
+  private handleFieldTimeSeriesError(error: any): Promise<any> {
     return Promise.reject(error.message || error);
   }
 }

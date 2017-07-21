@@ -39,9 +39,9 @@
     </div>
     <div class="parameterOption" *ngIf="fieldOptionsAreVisible">
       <div class="parameterOptionTitle">Field Characteristic</div><br/>
-      <md-select [(ngModel)]="chart1SelectFieldCharacteristic" (change)="onChart1FieldCharacteristicChange()">
-        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType">
-          {{fieldType}}
+      <md-select [(ngModel)]="chart1SelectedFieldCharacteristicName" (change)="onChart1FieldCharacteristicChange()">
+        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
+          {{fieldType.alias}}
         </md-option>
       </md-select>
     </div>
@@ -86,7 +86,7 @@
     </div>
     <div class="parameterOption" *ngIf="fieldOptionsAreVisible">
       <div class="parameterOptionTitle">Field Characteristic</div><br/>
-      <md-select [(ngModel)]="chart2SelectFieldCharacteristic" (change)="onChart2FieldCharacteristicChange()">
+      <md-select [(ngModel)]="chart2SelectedFieldCharacteristic" (change)="onChart2FieldCharacteristicChange()">
         <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType">
           {{fieldType}}
         </md-option>
