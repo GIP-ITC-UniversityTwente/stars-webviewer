@@ -13,7 +13,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Type</div><br/>
       <md-select [(ngModel)]="chart1SelectedImageType" (change)="onChart1ImageTypeChange()">
         <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
@@ -21,7 +21,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
       <md-select [(ngModel)]="chart1SelectedImageCharacteristicName" (change)="onChart1ImageCharacteristicChange()">
         <md-option *ngFor="let chart1ImageCharacteristic of chart1ImageCharacteristics" [value]="chart1ImageCharacteristic">
@@ -29,7 +29,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Source</div><br/>
       <md-select [(ngModel)]="selectedChart1Sensor" (change)="onChart1SensorChange()">
         <md-option *ngFor="let chart1Sensor of chart1Sensors" [value]="chart1Sensor">
@@ -37,7 +37,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="fieldOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart1FieldOptionsAreVisible">
       <div class="parameterOptionTitle">Field Characteristic</div><br/>
       <md-select [(ngModel)]="chart1SelectedFieldCharacteristicName" (change)="onChart1FieldCharacteristicChange()">
         <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
@@ -60,7 +60,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart2ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Type</div><br/>
       <md-select [(ngModel)]="chart2SelectedImageType" (change)="onChart2ImageTypeChange()">
         <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
@@ -68,7 +68,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart2ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
       <md-select [(ngModel)]="chart2SelectedImageCharacteristicName" name="texturalCharacteristic" (change)="onChart2ImageCharacteristicChange()">
         <md-option *ngFor="let chart2ImageCharacteristic of chart2ImageCharacteristics" [value]="chart2ImageCharacteristic">
@@ -76,7 +76,7 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="imageOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart2ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Source</div><br/>
       <md-select [(ngModel)]="selectedChart2Sensor" (change)="onChart2SensorChange()">
         <md-option *ngFor="let chart2Sensor of chart2Sensors" [value]="chart2Sensor">
@@ -84,11 +84,11 @@
         </md-option>
       </md-select>
     </div>
-    <div class="parameterOption" *ngIf="fieldOptionsAreVisible">
+    <div class="parameterOption" *ngIf="chart2FieldOptionsAreVisible">
       <div class="parameterOptionTitle">Field Characteristic</div><br/>
-      <md-select [(ngModel)]="chart2SelectedFieldCharacteristic" (change)="onChart2FieldCharacteristicChange()">
-        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType">
-          {{fieldType}}
+      <md-select [(ngModel)]="chart2SelectedFieldCharacteristicName" (change)="onChart2FieldCharacteristicChange()">
+        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
+          {{fieldType.alias}}
         </md-option>
       </md-select>
     </div>

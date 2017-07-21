@@ -30,13 +30,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   cropTypes: string;
 
   characteristicTypes: string[] = [];
-  imageOptionsAreVisible: boolean = false;
-  fieldOptionsAreVisible: boolean = false;
   imageTypes: string[] = [];
   fieldTypes: any[] = [];
   allSpectralCharacteristicObjects: any[] = [];
   allTexturalCharacteristicObjects: any[] = [];
 
+  chart1ImageOptionsAreVisible: boolean = false;
+  chart1FieldOptionsAreVisible: boolean = false;
   chart1SelectedCharacteristicType: string;
   chart1SelectedImageType: string;
   chart1ImageCharacteristics: any[] = [];
@@ -47,6 +47,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   chart1SelectedFieldCharacteristicName: string;
   chart1SelectedFieldCharacteristicId: number;
 
+  chart2ImageOptionsAreVisible: boolean = false;
+  chart2FieldOptionsAreVisible: boolean = false;
   chart2SelectedCharacteristicType: string;
   chart2SelectedImageType: string;
   chart2ImageCharacteristics: any[] = [];
@@ -54,7 +56,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   chart2SelectedImageCharacteristicId: number;
   chart2Sensors: any[] = [];
   selectedChart2Sensor: string;
-  chart2SelectedFieldCharacteristic: string;
+  chart2SelectedFieldCharacteristicName: string;
+  chart2SelectedFieldCharacteristicId: number;
 
   // tooltip
   toolTipPosition = "right";
@@ -493,18 +496,18 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     if (this.chart1SelectedCharacteristicType == this.characteristicTypes[0]) {
 
       // show image characteristic drop down options
-      this.imageOptionsAreVisible = true;
+      this.chart1ImageOptionsAreVisible = true;
 
       // hide field characteristic drop down options
-      this.fieldOptionsAreVisible = false;
+      this.chart1FieldOptionsAreVisible = false;
     }
     else {
 
       // hide image characteristic drop down options
-      this.imageOptionsAreVisible = false;
+      this.chart1ImageOptionsAreVisible = false;
 
       // show field characteristic drop down options
-      this.fieldOptionsAreVisible = true;
+      this.chart1FieldOptionsAreVisible = true;
     }
   }
 
@@ -599,6 +602,22 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when user choose a characteristic type for Chart 2.
    */
   onChart2CharacteristicTypeChange() {
+    if (this.chart2SelectedCharacteristicType == this.characteristicTypes[0]) {
+
+      // show image characteristic drop down options
+      this.chart2ImageOptionsAreVisible = true;
+
+      // hide field characteristic drop down options
+      this.chart2FieldOptionsAreVisible = false;
+    }
+    else {
+
+      // hide image characteristic drop down options
+      this.chart2ImageOptionsAreVisible = false;
+
+      // show field characteristic drop down options
+      this.chart2FieldOptionsAreVisible = true;
+    }
   }
 
   /**
@@ -669,6 +688,24 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a field characteristic for Chart 2.
    */
   onChart2FieldCharacteristicChange() {
+
+    // fetch the field characteristic id
+    let targetFieldCharName = this.chart2SelectedFieldCharacteristicName;
+    let fieldCharId: number = undefined;
+    this.fieldTypes.forEach(function(item){
+      if (item.alias == targetFieldCharName) {
+        fieldCharId = item.oid;
+      }
+    });
+    this.chart2SelectedFieldCharacteristicId = fieldCharId;
+
+    // fetch the time series for the selected field characteristic
+    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedFieldCharacteristicId).then((response) => {
+      return response;
+    }).then((data) => {
+      const results = data.results;
+      this.renderFieldCharacteristicTimeSeriesChart(results, this.chart2SelectedCharacteristicType, this.chart2SelectedFieldCharacteristicName, 'chart2');
+    });
   }
 
   /**
