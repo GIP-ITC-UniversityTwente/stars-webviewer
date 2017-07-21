@@ -28,7 +28,7 @@ export class HistogramComponent implements OnInit {
   cropTypes: string[] = [];
 
   selectedFieldConstantCharacteristic: string;
-  fieldConstantCharacteristics: string[] = [];
+  fieldConstantCharacteristics: any[] = [];
   selectedClassificationMethod: string;
   classificationMethods: string[];
   selectedClassSize: number;
@@ -55,11 +55,12 @@ export class HistogramComponent implements OnInit {
       startYear => {
         this.startYear = startYear;
 
-        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
+        // fetch field constant characteristics for drop down
+        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear).then((response) => {
           return response;
         }).then((data) => {
 
-          console.log(data);
+          this.fieldConstantCharacteristics = data.results.fieldConstants;
 
         }).catch((error) => {
           console.log(error);
@@ -72,11 +73,12 @@ export class HistogramComponent implements OnInit {
       endYear => {
         this.endYear = endYear;
 
+        // fetch field constant characteristics for drop down
         this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
 
-          console.log(data);
+          this.fieldConstantCharacteristics = data.results.fieldConstants;
 
         }).catch((error) => {
           console.log(error);
