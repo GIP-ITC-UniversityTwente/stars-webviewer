@@ -190,17 +190,15 @@ export class HistogramComponent implements OnInit {
    * @param histogramData
    */
   createHistogram(histogramData: any, isShowing: boolean) {
-    
+
+    const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
     const layout = {
-      title: 'Histogram of `' + this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId) + '`',
+      title: 'Histogram of `' + targetFieldConstantAlias + '`',
       yaxis: { title: "Count"},
       bargap: 0.05,
       hovermode: 'closest',
       showlegend: isShowing
     };
-
-    //
-    console.log(histogramData);
 
     Plotly.newPlot('histogram',
       histogramData,
@@ -211,8 +209,6 @@ export class HistogramComponent implements OnInit {
         displaylogo: false
       }
     );
-
-    //Plotly.newPlot('histogram', histogramData);
   }
 
   /**
@@ -316,27 +312,26 @@ export class HistogramComponent implements OnInit {
         //console.log('the counts are: ' + counts);
 
         // create color array (per Plotly spec)
-        const color = HistogramComponent.fetchHistogramColorForIndex(index);
+        const targetColor = HistogramComponent.fetchHistogramColorForIndex(index);
         const colorArray = [];
         values.forEach(function(){
-          colorArray.push(color);
+          colorArray.push(targetColor);
         });
 
         // create a frequency data item (per Plotly spec)
         const freqItem = {
-          'name': 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
-          'x': values,
-          'y': counts,
-          type: 'bar',
-          marker: { color:  colorArray}
+          name: 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
+          x: values,
+          type: 'histogram',
+          marker: { color:  targetColor}
         };
 
         result.push(freqItem);
       });
 
       //
-      console.log('the histogram model');
-      console.log(result);
+      //console.log('the histogram model');
+      //console.log(result);
     }
 
     return result;
