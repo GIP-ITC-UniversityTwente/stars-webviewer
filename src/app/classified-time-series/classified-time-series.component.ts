@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppConfiguration } from "../app-configuration";
+import { AppConfiguration } from '../app-configuration';
 
 declare const Plotly: any;
 
@@ -13,7 +13,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
   /**
    * Properties
    */
-  toolTipPosition = "right";
+  toolTipPosition = 'right';
   classifiedTimeSeriesToolTip = AppConfiguration.classifiedTimeSeriesToolTip;
 
   constructor() { }
@@ -74,7 +74,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
 
     // layout for millet spectral test sample
     const milletSpectralLayout = {
-      title: "NDVI by field size class",
+      title: 'NDVI by field size class',
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -152,7 +152,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
 
     // layout for millet textural test sample
     const milletTexturalLayout = {
-      title: "Homogeneity by field size class",
+      title: 'Homogeneity by field size class',
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -180,6 +180,6 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
    * For handling when a user taps the info button for the classified section
    */
   handleInfoButtonTap() {
-    console.log('show info for classified section...')
+    console.log('show info for classified section...');
   }
 }

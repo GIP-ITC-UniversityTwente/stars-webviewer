@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
-import { AppConfiguration } from "../app-configuration";
+import { AppConfiguration } from '../app-configuration';
 
 @Component({
   selector: 'app-study-area',
@@ -32,7 +32,7 @@ export class StudyAreaComponent implements OnInit {
   crops: any[] = [];
 
   // tooltips
-  toolTipPosition = "right";
+  toolTipPosition = 'right';
   studyAreaToolTip = AppConfiguration.studyAreaToolTip;
   cropTypeToolTip = AppConfiguration.cropTypeToolTip;
 
@@ -67,7 +67,7 @@ export class StudyAreaComponent implements OnInit {
   initializeStudyAreaOptions(results: JSON[], studyAreas: JSON[]) {
     results.forEach(function(item) {
       studyAreas.push(item);
-    })
+    });
   }
 
   /**
@@ -78,7 +78,7 @@ export class StudyAreaComponent implements OnInit {
   initializeStartYearOptions(results: any, startYears: any) {
     results.forEach(function(item) {
       startYears.push(item.properties.year_start);
-    })
+    });
   }
 
   /**
@@ -89,7 +89,7 @@ export class StudyAreaComponent implements OnInit {
   initializeEndYearOptions(results: any, endYears: any) {
     results.forEach(function(item) {
       endYears.push(item.properties.year_end);
-    })
+    });
   }
 
   /**
@@ -102,8 +102,8 @@ export class StudyAreaComponent implements OnInit {
 
     // get selected study area name
     const targetStudyAreaName = this.selectedStudyAreaName;
-    for(const studyArea of this.studyAreas) {
-      if(studyArea.properties.name == targetStudyAreaName) {
+    for (const studyArea of this.studyAreas) {
+      if (studyArea.properties.name === targetStudyAreaName) {
         this.userSelectionService.updateStudyArea(studyArea);
       }
     }
@@ -116,7 +116,7 @@ export class StudyAreaComponent implements OnInit {
   fetchStudyAreaId(targetStudyAreaName: string) {
     let result: number = null;
     this.studyAreas.forEach(function(item){
-      if(item.properties.name == targetStudyAreaName) {
+      if (item.properties.name === targetStudyAreaName) {
         result = item.properties.id;
       }
     });
@@ -143,15 +143,15 @@ export class StudyAreaComponent implements OnInit {
       const results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
-          if(item["name"] != null) {
-            item["isChecked"] = false;
+          if (item['name'] != null) {
+            item['isChecked'] = false;
             crops.push(item);
           }
-        })
+        });
       }
     }).catch((error) => {
       console.log(error);
-    })
+    });
   }
 
   /**
@@ -178,15 +178,15 @@ export class StudyAreaComponent implements OnInit {
       const results = data.results;
       if (results.length > 0) {
         results.forEach(function(item){
-          if(item["name"] != null) {
-            item["isChecked"] = false;
+          if (item['name'] != null) {
+            item['isChecked'] = false;
             crops.push(item);
           }
         });
       }
     }).catch((error) => {
       console.log(error);
-    })
+    });
   }
 
   /**
@@ -199,8 +199,8 @@ export class StudyAreaComponent implements OnInit {
 
     // get the crops that are checked
     for (const crop of this.crops) {
-      if(crop["isChecked"] == true) {
-        this.selectedCrops.push(crop["name"]);
+      if (crop['isChecked'] === true) {
+        this.selectedCrops.push(crop['name']);
       }
     }
 
@@ -212,13 +212,14 @@ export class StudyAreaComponent implements OnInit {
    * Handles when a user taps on the study area info
    */
   handleInfoTapForStudyArea() {
-    console.log("show study area info");
+    console.log('show study area info');
   }
 
   /**
    * Handles when a user taps on the crop type
    */
   handleInfoTapForCropType() {
-    console.log("show crop type info");
+    console.log('show crop type info');
+    console.log('show crop type info');
   }
 }

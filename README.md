@@ -33,6 +33,13 @@ This aplication uses:
 	* Adding the .js file to src/assets/scripts folder
 	* Referencing in index.js
 
+## Coding Style, Syntax & Semantics
+
+The coding style used in the STARS WebViewer is inspired by the following:
+
+* The [Angular Style Guide](https://angular.io/guide/styleguide)
+* The [TSLint rules](https://palantir.github.io/tslint/rules/)
+
 ## Running the App
 
 To run this app, clone the repo, install node packages, and use the Angular-CLI to serve it up.  For example:

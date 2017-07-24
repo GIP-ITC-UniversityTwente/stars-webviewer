@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppConfiguration } from '../app-configuration';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
-import { StarsAPIService } from "../services/stars-api.service";
+import { StarsAPIService } from '../services/stars-api.service';
 
 declare const ol: any;
 
@@ -60,10 +60,10 @@ export class MapComponent implements OnInit, OnDestroy {
         this.cropTypes = cropTypes;
 
         // add farm fields to map
-        starsAPIService.fetchFarmFields(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
+        starsAPIService.fetchFarmFields(this.studyArea['properties']['id'], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
-          const results = data["results"];
+          const results = data['results'];
           this.addFarmFieldsAsMapLayer(results);
         });
       }
@@ -75,7 +75,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.addTopoMapLayer();
     this.addAerialMapLayer();
     this.initializeLayerVisibility(this.map);
-    //this.initializeFeatureClick(this.map);
+    // this.initializeFeatureClick(this.map);
   }
 
   ngOnDestroy() {
@@ -100,7 +100,7 @@ export class MapComponent implements OnInit, OnDestroy {
         center: ol.proj.fromLonLat([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat]),
         zoom: AppConfiguration.mapZoom
       }),
-      interactions: ol.interaction.defaults({mouseWheelZoom:false})
+      interactions: ol.interaction.defaults({mouseWheelZoom: false})
     });
   }
 
@@ -142,23 +142,24 @@ export class MapComponent implements OnInit, OnDestroy {
    * @param map
    */
   initializeLayerVisibility(map: any) {
-    this.map.on("moveend", function(){
+    this.map.on('moveend', function(){
       const zoomLevel = map.getView().getZoom();
       const mapLayersCollection = map.getLayers();
       const topoLayer = mapLayersCollection.item(0);
       const aerialLayer = mapLayersCollection.item(1);
 
-      // zoomed in, show aerial
       if (zoomLevel >= 9) {
+
+        // zoomed in, show aerial
         topoLayer.setVisible(false);
         aerialLayer.setVisible(true);
-      }
-      // zoomed out, show topo
-      else {
+      } else {
+
+        // zoomed out, show topo
         topoLayer.setVisible(true);
         aerialLayer.setVisible(false);
       }
-    })
+    });
   }
 
   /**
@@ -173,7 +174,7 @@ export class MapComponent implements OnInit, OnDestroy {
         width: 4
       }),
       fill: new ol.style.Fill({
-        color: 'rgba(0, 0, 255, 0.1)' //clear
+        color: 'rgba(0, 0, 255, 0.1)'
       })
     });
 
@@ -189,7 +190,7 @@ export class MapComponent implements OnInit, OnDestroy {
       const features = evt.target.getFeatures();
       const feature = features.item(0);
       const cropType = feature.get('croptype');
-      if(cropType != undefined) {
+      if(cropType !== undefined) {
         console.log('Show popup that says ... ' + cropType);
         // TODO ENDED HERE
         // TODO ZOOM TO FARM FIELD
@@ -207,32 +208,32 @@ export class MapComponent implements OnInit, OnDestroy {
 
     // re-project STARS API coordinates from EPSG: 4326 to 3857
     const projectedCoordinates: any[] = [];
-    const originalCoordinates = studyAreaJSON["geometry"]["coordinates"][0];
+    const originalCoordinates = studyAreaJSON['geometry']['coordinates'][0];
     originalCoordinates.forEach(function(item) {
-      const projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
+      const projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326', 'EPSG:3857');
       projectedCoordinates.push(projected);
     });
 
     // geojson object template
     return {
-      "type": "FeatureCollection",
-      "crs": {
-        "type": "name",
-        "properties": {
-          "name": "EPSG:3857"
+      'type': 'FeatureCollection',
+      'crs': {
+        'type': 'name',
+        'properties': {
+          'name': 'EPSG:3857'
         }
       },
-      "features": [
+      'features': [
         {
-          "type": "Feature",
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
+          'type': 'Feature',
+          'geometry': {
+            'type': 'Polygon',
+            'coordinates': [
               projectedCoordinates
             ]
           },
-          "properties": {
-            "id": 1000
+          'properties': {
+            'id': 1000
           }
         }
       ]
@@ -260,7 +261,7 @@ export class MapComponent implements OnInit, OnDestroy {
         width: 4
       }),
       fill: new ol.style.Fill({
-        color: 'rgba(102, 153, 67, 0.0)' //clear
+        color: 'rgba(102, 153, 67, 0.0)'
       })
     });
 
@@ -284,27 +285,27 @@ export class MapComponent implements OnInit, OnDestroy {
 
       // re-project STARS API coordinates from EPSG: 4326 to 3857
       const projectedCoordinates: any[] = [];
-      const originalCoordinates = item["geometry"]["coordinates"][0];
+      const originalCoordinates = item['geometry']['coordinates'][0];
       originalCoordinates.forEach(function(item) {
-        const projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326','EPSG:3857');
+        const projected = ol.proj.transform([item[0], item[1]], 'EPSG:4326', 'EPSG:3857');
         projectedCoordinates.push(projected);
       });
 
       // create feature with re-projected coordinates
       const feature = {
-        "type": "Feature",
-        "geometry": {
-          "type": "Polygon",
-          "coordinates": [
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Polygon',
+          'coordinates': [
             projectedCoordinates
           ]
         },
-        "properties": {
-          "study_area_oid": item["properties"].oid,
-          "oid": item["properties"].oid,
-          "croptype": item["properties"].croptype,
-          "fieldwork": item["properties"].fieldwork,
-          "year_start": item["properties"].year_start
+        'properties': {
+          'study_area_oid': item['properties'].oid,
+          'oid': item['properties'].oid,
+          'croptype': item['properties'].croptype,
+          'fieldwork': item['properties'].fieldwork,
+          'year_start': item['properties'].year_start
         }
       };
       geoJSONFeatures.push(feature);
@@ -312,14 +313,14 @@ export class MapComponent implements OnInit, OnDestroy {
 
     // geojson object template
     const geoJSON =  {
-      "type": "FeatureCollection",
-      "crs": {
-        "type": "name",
-        "properties": {
-          "name": "EPSG:3857"
+      'type': 'FeatureCollection',
+      'crs': {
+        'type': 'name',
+        'properties': {
+          'name': 'EPSG:3857'
         }
       },
-      "features": geoJSONFeatures
+      'features': geoJSONFeatures
     };
 
     return geoJSON;
@@ -334,7 +335,7 @@ export class MapComponent implements OnInit, OnDestroy {
     // remove any previously added farm fields on the map (as user changes the selected crops)
     const mapLayersCollection = this.map.getLayers();
     const farmFieldsLayer  = mapLayersCollection.item(3);
-    if(farmFieldsLayer != undefined) {
+    if(farmFieldsLayer !== undefined) {
       this.map.removeLayer(farmFieldsLayer);
     }
 
@@ -342,13 +343,13 @@ export class MapComponent implements OnInit, OnDestroy {
     const cropTypes = this.cropTypes;
     const targetCropFeatures = [];
     farmFieldFeatures.forEach(function(item){
-      if(cropTypes.includes(item["properties"]["croptype"])) {
+      if (cropTypes.includes(item['properties']['croptype'])) {
         targetCropFeatures.push(item);
       }
     });
 
     // add the farm fields to the map
-    if(targetCropFeatures.length > 0) {
+    if (targetCropFeatures.length > 0) {
       const farmFieldsGeoJSON = this.createFarmFieldsGeoJson(targetCropFeatures);
       const geoJSON = new ol.format.GeoJSON({
         projection: 'EPSG:3857'

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
 import { UserSelectionService } from '../services/user-selection.service';
-import { AppConfiguration } from "../app-configuration"
+import { AppConfiguration } from '../app-configuration';
 
 declare const Plotly: any;
 
@@ -17,7 +17,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Properties
    */
 
-  chart2IsShowing: boolean = false;
+  chart2IsShowing = false;
 
   subscriptionToSelectedStudyArea: Subscription;
   studyArea: JSON;
@@ -34,8 +34,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   allSpectralCharacteristicObjects: any[] = [];
   allTexturalCharacteristicObjects: any[] = [];
 
-  chart1ImageOptionsAreVisible: boolean = false;
-  chart1FieldOptionsAreVisible: boolean = false;
+  chart1ImageOptionsAreVisible = false;
+  chart1FieldOptionsAreVisible = false;
   chart1SelectedCharacteristicType: string;
   chart1SelectedImageType: string;
   chart1ImageCharacteristics: any[] = [];
@@ -46,8 +46,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   chart1SelectedFieldCharacteristicName: string;
   chart1SelectedFieldCharacteristicId: number;
 
-  chart2ImageOptionsAreVisible: boolean = false;
-  chart2FieldOptionsAreVisible: boolean = false;
+  chart2ImageOptionsAreVisible = false;
+  chart2FieldOptionsAreVisible = false;
   chart2SelectedCharacteristicType: string;
   chart2SelectedImageType: string;
   chart2ImageCharacteristics: any[] = [];
@@ -59,7 +59,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   chart2SelectedFieldCharacteristicId: number;
 
   // tooltip
-  toolTipPosition = "right";
+  toolTipPosition = 'right';
   timeSeriesTooltip = AppConfiguration.timeSeriesTooltip;
 
   /**
@@ -81,7 +81,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         this.startYear = startYear;
 
         // initialize the image characteristic options (and other options)
-        starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
+        starsAPIService.fetchImageCharacteristics(this.studyArea['properties']['id'], this.startYear).then((response) => {
           return response;
         }).then((data) => {
 
@@ -95,7 +95,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         });
 
         // initialize field characteristic options
-        this.starsAPIService.fetchFieldCharacteristics(this.studyArea["properties"]["id"], this.startYear).then((response) => {
+        this.starsAPIService.fetchFieldCharacteristics(this.studyArea['properties']['id'], this.startYear).then((response) => {
           return response;
         }).then((data) => {
 
@@ -114,7 +114,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         this.endYear = endYear;
 
         // initialize the image characteristic options (and other options)
-        starsAPIService.fetchImageCharacteristics(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
+        starsAPIService.fetchImageCharacteristics(this.studyArea['properties']['id'], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
 
@@ -128,7 +128,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         });
 
         // initialize field characteristic options
-        this.starsAPIService.fetchFieldCharacteristics(this.studyArea["properties"]["id"], this.startYear, this.endYear).then((response) => {
+        this.starsAPIService.fetchFieldCharacteristics(this.studyArea['properties']['id'], this.startYear, this.endYear).then((response) => {
           return response;
         }).then((data) => {
 
@@ -144,13 +144,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
 
-        let cropList: string = "";
+        let cropList = '';
         cropTypes.forEach(function(item, index) {
-          if(index == cropTypes.length - 1) {
+          if (index === cropTypes.length - 1) {
             cropList += cropTypes[index];
-          }
-          else {
-            cropList += cropTypes[index] + ",";
+          } else {
+            cropList += cropTypes[index] + ',';
           }
         });
         this.cropTypes = cropList;
@@ -193,7 +192,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   fetchImageCharacteristicId(imageCharacteristicName: string, allImageCharacteristics: any[]): number {
     let targetId: number = undefined;
     allImageCharacteristics.forEach(function(item){
-      if (item.alias == imageCharacteristicName) {
+      if (item.alias === imageCharacteristicName) {
         targetId = item.oid;
       }
     });
@@ -209,7 +208,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   fetchSensorsForImageCharacteristic(imageCharacteristicAlias: string, allImageCharacteristics: any[]): string[] {
     const results: string[] = [];
     allImageCharacteristics.forEach(function(item) {
-      if (item.alias == imageCharacteristicAlias) {
+      if (item.alias === imageCharacteristicAlias) {
         results.push(item.sensor);
       }
     });
@@ -222,12 +221,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    */
   fetchRandomColor() {
     const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
-    let randomIndex = this.randomIntFromInterval(0, 4);
+    const randomIndex = this.randomIntFromInterval(0, 4);
     return colors[randomIndex];
   }
 
   randomIntFromInterval(min, max) {
-    return Math.floor(Math.random()*(max-min+1)+min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   /**
@@ -239,19 +238,15 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
     let backgroundColor: string;
 
-    if(lineColor == '#6A7f00') {
+    if (lineColor === '#6A7f00') {
       backgroundColor = 'rgba(106, 127, 0, 0.2)';
-    }
-    else if (lineColor == '#D26F51') {
+    } else if (lineColor === '#D26F51') {
       backgroundColor = 'rgba(210, 111, 82, 0.2)';
-    }
-    else if (lineColor == '#D59F2E') {
+    } else if (lineColor === '#D59F2E') {
       backgroundColor = 'rgba(213, 159, 46, 0.2)';
-    }
-    else if (lineColor == '#00577F') {
+    } else if (lineColor === '#00577F') {
       backgroundColor = 'rgba(0, 87, 127, 0.2)';
-    }
-    else if (lineColor == '#C548C0') {
+    } else if (lineColor === '#C548C0') {
       backgroundColor = 'rgba(197, 72, 192, 0.2)';
     }
 
@@ -268,16 +263,16 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   renderImageCharacteristicTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
     const chartData = [];
 
-    for(const item of results) {
+    for (const item of results) {
       const cropName = item.crop;
 
-      for(const crop of item.cseries) {
+      for (const crop of item.cseries) {
         const dateCollection = [];
         const avgValueCollection = [];
         const maxValueCollection = [];
         const minValueCollection = [];
 
-        for(const sensor of crop.sseries) {
+        for (const sensor of crop.sseries) {
           dateCollection.push(sensor.acquisition_date);
           avgValueCollection.push(sensor.avgvalue);
           maxValueCollection.push(sensor.maxvalue);
@@ -313,12 +308,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         const envelopeDataObject = {
           x: envelopeX,
           y: envelopeY,
-          fill: "tozerox",
+          fill: 'tozerox',
           fillcolor: backgroundColor,
           name: '',
           showlegend: false,
-          type: "scatter",
-          line: {color: "transparent"}
+          type: 'scatter',
+          line: {color: 'transparent'}
         };
 
         // add line & envelope to chart data
@@ -329,18 +324,18 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
     // layout for millet spectral test sample
     const layout = {
-      title: xAxisTitle + " Time Series",
+      title: xAxisTitle + ' Time Series',
       xaxis: {
         title: 'Time',
         showgrid: true,
         zeroline: true,
-        ticks: "outside",
+        ticks: 'outside',
         showticklabels: true
       },
       yaxis: {
         title: yAxisTitle,
         showline: false,
-        ticks: "outside",
+        ticks: 'outside',
         showticklabels: true
       },
       hovermode: 'closest'
@@ -366,14 +361,14 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   renderFieldCharacteristicTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
     const chartData = [];
 
-    for(const item of results) {
+    for (const item of results) {
       const cropName = item.crop;
       const dateCollection = [];
       const avgValueCollection = [];
       const maxValueCollection = [];
       const minValueCollection = [];
 
-      for(const crop of item.cseries[0]) { // note variation - need to do [0]
+      for (const crop of item.cseries[0]) { // note variation - need to do [0]
         dateCollection.push(crop.acquisition_date);
         avgValueCollection.push(crop.avgvalue);
         if (crop.hasOwnProperty('maxvalue') && crop.hasOwnProperty('minvalue')) {
@@ -393,7 +388,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
       console.log('minvalue: ' + minValueCollection);
 
       // draw line and envelope
-      if (avgValueCollection.length == maxValueCollection.length) {
+      if (avgValueCollection.length === maxValueCollection.length) {
 
         // chart's line
         const lineColor = this.fetchRandomColor();
@@ -424,20 +419,20 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         const envelopeDataObject = {
           x: envelopeX,
           y: envelopeY,
-          fill: "tozerox",
+          fill: 'tozerox',
           fillcolor: backgroundColor,
           name: '',
           showlegend: false,
-          type: "scatter",
-          line: {color: "transparent"}
+          type: 'scatter',
+          line: {color: 'transparent'}
         };
 
         // add line & envelope to chart data
         chartData.push(envelopeDataObject);
         chartData.push(lineDataObject);
-      }
-      // only draw line ...
-      else {
+      } else {
+
+        // only draw line ...
 
         // chart's line
         const lineColor = this.fetchRandomColor();
@@ -460,18 +455,18 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
     // layout for millet spectral test sample
     const layout = {
-      title: xAxisTitle + " Time Series",
+      title: xAxisTitle + ' Time Series',
       xaxis: {
         title: 'Time',
         showgrid: true,
         zeroline: true,
-        ticks: "outside",
+        ticks: 'outside',
         showticklabels: true
       },
       yaxis: {
         title: yAxisTitle,
         showline: false,
-        ticks: "outside",
+        ticks: 'outside',
         showticklabels: true
       },
       hovermode: 'closest'
@@ -492,15 +487,14 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    */
   onChart1CharacteristicTypeChange() {
 
-    if (this.chart1SelectedCharacteristicType == this.characteristicTypes[0]) {
+    if (this.chart1SelectedCharacteristicType === this.characteristicTypes[0]) {
 
       // show image characteristic drop down options
       this.chart1ImageOptionsAreVisible = true;
 
       // hide field characteristic drop down options
       this.chart1FieldOptionsAreVisible = false;
-    }
-    else {
+    } else {
 
       // hide image characteristic drop down options
       this.chart1ImageOptionsAreVisible = false;
@@ -516,18 +510,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   onChart1ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
-    if(this.chart1SelectedImageCharacteristicName != undefined) {
+    if (this.chart1SelectedImageCharacteristicName !== undefined) {
       this.chart1SelectedImageCharacteristicName = undefined;
     }
-    if(this.selectedChart1Sensor != undefined) {
+    if (this.selectedChart1Sensor !== undefined) {
       this.selectedChart1Sensor = undefined;
     }
 
     // add image characteristic drop down items
-    if(this.chart1SelectedImageType == "Spectral") {
+    if (this.chart1SelectedImageType === 'Spectral') {
       this.chart1ImageCharacteristics = this.createSetOfCharacteristicNames(this.allSpectralCharacteristicObjects);
-    }
-    else {
+    } else {
       this.chart1ImageCharacteristics = this.createSetOfCharacteristicNames(this.allTexturalCharacteristicObjects);
     }
   }
@@ -538,20 +531,19 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   onChart1ImageCharacteristicChange() {
 
     // clear previous dependent selection for sensor
-    if(this.selectedChart1Sensor != undefined) {
+    if (this.selectedChart1Sensor !== undefined) {
       this.selectedChart1Sensor = undefined;
     }
 
     // add sensor drop down items
-    if(this.chart1SelectedImageType == "Spectral") {
+    if (this.chart1SelectedImageType === 'Spectral') {
 
       // load sensor drop down options
       this.chart1Sensors = this.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
 
       // for fetching a time series after a sensor is chosen
       this.chart1SelectedImageCharacteristicId  = this.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
-    }
-    else {
+    } else {
 
       // load sensor drop down options
       this.chart1Sensors = this.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
@@ -565,7 +557,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 1.
    */
   onChart1SensorChange() {
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -579,17 +571,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   onChart1FieldCharacteristicChange() {
 
     // fetch the field characteristic id
-    let targetFieldCharName = this.chart1SelectedFieldCharacteristicName;
+    const targetFieldCharName = this.chart1SelectedFieldCharacteristicName;
     let fieldCharId: number = undefined;
     this.fieldTypes.forEach(function(item){
-      if (item.alias == targetFieldCharName) {
+      if (item.alias === targetFieldCharName) {
         fieldCharId = item.oid;
       }
     });
     this.chart1SelectedFieldCharacteristicId = fieldCharId;
 
     // fetch the time series for the selected field characteristic
-    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedFieldCharacteristicId).then((response) => {
+    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -601,15 +593,14 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when user choose a characteristic type for Chart 2.
    */
   onChart2CharacteristicTypeChange() {
-    if (this.chart2SelectedCharacteristicType == this.characteristicTypes[0]) {
+    if (this.chart2SelectedCharacteristicType === this.characteristicTypes[0]) {
 
       // show image characteristic drop down options
       this.chart2ImageOptionsAreVisible = true;
 
       // hide field characteristic drop down options
       this.chart2FieldOptionsAreVisible = false;
-    }
-    else {
+    } else {
 
       // hide image characteristic drop down options
       this.chart2ImageOptionsAreVisible = false;
@@ -625,19 +616,18 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   onChart2ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
-    if(this.chart2SelectedImageCharacteristicName != undefined) {
+    if (this.chart2SelectedImageCharacteristicName !== undefined) {
       this.chart2SelectedImageCharacteristicName = undefined;
     }
 
-    if(this.selectedChart2Sensor != undefined) {
+    if (this.selectedChart2Sensor !== undefined) {
       this.selectedChart2Sensor = undefined;
     }
 
     // add image characteristic drop down items
-    if(this.chart2SelectedImageType == "Spectral") {
+    if (this.chart2SelectedImageType === 'Spectral') {
       this.chart2ImageCharacteristics = this.createSetOfCharacteristicNames(this.allSpectralCharacteristicObjects);
-    }
-    else {
+    } else {
       this.chart2ImageCharacteristics = this.createSetOfCharacteristicNames(this.allTexturalCharacteristicObjects);
     }
   }
@@ -648,20 +638,19 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   onChart2ImageCharacteristicChange() {
 
     // clear previous dependent selection for sensor
-    if(this.selectedChart2Sensor != undefined) {
+    if (this.selectedChart2Sensor !== undefined) {
       this.selectedChart2Sensor = undefined;
     }
 
     // add sensor drop down items
-    if(this.chart2SelectedImageType == "Spectral") {
+    if (this.chart2SelectedImageType === 'Spectral') {
 
       // load sensor drop down options
       this.chart2Sensors = this.fetchSensorsForImageCharacteristic(this.chart2SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
 
       // for fetching a time series after a sensor is chosen
       this.chart2SelectedImageCharacteristicId  = this.fetchImageCharacteristicId(this.chart2SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
-    }
-    else {
+    } else {
 
       // load sensor drop down options
       this.chart2Sensors = this.fetchSensorsForImageCharacteristic(this.chart2SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
@@ -675,7 +664,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 2.
    */
   onChart2SensorChange() {
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -689,17 +678,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   onChart2FieldCharacteristicChange() {
 
     // fetch the field characteristic id
-    let targetFieldCharName = this.chart2SelectedFieldCharacteristicName;
+    const targetFieldCharName = this.chart2SelectedFieldCharacteristicName;
     let fieldCharId: number = undefined;
     this.fieldTypes.forEach(function(item){
-      if (item.alias == targetFieldCharName) {
+      if (item.alias === targetFieldCharName) {
         fieldCharId = item.oid;
       }
     });
     this.chart2SelectedFieldCharacteristicId = fieldCharId;
 
     // fetch the time series for the selected field characteristic
-    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedFieldCharacteristicId).then((response) => {
+    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -720,8 +709,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   handleAddChartButtonTap() {
     if (this.chart2IsShowing) {
       this.chart2IsShowing = false;
-    }
-    else {
+    } else {
       this.chart2IsShowing = true;
     }
   }
@@ -731,19 +719,19 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    */
   createTestCharts() {
 
-    //----------------------
+    // ----------------------
     //  CHART 1 PLACEHOLDER
-    //----------------------
+    // ----------------------
 
     const milletSpectralLineEnvelope = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d', '318d', '305d', '291d', '210d', '177d', '150d', '142d'],
       y: [0.15, 0.15, 0.2, 0.43, 0.44, 0.31, 0.27, 0.3, 0.34, 0.48, 0.48, 0.25, 0.19, 0.17],
-      fill: "tozerox",
-      fillcolor: "rgba(0, 100, 80, 0.2)",
+      fill: 'tozerox',
+      fillcolor: 'rgba(0, 100, 80, 0.2)',
       name: 'Millet Envelope',
       showlegend: false,
-      type: "scatter",
-      line: {color: "transparent"}
+      type: 'scatter',
+      line: {color: 'transparent'}
     };
 
     // data for millet spectral test sample
@@ -756,23 +744,23 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         color: '#6A7F00',
         width: 3
       },
-      type: "scatter"
+      type: 'scatter'
     };
 
     // layout for millet spectral test sample
     const milletSpectralLayout = {
-      title: "Spectral Time Series",
+      title: 'Spectral Time Series',
       xaxis: {
         title: 'Time',
         showgrid: true,
         zeroline: true,
-        ticks: "outside",
+        ticks: 'outside',
         showticklabels: true
       },
       yaxis: {
         title: 'NDVI average',
         showline: false,
-        ticks: "outside",
+        ticks: 'outside',
         showticklabels: true
       },
       hovermode: 'closest'
@@ -790,9 +778,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
       }
     );
 
-    //----------------------
+    // ----------------------
     //  CHART 2 PLACEHOLDER
-    //----------------------
+    // ----------------------
 
     // data for millet textural test sample
     const milletTexturalLine = {
@@ -808,7 +796,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
     // layout for millet textural test sample
     const milletTexturalLayout = {
-      title: "Textural Time Series",
+      title: 'Textural Time Series',
       xaxis: {
         title: 'Time',
         showgrid: true,

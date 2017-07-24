@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppConfiguration } from "../app-configuration"
+import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -35,7 +35,7 @@ export class HistogramComponent implements OnInit {
   classSizes: number[] = [1, 2, 3, 4, 5];
   frequencyData: number[] = [];
   geostatSeries: any;
-  toolTipPosition = "right";
+  toolTipPosition = 'right';
   fieldConstantsToolTip = AppConfiguration.fieldConstantsToolTip;
 
   /**
@@ -69,19 +69,18 @@ export class HistogramComponent implements OnInit {
       cropTypes => {
 
         // create the comma-delimited list of crops for an API request
-        let cropList: string = "";
+        let cropList = '';
         cropTypes.forEach(function(item, index) {
-          if(index == cropTypes.length - 1) {
+          if (index === cropTypes.length - 1) {
             cropList += cropTypes[index];
-          }
-          else {
-            cropList += cropTypes[index] + ",";
+          } else {
+            cropList += cropTypes[index] + ',';
           }
         });
         this.cropTypes = cropList;
 
-        // fetch field constant characteristics for drop down only after crops are chosen - as they are required parameters for the histograms
-        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea["properties"]["id"], this.startYear).then((response) => {
+        // fetch field constant characteristics for drop down only after crops are chosen
+        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea['properties']['id'], this.startYear).then((response) => {
           return response;
         }).then((data) => {
 
@@ -111,7 +110,12 @@ export class HistogramComponent implements OnInit {
   onFieldCharacteristicChange() {
 
     // fetch field constants data
-    this.starsAPIService.fetchFieldConstantData(this.studyArea["properties"]["id"], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
+    const studyAreaId = this.studyArea['properties']['id'];
+    const startYear = this.startYear;
+    const endYear = this.endYear;
+    const selectedFieldConstantCharacteristicId = this.selectedFieldConstantCharacteristicId;
+    const cropTypes = this.cropTypes;
+    this.starsAPIService.fetchFieldConstantData(studyAreaId, startYear, endYear, selectedFieldConstantCharacteristicId, cropTypes).then((response) => {
       return response;
     }).then((data) => {
 
@@ -122,7 +126,7 @@ export class HistogramComponent implements OnInit {
 
       // initialize (or update) frequency data
       for (const item of data.results) {
-        this.frequencyData.push(item["v"]);
+        this.frequencyData.push(item['v']);
       }
 
       // create histogram
@@ -132,8 +136,7 @@ export class HistogramComponent implements OnInit {
         this.geostatSeries = new geostats(this.frequencyData);
         const histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
         this.createHistogram(histoData, false);
-      }
-      else {
+      } else {
 
         // create a classified histogram
         const histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
@@ -151,7 +154,7 @@ export class HistogramComponent implements OnInit {
   onClassSizeChange() {
 
     // initialize classification methods in drop down
-    this.classificationMethods = ["Jenks", "Equal Interval", "Quantile", "Unique Values", "Standard Deviation", "Arithmetic Progression", "Geometric Progression"];
+    this.classificationMethods = ['Jenks', 'Equal Interval', 'Quantile', 'Unique Values', 'Standard Deviation', 'Arithmetic Progression', 'Geometric Progression'];
   }
 
   /**
@@ -171,7 +174,7 @@ export class HistogramComponent implements OnInit {
   lookUpFieldConstantName(id: number) {
     let result: string = undefined;
     this.fieldConstantCharacteristics.forEach(function(item) {
-      if (item.oid == id) {
+      if (item.oid === id) {
         result = item.alias;
       }
     });
@@ -187,7 +190,7 @@ export class HistogramComponent implements OnInit {
     const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
     const layout = {
       title: 'Histogram of `' + targetFieldConstantAlias + '`',
-      yaxis: { title: "Count"},
+      yaxis: { title: 'Count'},
       bargap: 0.05,
       hovermode: 'closest',
       showlegend: isShowing
@@ -213,12 +216,11 @@ export class HistogramComponent implements OnInit {
    */
   static fetchValuesInRange(series: number[], start: number, end: number) {
     const result = [];
-    const lastValue = series[series.length-1];
+    const lastValue = series[series.length - 1];
     series.forEach((item) => {
       if (item >= start && item < end) {
         result.push(item);
-      }
-      else if (item == end && end == lastValue) {
+      } else if (item === end && end === lastValue) {
         result.push(item);
       }
     });
@@ -241,14 +243,14 @@ export class HistogramComponent implements OnInit {
     uniqueValues.forEach(function(currentUniqueValue) {
       let count = 0;
       values.forEach(function(item) {
-        if (item == currentUniqueValue) {
+        if (item === currentUniqueValue) {
           count += 1;
         }
       });
       result.push(count);
     });
 
-    return result
+    return result;
   }
 
   /**
@@ -256,19 +258,15 @@ export class HistogramComponent implements OnInit {
    * @param {number} index
    */
   static fetchHistogramColorForIndex(index: number) {
-    if (index == 0) {
+    if (index === 0) {
       return '#A1D99B';
-    }
-    else if (index == 1) {
+    } else if (index === 1) {
       return '#74C476';
-    }
-    else if (index == 2) {
+    } else if (index === 2) {
       return '#41AB5D';
-    }
-    else if (index == 3) {
+    } else if (index === 3) {
       return '#238B45';
-    }
-    else if (index == 4) {
+    } else if (index === 4) {
       return '005A32';
     }
   }
@@ -283,38 +281,31 @@ export class HistogramComponent implements OnInit {
     //
     console.log(this.selectedClassificationMethod);
 
-    if (this.selectedClassificationMethod == "Jenks") {
+    if (this.selectedClassificationMethod === 'Jenks') {
       this.geostatSeries.getJenks(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Equal Interval") {
+    } else if (this.selectedClassificationMethod === 'Equal Interval') {
       this.geostatSeries.getClassEqInterval(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Quantile") {
+    } else if (this.selectedClassificationMethod === 'Quantile') {
       this.geostatSeries.getClassQuantile(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Unique Values") {
+    } else if (this.selectedClassificationMethod === 'Unique Values') {
       this.geostatSeries.getClassUniqueValues(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Standard Deviation") {
+    } else if (this.selectedClassificationMethod === 'Standard Deviation') {
       this.geostatSeries.getClassStdDeviation(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Arithmetic Progression") {
+    } else if (this.selectedClassificationMethod === 'Arithmetic Progression') {
       this.geostatSeries.getClassArithmeticProgression(this.selectedClassSize);
-    }
-    else if (this.selectedClassificationMethod == "Geometric Progression") {
+    } else if (this.selectedClassificationMethod === 'Geometric Progression') {
       this.geostatSeries.getClassGeometricProgression(this.selectedClassSize);
-    }
-    else {
+    } else {
       this.geostatSeries.getJenks(this.selectedClassSize);
     }
 
-    const sorted = series.sort((n1,n2) => n1 - n2);
+    const sorted = series.sort((n1, n2) => n1 - n2);
 
     if (this.selectedClassSize > 0) {
       this.geostatSeries.ranges.forEach(function(item, index){
 
         // get the start and end values for the current range
-        const sliced = item.split(" - ");
+        const sliced = item.split(' - ');
         const startRange = sliced[0];
         const endRange = sliced[1];
 
@@ -325,7 +316,7 @@ export class HistogramComponent implements OnInit {
         const values = HistogramComponent.fetchValuesInRange(sorted, startRange, endRange);
 
         //
-        //console.log('the values are: ' + values);
+        // console.log('the values are: ' + values);
 
         // get the count for each value
         const counts = HistogramComponent.fetchCountOfValues(values);
@@ -352,8 +343,8 @@ export class HistogramComponent implements OnInit {
       });
 
       //
-      //console.log('the histogram model');
-      //console.log(result);
+      // console.log('the histogram model');
+      // console.log(result);
     }
 
     return result;
@@ -386,7 +377,7 @@ export class HistogramComponent implements OnInit {
         x: ['7000'],
         y: [2],
         type: 'bar',
-        marker:{
+        marker: {
           color: ['#A6A6A6']
         }
       },
@@ -413,7 +404,7 @@ export class HistogramComponent implements OnInit {
 
     const layout = {
       title: 'Histogram of field size',
-      bargap :0.5,
+      bargap: 0.5,
       hovermode: 'closest'
     };
 

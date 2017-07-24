@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppConfiguration } from "../app-configuration";
+import { AppConfiguration } from '../app-configuration';
 
 @Component({
   selector: 'app-header',
@@ -12,8 +12,7 @@ export class HeaderComponent implements OnInit {
    * Properties
    */
 
-  title = "Crop Spectrotemporal Signature Library";
-  helpIsVisible = false;
+  title = 'Crop Spectrotemporal Signature Library';
 
   /**
    * Lifecycle Methods
@@ -28,7 +27,7 @@ export class HeaderComponent implements OnInit {
    */
 
   handleHelpButtonTap() {
-    window.open(AppConfiguration.onlineHelpURL,'_newtab');
+    window.open(AppConfiguration.onlineHelpURL, '_newtab');
   }
 
   handleLoginButtonTap() {
