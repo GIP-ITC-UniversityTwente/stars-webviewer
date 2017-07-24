@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
 import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
-import { Subscription } from 'rxjs/Subscription';
 
 declare const Plotly: any;
 declare const geostats: any;

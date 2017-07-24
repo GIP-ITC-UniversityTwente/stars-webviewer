@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { StarsAPIService } from '../services/stars-api.service';
 import { Subscription } from 'rxjs/Subscription';
-import { UserSelectionService } from '../services/user-selection.service';
+
 import { AppConfiguration } from '../app-configuration';
+import { StarsAPIService } from '../services/stars-api.service';
+import { UserSelectionService } from '../services/user-selection.service';
 
 declare const Plotly: any;
 

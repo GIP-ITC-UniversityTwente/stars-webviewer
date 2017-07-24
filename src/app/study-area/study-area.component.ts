@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
+import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
-import { AppConfiguration } from '../app-configuration';
 
 @Component({
   selector: 'app-study-area',
