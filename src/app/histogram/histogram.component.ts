@@ -139,8 +139,13 @@ export class HistogramComponent implements OnInit {
         this.presentHistogramData(histoData, false);
       } else {
 
-        // create a classified histogram
-        const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+        // classify the data
+        HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+
+        // create histogram data
+        const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.geostatSeries.ranges);
+
+        // display histogram data
         this.presentHistogramData(histoData, true);
       }
 
@@ -164,8 +169,13 @@ export class HistogramComponent implements OnInit {
    */
   onClassificationChange() {
 
-    // create classified histogram
-    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+    // classify the data
+    HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+
+    // create histogram data
+    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.geostatSeries.ranges);
+
+    // display histogram data
     this.presentHistogramData(histoData, true);
   }
 

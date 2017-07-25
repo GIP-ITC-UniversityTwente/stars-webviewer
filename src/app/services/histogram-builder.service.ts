@@ -41,7 +41,7 @@ export class HistogramBuilderService {
     } else if (index === 3) {
       return '#238B45';
     } else if (index === 4) {
-      return '005A32';
+      return '#005A32';
     }
   }
 
@@ -69,23 +69,24 @@ export class HistogramBuilderService {
   }
 
   /**
-   * Utility for creating the data object for a classified histogram
+   * Utility for creating the data object for a classified histogram.
    * @param {number[]} series - the frequency data
-   * @param {string} selectedClassificationMethod
-   * @param {number} selectedClassSize
-   * @param geostatSeries
+   * @param ranges
    * @returns {Array}
    */
-  static createClassifiedHistogramDataObject(series: number[], selectedClassificationMethod: string, selectedClassSize: number, geostatSeries: any) {
-    const result = [];
+  static createClassifiedHistogramDataObject(series: number[], ranges: string[]) {
+    //
+    console.log(series);
+    //
+    console.log(ranges);
 
-    HistogramBuilderService.classifySeries(selectedClassificationMethod, selectedClassSize, geostatSeries);
-    geostatSeries.ranges.forEach(function(item, index) {
+    const result = [];
+    ranges.forEach(function(item, index) {
 
       // get the start and end values for the current range
       const sliced = item.split(' - ');
-      const startRange = sliced[0];
-      const endRange = sliced[1];
+      const startRange = Number(sliced[0]);
+      const endRange = Number(sliced[1]);
 
       // get the values in the series for the current range
       const values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
@@ -107,6 +108,24 @@ export class HistogramBuilderService {
 
       result.push(freqItem);
     });
+
+    //
+    console.log(JSON.stringify(result));
+
+    return result;
+  }
+
+  /**
+   * Utility for creating the data object for an un-classified histogram.
+   * @param {number[]} series
+   */
+  static createUnclassifiedHistogramDataObject(series: number[]) {
+
+    // build histogram data object per the Plotly spec
+    const result = [{
+      x: series,
+      type: 'histogram'
+    }];
 
     return result;
   }
@@ -164,20 +183,5 @@ export class HistogramBuilderService {
         displaylogo: false
       }
     );
-  }
-
-  /**
-   * Utility for creating the data object for an un-classified histogram
-   * @param {number[]} series
-   */
-  static createUnclassifiedHistogramDataObject(series: number[]) {
-
-    // build histogram data object per the Plotly spec
-    const result = [{
-      x: series,
-      type: 'histogram'
-    }];
-
-    return result;
   }
 }
