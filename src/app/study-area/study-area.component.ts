@@ -38,7 +38,7 @@ export class StudyAreaComponent implements OnInit {
   cropTypeToolTip = AppConfiguration.cropTypeToolTip;
 
   /**
-   * Component Life-cycle Methods
+   * For dependency injecting needed services.
    */
   constructor(private starsAPIService: StarsAPIService, private userSelectionService: UserSelectionService) {
 
@@ -58,10 +58,13 @@ export class StudyAreaComponent implements OnInit {
     });
   }
 
+  /**
+   * Life-cycle hook after component is created.
+   */
   ngOnInit() { }
 
   /**
-   * For initializing the study area options
+   * For initializing the study area options.
    * @param results - the results from the async call to the API for study areas
    * @param studyAreas - the instance property that represents a collection of study areas
    */
@@ -72,7 +75,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * For initializing the start year options a user can choose from
+   * For initializing the start year options a user can choose from.
    * @param results - the results from the async call to the API for study areas
    * @param startYears - the collection of all start years
    */
@@ -83,7 +86,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * For initializing the end year options a user can choose from
+   * For initializing the end year options a user can choose from.
    * @param results - the results from the async call to the API for study areas
    * @param endYears - the collection of all end years
    */
@@ -94,7 +97,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * Handles when a user selects a study area option
+   * Handles when a user selects a study area option.
    */
   onStudyAreaChange() {
 
@@ -111,7 +114,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * Utility for fetching the study area Id for the input study area name
+   * Utility for fetching the study area Id for the input study area name.
    * @param targetStudyAreaName
    */
   fetchStudyAreaId(targetStudyAreaName: string) {
@@ -125,7 +128,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * Handle when a user selects a start year option
+   * Handle when a user selects a start year option.
    */
   onStartYearChange() {
 
@@ -156,7 +159,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * Handles when a user selects an end year option
+   * Handles when a user selects an end year option.
    */
   onEndYearChange() {
 
@@ -191,7 +194,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * Handles when a user selects a crop type option
+   * Handles when a user selects a crop type option.
    */
   onCropTypeChange() {
 
@@ -210,14 +213,14 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * Handles when a user taps on the study area info
+   * Handles when a user taps on the study area info.
    */
   handleInfoTapForStudyArea() {
     console.log('show study area info');
   }
 
   /**
-   * Handles when a user taps on the crop type
+   * Handles when a user taps on the crop type.
    */
   handleInfoTapForCropType() {
     console.log('show crop type info');

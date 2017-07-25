@@ -17,10 +17,25 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
   toolTipPosition = 'right';
   classifiedTimeSeriesToolTip = AppConfiguration.classifiedTimeSeriesToolTip;
 
-  constructor() { }
-
+  /**
+   * Life-cycle hook after component is created.
+   */
   ngOnInit() {
 
+    this.createTestGraphs();
+  }
+
+  /**
+   * For handling when a user taps the info button for the classified section
+   */
+  handleInfoButtonTap() {
+    console.log('show info for classified section...');
+  }
+
+  /**
+   * Utility for creating test graphs
+   */
+  createTestGraphs() {
     // test sample
     const spectralLarge = {
       x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
@@ -175,12 +190,5 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
         modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
       }
     );
-  }
-
-  /**
-   * For handling when a user taps the info button for the classified section
-   */
-  handleInfoButtonTap() {
-    console.log('show info for classified section...');
   }
 }

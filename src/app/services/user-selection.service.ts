@@ -23,7 +23,7 @@ export class UserSelectionService {
   cropTypes$ = this.cropTypesSource.asObservable();
 
   /**
-   * For changing the study area chosen by the user
+   * For changing the study area chosen by the user.
    * @param studyArea
    */
   updateStudyArea(studyArea: JSON) {
@@ -31,7 +31,7 @@ export class UserSelectionService {
   }
 
   /**
-   * For changing the start year chosen by the user
+   * For changing the start year chosen by the user.
    * @param startYear
    */
   updateStartYear(startYear: number) {
@@ -39,7 +39,7 @@ export class UserSelectionService {
   }
 
   /**
-   * For changing the end year chosen by the user
+   * For changing the end year chosen by the user.
    * @param endYear
    */
   updateEndYear(endYear: number) {
@@ -47,7 +47,7 @@ export class UserSelectionService {
   }
 
   /**
-   * For changing the crop types chosen by the user
+   * For changing the crop types chosen by the user.
    * @param cropTypes
    */
   updateCropTypes(cropTypes: string[]) {

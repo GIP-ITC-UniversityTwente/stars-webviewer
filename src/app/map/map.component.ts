@@ -29,7 +29,7 @@ export class MapComponent implements OnInit, OnDestroy {
   cropTypes: string[] = [];
 
   /**
-   * Component Life-cycle Methods
+   * For dependency injecting needed Services.
    */
   constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
 
@@ -71,6 +71,9 @@ export class MapComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Life-cycle hook after component is created.
+   */
   ngOnInit() {
     this.initializeMap();
     this.addTopoMapLayer();
@@ -79,6 +82,9 @@ export class MapComponent implements OnInit, OnDestroy {
     // this.initializeFeatureClick(this.map);
   }
 
+  /**
+   * Life-cycle hook after component is destroyed.
+   */
   ngOnDestroy() {
     this.subscriptionToSelectedStudyArea.unsubscribe();
     this.subscriptionToSelectedStartYear.unsubscribe();
@@ -87,7 +93,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * For initializing the map
+   * For initializing the map.
    */
   initializeMap() {
 
@@ -106,7 +112,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for adding the topo layer to the map
+   * Utility for adding the topo layer to the map.
    */
   addTopoMapLayer() {
     const topoSource = new ol.source.XYZ({
@@ -122,7 +128,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for adding the aerial layer to the map
+   * Utility for adding the aerial layer to the map.
    */
   addAerialMapLayer() {
     const bingSource = new ol.source.BingMaps({
@@ -139,7 +145,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for handling layer visibility based on map zoom level
+   * Utility for handling layer visibility based on map zoom level.
    * @param map
    */
   initializeLayerVisibility(map: any) {
@@ -164,7 +170,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for handling when user clicks on a map feature
+   * Utility for handling when user clicks on a map feature.
    */
   initializeFeatureClick(map: any) {
 
@@ -201,7 +207,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for creating the study area GeoJSON object for the input study area name
+   * Utility for creating the study area GeoJSON object for the input study area name.
    * @param studyAreaJSON - the JSON representation of the Study Area
    * @returns {{}} - the geojson for the study area name
    */
@@ -242,7 +248,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for adding a study area's geojson as a map layer
+   * Utility for adding a study area's geojson as a map layer.
    * @param studyAreaJSON
    */
   addStudyAreaAsMapLayer(studyAreaJSON: JSON) {
@@ -278,7 +284,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Utility for creating the farmfields GeoJSON
+   * Utility for creating the farmfields GeoJSON.
    */
   createFarmFieldsGeoJson(farmFieldFeatures) {
     const geoJSONFeatures: any[] = [];

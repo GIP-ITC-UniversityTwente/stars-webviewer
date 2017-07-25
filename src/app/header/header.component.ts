@@ -12,25 +12,23 @@ export class HeaderComponent implements OnInit {
   /**
    * Properties
    */
-
   title = 'Crop Spectrotemporal Signature Library';
 
   /**
-   * Lifecycle Methods
+   * Life-cycle hook after component is created.
    */
-
-  constructor() { }
-
-  ngOnInit() { }
+  ngOnInit() {}
 
   /**
-   * Event Handlers
+   * For handling when user taps on the help button.
    */
-
   handleHelpButtonTap() {
     window.open(AppConfiguration.onlineHelpURL, '_newtab');
   }
 
+  /**
+   * For handling when user taps on the login/logout button.
+   */
   handleLoginButtonTap() {
     console.log('login button tapped');
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AppConfiguration } from '../app-configuration';
+import { HistogramBuilderService } from '../services/histogram-builder.service';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
 
@@ -31,7 +32,7 @@ export class HistogramComponent implements OnInit {
   selectedFieldConstantCharacteristicId: number;
   fieldConstantCharacteristics: any[] = [];
   selectedClassificationMethod: string;
-  classificationMethods: string[];
+  classificationMethods: string[] = [];
   selectedClassSize: number;
   classSizes: number[] = [1, 2, 3, 4, 5];
   frequencyData: number[] = [];
@@ -40,7 +41,7 @@ export class HistogramComponent implements OnInit {
   fieldConstantsToolTip = AppConfiguration.fieldConstantsToolTip;
 
   /**
-   * Component Life-cycle methods
+   * For dependency injecting needed services.
    */
   constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
 
@@ -94,8 +95,12 @@ export class HistogramComponent implements OnInit {
     );
   }
 
+  /**
+   * Life-cycle hook after component is created.
+   */
   ngOnInit() {
-    this.createTestHistogram();
+
+    HistogramBuilderService.createTestHistogram(Plotly);
   }
 
   /**
@@ -111,12 +116,7 @@ export class HistogramComponent implements OnInit {
   onFieldCharacteristicChange() {
 
     // fetch field constants data
-    const studyAreaId = this.studyArea['properties']['id'];
-    const startYear = this.startYear;
-    const endYear = this.endYear;
-    const selectedFieldConstantCharacteristicId = this.selectedFieldConstantCharacteristicId;
-    const cropTypes = this.cropTypes;
-    this.starsAPIService.fetchFieldConstantData(studyAreaId, startYear, endYear, selectedFieldConstantCharacteristicId, cropTypes).then((response) => {
+    this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
     }).then((data) => {
 
@@ -135,13 +135,13 @@ export class HistogramComponent implements OnInit {
 
         // create a un-classified histogram
         this.geostatSeries = new geostats(this.frequencyData);
-        const histoData = this.createUnclassifiedHistogramDataObject(this.frequencyData);
-        this.createHistogram(histoData, false);
+        const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData);
+        this.presentHistogramData(histoData, false);
       } else {
 
         // create a classified histogram
-        const histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
-        this.createHistogram(histoData, true);
+        const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+        this.presentHistogramData(histoData, true);
       }
 
     }).catch((error) => {
@@ -154,8 +154,9 @@ export class HistogramComponent implements OnInit {
    */
   onClassSizeChange() {
 
-    // initialize classification methods in drop down
-    this.classificationMethods = ['Jenks', 'Equal Interval', 'Quantile', 'Unique Values', 'Standard Deviation', 'Arithmetic Progression', 'Geometric Progression'];
+    if (this.classificationMethods.length !== HistogramBuilderService.classificationMethods.length) {
+      this.classificationMethods = HistogramBuilderService.classificationMethods;
+    }
   }
 
   /**
@@ -164,8 +165,8 @@ export class HistogramComponent implements OnInit {
   onClassificationChange() {
 
     // create classified histogram
-    const histoData = this.createClassifiedHistogramDataObject(this.frequencyData);
-    this.createHistogram(histoData, true);
+    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+    this.presentHistogramData(histoData, true);
   }
 
   /**
@@ -183,10 +184,11 @@ export class HistogramComponent implements OnInit {
   }
 
   /**
-   * Utility for creating a histogram for the input series
+   * Utility for presenting a histogram for the input data
    * @param histogramData
+   * @param {boolean} isShowing
    */
-  createHistogram(histogramData: any, isShowing: boolean) {
+  presentHistogramData(histogramData: any, isShowing: boolean) {
 
     const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
     const layout = {
@@ -199,217 +201,6 @@ export class HistogramComponent implements OnInit {
 
     Plotly.newPlot('histogram',
       histogramData,
-      layout,
-      {
-        displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
-        displaylogo: false
-      }
-    );
-  }
-
-  /**
-   * Utility for fetching numbers in the input series that are greater than or equal to the input start number and less then the input end number.
-   * @param {number[]} series
-   * @param {number} start
-   * @param {number} end
-   * @returns {Array}
-   */
-  static fetchValuesInRange(series: number[], start: number, end: number) {
-    const result = [];
-    const lastValue = series[series.length - 1];
-    series.forEach((item) => {
-      if (item >= start && item < end) {
-        result.push(item);
-      } else if (item === end && end === lastValue) {
-        result.push(item);
-      }
-    });
-
-    return result;
-  }
-
-  /**
-   * Utility for creating an array that represents the counts of each value in the input number array.
-   * @param {number[]} values
-   * @returns {Array}
-   */
-  static fetchCountOfValues(values: number[]) {
-    const result = [];
-
-    // get unique values
-    const uniqueValues = new Set(values);
-
-    // get count of unique values
-    uniqueValues.forEach(function(currentUniqueValue) {
-      let count = 0;
-      values.forEach(function(item) {
-        if (item === currentUniqueValue) {
-          count += 1;
-        }
-      });
-      result.push(count);
-    });
-
-    return result;
-  }
-
-  /**
-   * Utility for fetching a histogram color.
-   * @param {number} index
-   */
-  static fetchHistogramColorForIndex(index: number) {
-    if (index === 0) {
-      return '#A1D99B';
-    } else if (index === 1) {
-      return '#74C476';
-    } else if (index === 2) {
-      return '#41AB5D';
-    } else if (index === 3) {
-      return '#238B45';
-    } else if (index === 4) {
-      return '005A32';
-    }
-  }
-
-  /**
-   * For classifiying the frequency data using geostats.
-   */
-  static classifySeries(classificationMethods: string[], targetClassification: string, classSize: number, geostatSeries: any) {
-    if (targetClassification === classificationMethods[0]) {
-      geostatSeries.getJenks(classSize);
-    } else if (targetClassification === classificationMethods[1]) {
-      geostatSeries.getClassEqInterval(classSize);
-    } else if (targetClassification === classificationMethods[2]) {
-      geostatSeries.getClassQuantile(classSize);
-    } else if (targetClassification === classificationMethods[3]) {
-      geostatSeries.getClassUniqueValues(classSize);
-    } else if (targetClassification === classificationMethods[4]) {
-      geostatSeries.getClassStdDeviation(classSize);
-    } else if (targetClassification === classificationMethods[5]) {
-      geostatSeries.getClassArithmeticProgression(classSize);
-    } else if (targetClassification === classificationMethods[6]) {
-      geostatSeries.getClassGeometricProgression(classSize);
-    } else {
-      geostatSeries.getJenks(classSize);
-    }
-  }
-
-  /**
-   * Utility for creating the data object for a classified histogram
-   * @param {number[]} series
-   */
-  createClassifiedHistogramDataObject(series: number[]) {
-    const result = [];
-
-    //
-    console.log(this.selectedClassificationMethod);
-
-    HistogramComponent.classifySeries(this.classificationMethods, this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
-
-    this.geostatSeries.ranges.forEach(function(item, index) {
-
-      // get the start and end values for the current range
-      const sliced = item.split(' - ');
-      const startRange = sliced[0];
-      const endRange = sliced[1];
-
-      //
-      console.log('the range is: ' + startRange + ' to ' + endRange);
-
-      // get the values in the series for the current range
-      const values = HistogramComponent.fetchValuesInRange(series, startRange, endRange);
-
-      //
-      // console.log('the values are: ' + values);
-
-      // get the count for each value
-      const counts = HistogramComponent.fetchCountOfValues(values);
-
-      //
-      console.log('the counts are: ' + counts);
-
-      // create color array (per Plotly spec)
-      const targetColor = HistogramComponent.fetchHistogramColorForIndex(index);
-      const colorArray = [];
-      values.forEach(function(){
-        colorArray.push(targetColor);
-      });
-
-      // create a frequency data item (per Plotly spec)
-      const freqItem = {
-        name: 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
-        x: values,
-        type: 'histogram',
-        marker: { color:  targetColor}
-      };
-
-      result.push(freqItem);
-    });
-
-    return result;
-  }
-
-  /**
-   * Utility for creating the data object for an un-classified histogram
-   * @param {number[]} series
-   */
-  createUnclassifiedHistogramDataObject(series: number[]) {
-
-    // build histogram data object per the Plotly spec
-    const result = [{
-      x: series,
-      type: 'histogram'
-    }];
-
-    return result;
-  }
-
-  /**
-   * Creates a test histogram to demonstrate the general code required for the chart.
-   */
-  createTestHistogram() {
-
-    // field based characteristic sample classification data
-    const data = [
-      {
-        name: 'Medium Field',
-        x: ['7000'],
-        y: [2],
-        type: 'bar',
-        marker: {
-          color: ['#A6A6A6']
-        }
-      },
-      {
-        name: 'Large Field',
-        x: ['11000', '15000'],
-        y: [3, 3],
-        type: 'bar',
-        marker: {
-          color: ['#ED7D31', '#ED7D31']
-        }
-      }
-      ,
-      {
-        name: 'Small Field',
-        x: ['0', '23000', '27000'],
-        y: [0, 1, 1],
-        type: 'bar',
-        marker: {
-          color: ['#0070C0', '#0070C0', '#0070C0']
-        }
-      }
-    ];
-
-    const layout = {
-      title: 'Histogram of field size',
-      bargap: 0.5,
-      hovermode: 'closest'
-    };
-
-    Plotly.newPlot('histogram',
-      data,
       layout,
       {
         displayModeBar: 'hover',

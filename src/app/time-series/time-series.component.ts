@@ -17,7 +17,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   /**
    * Properties
    */
-
   chart2IsShowing = false;
 
   subscriptionToSelectedStudyArea: Subscription;
@@ -64,7 +63,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   timeSeriesTooltip = AppConfiguration.timeSeriesTooltip;
 
   /**
-   * Component Life-cycle methods
+   * For dependency injecting needed services.
    */
   constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
 
@@ -158,12 +157,18 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Life-cycle hook after component is created.
+   */
   ngOnInit() {
 
     // fill out charts with test data
     this.createTestCharts();
   }
 
+  /**
+   * Lifecycle hook that is called when destroyed.
+   */
   ngOnDestroy() {
     this.subscriptionToSelectedStudyArea.unsubscribe();
     this.subscriptionToSelectedStartYear.unsubscribe();
