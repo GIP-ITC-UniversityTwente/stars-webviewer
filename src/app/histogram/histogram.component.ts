@@ -273,6 +273,29 @@ export class HistogramComponent implements OnInit {
   }
 
   /**
+   * For classifiying the frequency data using geostats.
+   */
+  static classifySeries(classificationMethods: string[], targetClassification: string, classSize: number, geostatSeries: any) {
+    if (targetClassification === classificationMethods[0]) {
+      geostatSeries.getJenks(classSize);
+    } else if (targetClassification === classificationMethods[1]) {
+      geostatSeries.getClassEqInterval(classSize);
+    } else if (targetClassification === classificationMethods[2]) {
+      geostatSeries.getClassQuantile(classSize);
+    } else if (targetClassification === classificationMethods[3]) {
+      geostatSeries.getClassUniqueValues(classSize);
+    } else if (targetClassification === classificationMethods[4]) {
+      geostatSeries.getClassStdDeviation(classSize);
+    } else if (targetClassification === classificationMethods[5]) {
+      geostatSeries.getClassArithmeticProgression(classSize);
+    } else if (targetClassification === classificationMethods[6]) {
+      geostatSeries.getClassGeometricProgression(classSize);
+    } else {
+      geostatSeries.getJenks(classSize);
+    }
+  }
+
+  /**
    * Utility for creating the data object for a classified histogram
    * @param {number[]} series
    */
@@ -282,71 +305,47 @@ export class HistogramComponent implements OnInit {
     //
     console.log(this.selectedClassificationMethod);
 
-    if (this.selectedClassificationMethod === 'Jenks') {
-      this.geostatSeries.getJenks(this.selectedClassSize);
-    } else if (this.selectedClassificationMethod === 'Equal Interval') {
-      this.geostatSeries.getClassEqInterval(this.selectedClassSize);
-    } else if (this.selectedClassificationMethod === 'Quantile') {
-      this.geostatSeries.getClassQuantile(this.selectedClassSize);
-    } else if (this.selectedClassificationMethod === 'Unique Values') {
-      this.geostatSeries.getClassUniqueValues(this.selectedClassSize);
-    } else if (this.selectedClassificationMethod === 'Standard Deviation') {
-      this.geostatSeries.getClassStdDeviation(this.selectedClassSize);
-    } else if (this.selectedClassificationMethod === 'Arithmetic Progression') {
-      this.geostatSeries.getClassArithmeticProgression(this.selectedClassSize);
-    } else if (this.selectedClassificationMethod === 'Geometric Progression') {
-      this.geostatSeries.getClassGeometricProgression(this.selectedClassSize);
-    } else {
-      this.geostatSeries.getJenks(this.selectedClassSize);
-    }
+    HistogramComponent.classifySeries(this.classificationMethods, this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
 
-    const sorted = series.sort((n1, n2) => n1 - n2);
+    this.geostatSeries.ranges.forEach(function(item, index) {
 
-    if (this.selectedClassSize > 0) {
-      this.geostatSeries.ranges.forEach(function(item, index){
-
-        // get the start and end values for the current range
-        const sliced = item.split(' - ');
-        const startRange = sliced[0];
-        const endRange = sliced[1];
-
-        //
-        console.log('the range is: ' + startRange + ' to ' + endRange);
-
-        // get the values in the series for the current range
-        const values = HistogramComponent.fetchValuesInRange(sorted, startRange, endRange);
-
-        //
-        // console.log('the values are: ' + values);
-
-        // get the count for each value
-        const counts = HistogramComponent.fetchCountOfValues(values);
-
-        //
-        console.log('the counts are: ' + counts);
-
-        // create color array (per Plotly spec)
-        const targetColor = HistogramComponent.fetchHistogramColorForIndex(index);
-        const colorArray = [];
-        values.forEach(function(){
-          colorArray.push(targetColor);
-        });
-
-        // create a frequency data item (per Plotly spec)
-        const freqItem = {
-          name: 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
-          x: values,
-          type: 'histogram',
-          marker: { color:  targetColor}
-        };
-
-        result.push(freqItem);
-      });
+      // get the start and end values for the current range
+      const sliced = item.split(' - ');
+      const startRange = sliced[0];
+      const endRange = sliced[1];
 
       //
-      // console.log('the histogram model');
-      // console.log(result);
-    }
+      console.log('the range is: ' + startRange + ' to ' + endRange);
+
+      // get the values in the series for the current range
+      const values = HistogramComponent.fetchValuesInRange(series, startRange, endRange);
+
+      //
+      // console.log('the values are: ' + values);
+
+      // get the count for each value
+      const counts = HistogramComponent.fetchCountOfValues(values);
+
+      //
+      console.log('the counts are: ' + counts);
+
+      // create color array (per Plotly spec)
+      const targetColor = HistogramComponent.fetchHistogramColorForIndex(index);
+      const colorArray = [];
+      values.forEach(function(){
+        colorArray.push(targetColor);
+      });
+
+      // create a frequency data item (per Plotly spec)
+      const freqItem = {
+        name: 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
+        x: values,
+        type: 'histogram',
+        marker: { color:  targetColor}
+      };
+
+      result.push(freqItem);
+    });
 
     return result;
   }
