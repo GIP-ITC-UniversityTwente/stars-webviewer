@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
+import { TimeSeriesBuilderService } from '../services/time-series-builder.service';
 
 declare const Plotly: any;
 
@@ -21,12 +22,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
   subscriptionToSelectedStudyArea: Subscription;
   studyArea: JSON;
+  studyAreaId: number;
   subscriptionToSelectedStartYear: Subscription;
   startYear: number;
   subscriptionToSelectedEndYear: Subscription;
   endYear: number;
   subscriptionToSelectedCropTypes: Subscription;
-  cropTypes: string;
+  cropList: string;
 
   characteristicTypes: string[] = [];
   imageTypes: string[] = [];
@@ -63,6 +65,40 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   timeSeriesTooltip = AppConfiguration.timeSeriesTooltip;
 
   /**
+   * Utility for initializing the image characteristic options
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   */
+  initializeImageCharacteristicsOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
+    this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
+      return response;
+    }).then((data) => {
+      this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
+      this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  /**
+   * Utility for initializing the field characteristic options
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   */
+  initializeFieldCharacteristicOptions(studyAreaId: number, startYear: number, endYear: number = null) {
+
+    this.starsAPIService.fetchFieldCharacteristics(studyAreaId, startYear, endYear).then((response) => {
+      return response;
+    }).then((data) => {
+      this.fieldTypes = data.results.fieldCharacteristics;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  /**
    * For dependency injecting needed services.
    */
   constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
@@ -71,91 +107,56 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
         this.studyArea = studyArea;
+        this.studyAreaId = studyArea['properties']['id'];
       }
     );
 
     // subscribe to the start year selection by the user
     this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
       startYear => {
-
         this.startYear = startYear;
 
-        // initialize the image characteristic options (and other options)
-        starsAPIService.fetchImageCharacteristics(this.studyArea['properties']['id'], this.startYear).then((response) => {
-          return response;
-        }).then((data) => {
+        // initialize characteristic types
+        this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
 
-          this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
-          this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
-          this.characteristicTypes = ['Image Characteristic', 'Field Characteristic'];
-          this.imageTypes = ['Spectral', 'Textural'];
+        // initialize image types
+        this.imageTypes = TimeSeriesBuilderService.fetchImageTypes();
 
-        }).catch((error) => {
-          console.log(error);
-        });
+        // initialize the image characteristic options
+        this.initializeImageCharacteristicsOptions(this.studyAreaId, this.startYear, this.endYear);
 
-        // initialize field characteristic options
-        this.starsAPIService.fetchFieldCharacteristics(this.studyArea['properties']['id'], this.startYear).then((response) => {
-          return response;
-        }).then((data) => {
-
-          this.fieldTypes = data.results.fieldCharacteristics;
-
-        }).catch((error) => {
-          console.log(error);
-        });
+        // initializes the field characteristic options
+        this.initializeFieldCharacteristicOptions(this.studyAreaId, this.startYear, this.endYear);
       }
     );
 
     // subscribe to the end year selection by the user
     this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
       endYear => {
-
         this.endYear = endYear;
 
-        // initialize the image characteristic options (and other options)
-        starsAPIService.fetchImageCharacteristics(this.studyArea['properties']['id'], this.startYear, this.endYear).then((response) => {
-          return response;
-        }).then((data) => {
+        // initialize characteristic types
+        this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
 
-          this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
-          this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
-          this.characteristicTypes = ['Image Characteristic', 'Field Characteristic'];
-          this.imageTypes = ['Spectral', 'Textural'];
+        // initialize image types
+        this.imageTypes = TimeSeriesBuilderService.fetchImageTypes();
 
-        }).catch((error) => {
-          console.log(error);
-        });
+        // initialize the image characteristic options
+        this.initializeImageCharacteristicsOptions(this.studyAreaId, this.startYear, this.endYear);
 
-        // initialize field characteristic options
-        this.starsAPIService.fetchFieldCharacteristics(this.studyArea['properties']['id'], this.startYear, this.endYear).then((response) => {
-          return response;
-        }).then((data) => {
-
-          this.fieldTypes = data.results.fieldCharacteristics;
-
-        }).catch((error) => {
-          console.log(error);
-        });
+        // initializes the field characteristic options
+        this.initializeFieldCharacteristicOptions(this.studyAreaId, this.startYear, this.endYear);
       }
     );
 
     // subscribe to crop types selections by the user
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
-
-        let cropList = '';
-        cropTypes.forEach(function(item, index) {
-          if (index === cropTypes.length - 1) {
-            cropList += cropTypes[index];
-          } else {
-            cropList += cropTypes[index] + ',';
-          }
-        });
-        this.cropTypes = cropList;
+        this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
       }
     );
   }
+
 
   /**
    * Life-cycle hook after component is created.
@@ -301,12 +302,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
         // chart's envelope
         const envelopeY = minValueCollection;
-        for (let i = maxValueCollection.length - 1, il = 0; i >= il; i--) {
+        for (let i = maxValueCollection.length - 1; i >= 0; i--) {
           envelopeY.push(maxValueCollection[i]);
         }
 
         const envelopeX = dateCollection;
-        for (let j = dateCollection.length - 1, jl = 0; j >= jl; j--) {
+        for (let j = dateCollection.length - 1; j >= 0; j--) {
           envelopeX.push(dateCollection[j]);
         }
 
@@ -412,12 +413,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
         // chart's envelope
         const envelopeY = minValueCollection;
-        for (let i = maxValueCollection.length - 1, il = 0; i >= il; i--) {
+        for (let i = maxValueCollection.length - 1; i >= 0; i--) {
           envelopeY.push(maxValueCollection[i]);
         }
 
         const envelopeX = dateCollection;
-        for (let j = dateCollection.length - 1, jl = 0; j >= jl; j--) {
+        for (let j = dateCollection.length - 1; j >= 0; j--) {
           envelopeX.push(dateCollection[j]);
         }
 
@@ -563,7 +564,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 1.
    */
   onChart1SensorChange() {
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -587,7 +588,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.chart1SelectedFieldCharacteristicId = fieldCharId;
 
     // fetch the time series for the selected field characteristic
-    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart1SelectedFieldCharacteristicId).then((response) => {
+    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -670,7 +671,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 2.
    */
   onChart2SensorChange() {
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
@@ -694,7 +695,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.chart2SelectedFieldCharacteristicId = fieldCharId;
 
     // fetch the time series for the selected field characteristic
-    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropTypes, this.chart2SelectedFieldCharacteristicId).then((response) => {
+    this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
       const results = data.results;
