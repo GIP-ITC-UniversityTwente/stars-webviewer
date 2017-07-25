@@ -1,40 +1,41 @@
-<!-- section for showing global options -->
-<div class="parameterSection" style="position:fixed;top:99px;">
-  <div class="parameterTitle">Study Area</div>
-  <div class="parameterInfo" (click)="handleInfoTapForStudyArea()">
-    <img src="../../assets/icon_info.svg" alt="info" mdTooltip={{studyAreaToolTip}} [mdTooltipPosition]='toolTipPosition' />
+<div style="position:fixed;margin-top:40px;">
+  <div class="parameterSection">
+    <div class="parameterTitle">Study Area</div>
+    <div class="parameterInfo" (click)="handleInfoTapForStudyArea()">
+      <img src="../../assets/icon_info.svg" alt="info" mdTooltip={{studyAreaToolTip}} [mdTooltipPosition]='toolTipPosition' />
+    </div>
+    <md-select class="selectItem" [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
+      <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
+        {{studyArea.properties.name}}
+      </md-option>
+    </md-select>
   </div>
-  <md-select class="selectItem" [(ngModel)]="selectedStudyAreaName" name="studyArea" (change)="onStudyAreaChange()">
-    <md-option *ngFor="let studyArea of studyAreas" [value]="studyArea.properties.name">
-      {{studyArea.properties.name}}
-    </md-option>
-  </md-select>
-</div>
-<div class="parameterSection" style="position:fixed;top:206px;">
-  <div>Start Year</div>
-  <md-select class="selectItem" [(ngModel)]="selectedStartYear" name="startYear" (change)="onStartYearChange()">
-    <md-option *ngFor="let startYear of startYears" [value]="startYear">
-      {{startYear}}
-    </md-option>
-  </md-select>
-</div>
-<div class="parameterSection" style="position:fixed;top:320px;">
-  <div>End Year</div>
-  <md-select class="selectItem" [(ngModel)]="selectedEndYear" name="endYear" (change)="onEndYearChange()">
-    <md-option *ngFor="let endYear of endYears" [value]="endYear">
-      {{endYear}}
-    </md-option>
-  </md-select>
-</div>
-<div class="parameterSection" style="position:fixed;top:429px;">
-  <div class="parameterTitle">Crop Type</div>
-  <div class="parameterInfo" (click)="handleInfoTapForCropType()" style="float:left;">
-    <img src="../../assets/icon_info.svg" alt="info" mdTooltip={{cropTypeToolTip}} [mdTooltipPosition]='toolTipPosition' />
+  <div class="parameterSection">
+    <div>Start Year</div>
+    <md-select class="selectItem" [(ngModel)]="selectedStartYear" name="startYear" (change)="onStartYearChange()">
+      <md-option *ngFor="let startYear of startYears" [value]="startYear">
+        {{startYear}}
+      </md-option>
+    </md-select>
   </div>
-  <br/>
-  <div class="cropItem" *ngFor="let crop of crops">
-    <md-checkbox color="warn" [(ngModel)]="crop.isChecked" (change)="onCropTypeChange()">{{crop.name}}</md-checkbox>
+  <div class="parameterSection">
+    <div>End Year</div>
+    <md-select class="selectItem" [(ngModel)]="selectedEndYear" name="endYear" (change)="onEndYearChange()">
+      <md-option *ngFor="let endYear of endYears" [value]="endYear">
+        {{endYear}}
+      </md-option>
+    </md-select>
+  </div>
+  <div class="parameterSection">
+    <div class="parameterTitle">Crop Type</div>
+    <div class="parameterInfo" (click)="handleInfoTapForCropType()" style="float:left;">
+      <img src="../../assets/icon_info.svg" alt="info" mdTooltip={{cropTypeToolTip}} [mdTooltipPosition]='toolTipPosition' />
+    </div>
     <br/>
+    <div class="cropItem" *ngFor="let crop of crops">
+      <md-checkbox color="warn" [(ngModel)]="crop.isChecked" (change)="onCropTypeChange()">{{crop.name}}</md-checkbox>
+      <br/>
+    </div>
   </div>
 </div>
 

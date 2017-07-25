@@ -5,10 +5,9 @@ import { ClassifiedTimeSeriesComponent } from './classified-time-series.componen
 describe('ClassifiedTimeSeriesComponent', () => {
   let component: ClassifiedTimeSeriesComponent;
   let fixture: ComponentFixture<ClassifiedTimeSeriesComponent>;
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ClassifiedTimeSeriesComponent ]
+      declarations: [ ClassifiedTimeSeriesComponent ],
     })
     .compileComponents();
   }));

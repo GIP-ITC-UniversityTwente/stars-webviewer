@@ -1,6 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -15,15 +13,13 @@ describe('StudyAreaComponent', () => {
   let component: StudyAreaComponent;
   let fixture: ComponentFixture<StudyAreaComponent>;
   let userSelectionServiceStub;
-  let starsAPIServiceStub;
 
   beforeEach(async(() => {
 
     userSelectionServiceStub = {};
-    starsAPIServiceStub = {};
 
     TestBed.configureTestingModule({
-      imports: [ BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule, MdSelectModule, MdCheckboxModule, MdTooltipModule ],
+      imports: [ BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule, MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule ],
       declarations: [ StudyAreaComponent ],
       providers: [
         { provide: UserSelectionService, useValue: userSelectionServiceStub }, // stub of service
@@ -42,7 +38,6 @@ describe('StudyAreaComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-
 
   it('stub object and injected UserSelectionService should not be the same', () => {
     expect(UserSelectionService === userSelectionServiceStub).toBe(false);
