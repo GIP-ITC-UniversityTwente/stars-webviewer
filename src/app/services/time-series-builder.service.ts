@@ -187,6 +187,32 @@ export class TimeSeriesBuilderService {
   }
 
   /**
+   * Utility for creating a time series layout object
+   * @param {string} chartTitle
+   * @param {string} yAxisTitle
+   * @returns {}
+   */
+  static createTimeSeriesLayoutObject(chartTitle: string, yAxisTitle: string) {
+    return  {
+      title: chartTitle + ' Time Series',
+      xaxis: {
+        title: 'Time',
+        showgrid: true,
+        zeroline: true,
+        ticks: 'outside',
+        showticklabels: true
+      },
+      yaxis: {
+        title: yAxisTitle,
+        showline: false,
+        ticks: 'outside',
+        showticklabels: true
+      },
+      hovermode: 'closest'
+    };
+  }
+
+  /**
    * Utility for testing patterns for creating chart spec.
    */
   static createTestCharts(Plotly: any) {

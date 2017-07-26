@@ -214,7 +214,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
       return response;
     }).then((data) => {
-      this.renderImageCharacteristicTimeSeriesChart(data, this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, 'chart1');
+      const chartData = TimeSeriesBuilderService.createTimeSeriesDataObject(data);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayoutObject(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+      this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart1');
     });
   }
 
@@ -320,7 +322,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
       return response;
     }).then((data) => {
-      this.renderImageCharacteristicTimeSeriesChart(data, this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName, 'chart2');
+      const chartData = TimeSeriesBuilderService.createTimeSeriesDataObject(data);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayoutObject(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+      this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart2');
     });
   }
 
@@ -402,34 +406,11 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
   /**
    * Utility for rendering the image characteristics chart for the time series response.
-   * @param {any[]} apiResponse
-   * @param {string} xAxisTitle
-   * @param {string} yAxisTitle
+   * @param {any} chartData
+   * @param {any} layout
    * @param {string} targetDivId
    */
-  renderImageCharacteristicTimeSeriesChart(apiResponse: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
-    // get data object for chart
-    const chartData = TimeSeriesBuilderService.createTimeSeriesDataObject(apiResponse);
-
-    // layout for millet spectral test sample
-    const layout = {
-      title: xAxisTitle + ' Time Series',
-      xaxis: {
-        title: 'Time',
-        showgrid: true,
-        zeroline: true,
-        ticks: 'outside',
-        showticklabels: true
-      },
-      yaxis: {
-        title: yAxisTitle,
-        showline: false,
-        ticks: 'outside',
-        showticklabels: true
-      },
-      hovermode: 'closest'
-    };
-
+  renderImageCharacteristicTimeSeriesChart(chartData: any, layout: any, targetDivId: string) {
     Plotly.newPlot(targetDivId,
       chartData,
       layout,
