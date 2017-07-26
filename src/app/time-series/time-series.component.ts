@@ -214,8 +214,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
       return response;
     }).then((data) => {
-      const chartData = TimeSeriesBuilderService.createTimeSeriesDataObject(data);
-      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayoutObject(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+      const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
       this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart1');
     });
   }
@@ -239,8 +239,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
-      const results = data.results;
-      this.renderFieldCharacteristicTimeSeriesChart(results, this.chart1SelectedCharacteristicType, this.chart1SelectedFieldCharacteristicName, 'chart1');
+      const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
+      this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
     });
   }
 
@@ -322,8 +323,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
       return response;
     }).then((data) => {
-      const chartData = TimeSeriesBuilderService.createTimeSeriesDataObject(data);
-      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayoutObject(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+      const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
       this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart2');
     });
   }
@@ -347,8 +348,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
-      const results = data.results;
-      this.renderFieldCharacteristicTimeSeriesChart(results, this.chart2SelectedCharacteristicType, this.chart2SelectedFieldCharacteristicName, 'chart2');
+      //
+      console.log(JSON.stringify(data));
+
+      const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart2SelectedFieldCharacteristicName);
+      this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart2');
     });
   }
 
@@ -407,13 +412,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   /**
    * Utility for rendering the image characteristics chart for the time series response.
    * @param {any} chartData
-   * @param {any} layout
+   * @param {any} chartLayout
    * @param {string} targetDivId
    */
-  renderImageCharacteristicTimeSeriesChart(chartData: any, layout: any, targetDivId: string) {
+  renderImageCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
     Plotly.newPlot(targetDivId,
       chartData,
-      layout,
+      chartLayout,
       {
         displayModeBar: 'hover',
         modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
@@ -423,128 +428,14 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
   /**
    * Utility for rendering the field characteristics chart for the time series response.
-   * @param {any[]} results
-   * @param {string} xAxisTitle
-   * @param {string} yAxisTitle
+   * @param {any[]} chartData
+   * @param {string} chartLayout
    * @param {string} targetDivId
    */
-  renderFieldCharacteristicTimeSeriesChart(results: any[], xAxisTitle: string, yAxisTitle: string, targetDivId: string) {
-    const chartData = [];
-
-    for (const item of results) {
-      const cropName = item.crop;
-      const dateCollection = [];
-      const avgValueCollection = [];
-      const maxValueCollection = [];
-      const minValueCollection = [];
-
-      for (const crop of item.cseries[0]) { // note variation - need to do [0]
-        dateCollection.push(crop.acquisition_date);
-        avgValueCollection.push(crop.avgvalue);
-        if (crop.hasOwnProperty('maxvalue') && crop.hasOwnProperty('minvalue')) {
-          if (crop.maxvalue != null) {
-            maxValueCollection.push(crop.maxvalue); // note variation - does not always have max and min values - only avg
-          }
-          if (crop.minvalue != null) {
-            minValueCollection.push(crop.minvalue);
-          }
-        }
-      }
-
-      //
-      console.log('date collection: ' + dateCollection);
-      console.log('avgvalue: ' + avgValueCollection);
-      console.log('maxvalue: ' + maxValueCollection);
-      console.log('minvalue: ' + minValueCollection);
-
-      // draw line and envelope
-      if (avgValueCollection.length === maxValueCollection.length) {
-
-        // chart's line
-        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
-        const lineDataObject = {
-          x: dateCollection,
-          y: avgValueCollection,
-          mode: 'lines',
-          name: cropName,
-          line: {
-            color: lineColor,
-            width: 3
-          },
-          type: 'scatter'
-        };
-
-        // chart's envelope
-        const envelopeY = minValueCollection;
-        for (let i = maxValueCollection.length - 1; i >= 0; i--) {
-          envelopeY.push(maxValueCollection[i]);
-        }
-
-        const envelopeX = dateCollection;
-        for (let j = dateCollection.length - 1; j >= 0; j--) {
-          envelopeX.push(dateCollection[j]);
-        }
-
-        const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
-        const envelopeDataObject = {
-          x: envelopeX,
-          y: envelopeY,
-          fill: 'tozerox',
-          fillcolor: backgroundColor,
-          name: '',
-          showlegend: false,
-          type: 'scatter',
-          line: {color: 'transparent'}
-        };
-
-        // add line & envelope to chart data
-        chartData.push(envelopeDataObject);
-        chartData.push(lineDataObject);
-      } else {
-
-        // only draw line ...
-
-        // chart's line
-        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
-        const lineDataObject = {
-          x: dateCollection,
-          y: avgValueCollection,
-          mode: 'lines',
-          name: cropName,
-          line: {
-            color: lineColor,
-            width: 3
-          },
-          type: 'scatter'
-        };
-
-        // add line & envelope to chart data
-        chartData.push(lineDataObject);
-      }
-    }
-
-    // layout for millet spectral test sample
-    const layout = {
-      title: xAxisTitle + ' Time Series',
-      xaxis: {
-        title: 'Time',
-        showgrid: true,
-        zeroline: true,
-        ticks: 'outside',
-        showticklabels: true
-      },
-      yaxis: {
-        title: yAxisTitle,
-        showline: false,
-        ticks: 'outside',
-        showticklabels: true
-      },
-      hovermode: 'closest'
-    };
-
+  renderFieldCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
     Plotly.newPlot(targetDivId,
       chartData,
-      layout,
+      chartLayout,
       {
         displayModeBar: 'hover',
         modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],

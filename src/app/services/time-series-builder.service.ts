@@ -116,11 +116,11 @@ export class TimeSeriesBuilderService {
   }
 
   /**
-   * Utility for creating a time series data object (per Plotly's spec) for creating a time series from the STARS API web response
+   * Utility for creating an image characteristics time series data object (per Plotly's spec) for creating a time series from the STARS API web response.
    * @param apiResponse
    * @returns {Array}
    */
-  static createTimeSeriesDataObject(apiResponse: any) {
+  static createImageCharacteristicTimeSeriesData(apiResponse: any) {
 
     const chartData = [];
 
@@ -186,13 +186,106 @@ export class TimeSeriesBuilderService {
     return chartData;
   }
 
+  static createFieldCharacteristicTimeSeriesData(apiResponse: any) {
+
+    const chartData = [];
+
+    for (const item of apiResponse.results) {
+      const cropName = item.crop;
+      const dateCollection = [];
+      const avgValueCollection = [];
+      const maxValueCollection = [];
+      const minValueCollection = [];
+
+      for (const crop of item.cseries[0]) {   // note variation - need to do [0]
+        dateCollection.push(crop.acquisition_date);
+        avgValueCollection.push(crop.avgvalue);
+        if (crop.hasOwnProperty('maxvalue') && crop.hasOwnProperty('minvalue')) {
+          if (crop.maxvalue != null) {
+            maxValueCollection.push(crop.maxvalue);
+          }
+          if (crop.minvalue != null) {
+            minValueCollection.push(crop.minvalue);
+          }
+        }
+      }
+
+      // draw line and envelope
+      if (avgValueCollection.length === maxValueCollection.length) {
+
+        // chart's line
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+        const lineDataObject = {
+          x: dateCollection,
+          y: avgValueCollection,
+          mode: 'lines',
+          name: cropName,
+          line: {
+            color: lineColor,
+            width: 3
+          },
+          type: 'scatter'
+        };
+
+        // chart's envelope
+        const envelopeY = minValueCollection;
+        for (let i = maxValueCollection.length - 1; i >= 0; i--) {
+          envelopeY.push(maxValueCollection[i]);
+        }
+
+        const envelopeX = dateCollection;
+        for (let j = dateCollection.length - 1; j >= 0; j--) {
+          envelopeX.push(dateCollection[j]);
+        }
+
+        const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
+        const envelopeDataObject = {
+          x: envelopeX,
+          y: envelopeY,
+          fill: 'tozerox',
+          fillcolor: backgroundColor,
+          name: '',
+          showlegend: false,
+          type: 'scatter',
+          line: {color: 'transparent'}
+        };
+
+        // add line & envelope to chart data
+        chartData.push(envelopeDataObject);
+        chartData.push(lineDataObject);
+      } else {
+
+        // only draw line ...
+
+        // chart's line
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+        const lineDataObject = {
+          x: dateCollection,
+          y: avgValueCollection,
+          mode: 'lines',
+          name: cropName,
+          line: {
+            color: lineColor,
+            width: 3
+          },
+          type: 'scatter'
+        };
+
+        // add line & envelope to chart data
+        chartData.push(lineDataObject);
+      }
+    }
+
+    return chartData;
+  }
+
   /**
-   * Utility for creating a time series layout object
+   * Utility for creating an image characteristics time series layout object.
    * @param {string} chartTitle
    * @param {string} yAxisTitle
    * @returns {}
    */
-  static createTimeSeriesLayoutObject(chartTitle: string, yAxisTitle: string) {
+  static createTimeSeriesLayout(chartTitle: string, yAxisTitle: string) {
     return  {
       title: chartTitle + ' Time Series',
       xaxis: {
@@ -211,6 +304,7 @@ export class TimeSeriesBuilderService {
       hovermode: 'closest'
     };
   }
+
 
   /**
    * Utility for testing patterns for creating chart spec.
