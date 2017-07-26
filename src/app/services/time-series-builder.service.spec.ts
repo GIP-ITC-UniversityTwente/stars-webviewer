@@ -239,6 +239,27 @@ describe('TimeSeriesBuilderService', () => {
     expect(actualSensors).toEqual(expectedSensors);
   }));
 
+  it('can fetch parameter name from api response', inject([TimeSeriesBuilderService], (service: TimeSeriesBuilderService) => {
+    const actualParameterNameA = TimeSeriesBuilderService.fetchParameterName('bandNumber : 1..4');
+    const expectedParameterNameA = 'bandNumber';
+    expect(actualParameterNameA).toEqual(expectedParameterNameA);
+
+    const actualParameterNameB = TimeSeriesBuilderService.fetchParameterName('lagDistance : 1..4');
+    const expectedParameterNameB = 'lagDistance';
+    expect(actualParameterNameB).toEqual(expectedParameterNameB);
+  }));
+
+  it('can fetch parameter range from api response', inject([TimeSeriesBuilderService], (service: TimeSeriesBuilderService) => {
+
+    const actualParameterRangeA = TimeSeriesBuilderService.fetchParameterRange('bandNumber : 1..8');
+    const expectedParameterRangeA = [1 , 2, 3, 4, 5, 6, 7, 8];
+    expect(actualParameterRangeA).toEqual(expectedParameterRangeA);
+
+    const actualParameterRangeB = TimeSeriesBuilderService.fetchParameterRange('bandNumber : 1..4');
+    const expectedParameterRangeB = [1 , 2, 3, 4];
+    expect(actualParameterRangeB).toEqual(expectedParameterRangeB);
+  }));
+
   it('can fetch a color for time series plot from color palette', inject([TimeSeriesBuilderService], (service: TimeSeriesBuilderService) => {
     const allPotentialColors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
     const randomColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();

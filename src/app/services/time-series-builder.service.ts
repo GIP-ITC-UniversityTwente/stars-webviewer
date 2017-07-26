@@ -72,6 +72,35 @@ export class TimeSeriesBuilderService {
   }
 
   /**
+   * The API provides a string literal for a parameter - such as (e.g. 'bandNumber : 1..4') - this fetches the parameter name
+   * @param {string} apiParameterValue
+   * @returns {string}
+   */
+  static fetchParameterName(apiParameterValue: string) {
+    const substrings = apiParameterValue.split(' ');
+    return substrings[0];
+  }
+
+  /**
+   * The API provides a string literal for a parameter - such as (e.g. 'bandNumber : 1..4') - this fetches the range of values for the parameter anem
+   * @param {string} apiParameterValue
+   * @returns {string}
+   */
+  static fetchParameterRange(apiParameterValue: string) {
+    const range = [];
+    const substrings = apiParameterValue.split(' ');
+    const rangeAsString = substrings[2];
+    const valueSubstrings = rangeAsString.split('..');
+    const lower = Number(valueSubstrings[0]);
+    const upper = Number(valueSubstrings[1]);
+    for (let i = lower; i <= upper; i++) {
+      range.push(i);
+    }
+
+    return range;
+  }
+
+  /**
    * Utility for fetching a random color from color palette when drawing lines for the time series chart
    * @returns {string}
    */

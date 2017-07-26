@@ -174,7 +174,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.selectedChart1Sensor = undefined;
 
     // add image characteristic drop down items
-    if (this.chart1SelectedImageType === this.imageTypes[0]) {
+    if (this.chart1SelectedImageType === 'Spectral') {
       this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allSpectralCharacteristicObjects);
     } else {
       this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allTexturalCharacteristicObjects);
@@ -190,7 +190,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.selectedChart1Sensor = undefined;
 
     // add sensor drop down items
-    if (this.chart1SelectedImageType === this.imageTypes[0]) {
+    if (this.chart1SelectedImageType === 'Spectral') {
+
+      //
+      console.log(this.allSpectralCharacteristicObjects);
 
       // load spectral sensor drop down options
       this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
@@ -198,6 +201,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
       // for fetching a time series after a sensor is chosen
       this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
     } else {
+
+      //
+      console.log(this.allTexturalCharacteristicObjects);
 
       // load textural sensor drop down options
       this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
