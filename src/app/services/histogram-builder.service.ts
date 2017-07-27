@@ -47,6 +47,9 @@ export class HistogramBuilderService {
 
   /**
    * Utilitly for classifiying the frequency data using geostats.
+   * @param {string} targetClassification
+   * @param {number} classSize
+   * @param geostatSeries
    */
   static classifySeries(targetClassification: string, classSize: number, geostatSeries: any) {
     if (targetClassification === HistogramBuilderService.classificationMethods[0]) {
@@ -75,11 +78,6 @@ export class HistogramBuilderService {
    * @returns {Array}
    */
   static createClassifiedHistogramDataObject(series: number[], ranges: string[]) {
-    //
-    console.log(series);
-    //
-    console.log(ranges);
-
     const result = [];
     ranges.forEach(function(item, index) {
 
@@ -122,12 +120,10 @@ export class HistogramBuilderService {
   static createUnclassifiedHistogramDataObject(series: number[]) {
 
     // build histogram data object per the Plotly spec
-    const result = [{
+    return [{
       x: series,
       type: 'histogram'
     }];
-
-    return result;
   }
 
   /**

@@ -70,7 +70,44 @@ export class TimeSeriesBuilderService {
     });
     return results;
   }
+  /**
+   * Fetches parameter 1 and/or parameter 2 if exists for the input image type, image characteristic, and sensor from the API response
+   * @param {string} imageType
+   * @param {string} imageCharacteristicName
+   * @param {string} sensor
+   * @param {any[]} allSpectralCharacteristics
+   * @param {any[]} allTexturalCharacteristics
+   */
+  static fetchParametersForImageCharacteristic(imageType: string, imageCharacteristicName: string, sensor: string, allSpectralCharacteristics: any[], allTexturalCharacteristics: any[]) {
 
+    const result = [];
+
+    if (imageType === 'Spectral') {
+      allSpectralCharacteristics.forEach(function(item) {
+        if (item.alias === imageCharacteristicName && item.sensor === sensor) {
+          if (item.hasOwnProperty('parameter1')) {
+            result.push(item.parameter1);
+          }
+          if (item.hasOwnProperty('parameter2')) {
+            result.push(item.parameter2);
+          }
+        }
+      });
+    } else if (imageType === 'Textural') {
+      allTexturalCharacteristics.forEach(function(item) {
+        if (item.alias === imageCharacteristicName && item.sensor === sensor) {
+          if (item.hasOwnProperty('parameter1')) {
+            result.push(item.parameter1);
+          }
+          if (item.hasOwnProperty('parameter2')) {
+            result.push(item.parameter2);
+          }
+        }
+      });
+    }
+
+    return result;
+  }
   /**
    * The API provides a string literal for a parameter - such as (e.g. 'bandNumber : 1..4') - this fetches the parameter name
    * @param {string} apiParameterValue

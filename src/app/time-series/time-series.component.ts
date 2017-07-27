@@ -192,9 +192,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     // add sensor drop down items
     if (this.chart1SelectedImageType === 'Spectral') {
 
-      //
-      console.log(this.allSpectralCharacteristicObjects);
-
       // load spectral sensor drop down options
       this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
 
@@ -217,13 +214,47 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when a user chooses a sensor for Chart 1.
    */
   onChart1SensorChange() {
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
-      return response;
-    }).then((data) => {
-      const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
-      this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart1');
-    });
+
+
+    // check if chosen sensor will require additional parameters
+    const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, this.selectedChart1Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
+    if (parameters.length === 0) {
+
+      // render the time series
+      this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+      });
+    } else {
+
+      // present parameters - we cannot yet render the time series
+
+      //
+      console.log(parameters);
+
+      if (parameters.length === 1) {
+        const parameter1 = parameters[0];
+        const parameter1Name = TimeSeriesBuilderService.fetchParameterName(parameter1);
+        const parameter1Range = TimeSeriesBuilderService.fetchParameterRange(parameter1);
+        //
+        console.log('param1 name: \'', parameter1Name, '\'  range: ', parameter1Range);
+      } else {
+        const parameter1 = parameters[0];
+        const parameter1Name = TimeSeriesBuilderService.fetchParameterName(parameter1);
+        const parameter1Range = TimeSeriesBuilderService.fetchParameterRange(parameter1);
+        //
+        console.log('param1 name: \'', parameter1Name, '\'  range: ', parameter1Range);
+
+        const parameter2 = parameters[1];
+        const parameter2Name = TimeSeriesBuilderService.fetchParameterName(parameter2);
+        const parameter2Range = TimeSeriesBuilderService.fetchParameterRange(parameter2);
+        //
+        console.log('param2 name: ', parameter2Name, '  range: ', parameter2Range);
+      }
+    }
   }
 
   /**
@@ -245,6 +276,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
+
+      //
+      console.log(data);
+
       const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
       const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
       this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
