@@ -37,6 +37,22 @@
         </md-option>
       </md-select>
     </div>
+    <div class="parameterOption" *ngIf="chart1Parameter1IsVisible">
+      <div class="parameterOptionTitle">{{chart1Parameter1Name}}</div><br/>
+      <md-select [(ngModel)]="chart1SelectedParameter1Option" (change)="onChart1Parameter1Change()">
+        <md-option *ngFor="let parameter1Option of chart1Parameter1Range" [value]="parameter1Option">
+          {{parameter1Option}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="parameterOption" *ngIf="chart1Parameter2IsVisible">
+      <div class="parameterOptionTitle">{{chart1Parameter2Name}}</div><br/>
+      <md-select [(ngModel)]="chart1SelectedParameter2Option" (change)="onChart1Parameter2Change()">
+        <md-option *ngFor="let parameter2Option of chart1Parameter2Range" [value]="parameter2Option">
+          {{parameter2Option}}
+        </md-option>
+      </md-select>
+    </div>
     <div class="parameterOption" *ngIf="chart1FieldOptionsAreVisible">
       <div class="parameterOptionTitle">Field Characteristic</div><br/>
       <md-select [(ngModel)]="chart1SelectedFieldCharacteristicName" (change)="onChart1FieldCharacteristicChange()">
@@ -81,6 +97,22 @@
       <md-select [(ngModel)]="selectedChart2Sensor" (change)="onChart2SensorChange()">
         <md-option *ngFor="let chart2Sensor of chart2Sensors" [value]="chart2Sensor">
           {{chart2Sensor}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="parameterOption" *ngIf="chart2Parameter1IsVisible">
+      <div class="parameterOptionTitle">{{chart2Parameter1Name}}</div><br/>
+      <md-select [(ngModel)]="chart2SelectedParameter1Option" (change)="onChart2Parameter1Change()">
+        <md-option *ngFor="let parameter1Option of chart2Parameter1Range" [value]="parameter1Option">
+          {{parameter1Option}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="parameterOption" *ngIf="chart2Parameter2IsVisible">
+      <div class="parameterOptionTitle">{{chart2Parameter2Name}}</div><br/>
+      <md-select [(ngModel)]="chart2SelectedParameter2Option" (change)="onChart2Parameter2Change()">
+        <md-option *ngFor="let parameter2Option of chart2Parameter2Range" [value]="parameter2Option">
+          {{parameter2Option}}
         </md-option>
       </md-select>
     </div>
