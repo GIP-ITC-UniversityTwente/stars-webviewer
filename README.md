@@ -33,6 +33,22 @@ This aplication uses:
 	* Adding the .js file to src/assets/scripts folder
 	* Referencing in index.js
 
+[__Auth0__](https://auth0.com) is used for the identify store.  The Auth0 hosted login page is also used for sign in, sign up, password recovery, and logging out.  Below are notes on the server and client configuration.
+
+* In the Auth0 console, rhe following changes are made in console > Clients  
+	* Create 'STARS Web Viewer' client app
+	* In console > Clients > Settings,  the __Domain__ is added to the app configuration.
+	* In console > Clients > Settings, the __Client ID__ is added to the app configuration.
+	* In console > Clients > Settings > Advanced Settings, the OAuth Json Web Token Signature Algorithm needs to be changed to RS256.
+
+* In the Auth0 console, we customize the color and logo for the login page by doing the following: 
+	* In console > Hosted Pages, turn on 'Customize Login Page'.
+	* In the __theme__ property, change the logo and primaryColor properties.
+
+* The development patterns used in the STARS Web Viewer for user authentication can be found in the following resources:
+	* [Angular 2+ Login](https://manage.auth0.com/#/clients/4Q4AvhUTyB0rePqjOKhRaMb5yIYHxXSQ/quickstart)
+	* [Auht0 Angular Login](https://github.com/auth0-samples/auth0-angular-samples/tree/master/01-Login)
+
 ## Coding Style, Syntax & Semantics
 
 The coding style used in the STARS WebViewer is inspired by the following:
