@@ -284,6 +284,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Handles when a user chooses a parameter 1 option for Chart 1.
+   */
   onChart1Parameter1Change() {
     //
     console.log('param1 name: ', this.chart1Parameter1Name, ' range: ', this.chart1Parameter1Range, ' selected: ', this.chart1SelectedParameter1Option);
@@ -302,6 +305,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Handles when a user chooses a parameter 2 option for Chart 1
+   */
   onChart1Parameter2Change() {
     //
     console.log('param1 name: ', this.chart1Parameter1Name, ' range: ', this.chart1Parameter1Range, ' selected: ',   this.chart1SelectedParameter1Option);
@@ -451,8 +457,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         const parameter1 = parameters[0];
         this.chart2Parameter1Name = TimeSeriesBuilderService.fetchParameterName(parameter1);
         this.chart2Parameter1Range = TimeSeriesBuilderService.fetchParameterRange(parameter1);
-
-        // TODO CALL TIME SERIES
       } else {
 
         // handle selection visibility
@@ -468,21 +472,51 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
         const parameter2 = parameters[1];
         this.chart2Parameter2Name = TimeSeriesBuilderService.fetchParameterName(parameter2);
         this.chart2Parameter2Range = TimeSeriesBuilderService.fetchParameterRange(parameter2);
-
-        // TODO CALL TIME SERIES
       }
     }
   }
 
+  /**
+   * Handles when a user chooses a parameter 1 option for Chart 2.
+   */
   onChart2Parameter1Change() {
     //
     console.log('param1 name: ', this.chart2Parameter1Name, ' range: ', this.chart2Parameter1Range, ' selected: ', this.chart2SelectedParameter1Option);
+
+    const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName, this.selectedChart2Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
+    if (parameters.length === 1) {
+
+      // render the time series
+      this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+      });
+    }
   }
 
+  /**
+   * Handles when a user chooses a parameter 2 option for Chart 2.
+   */
   onChart2Parameter2Change() {
     //
     console.log('param1 name: ', this.chart2Parameter1Name, ' range: ', this.chart2Parameter1Range, ' selected: ',   this.chart2SelectedParameter1Option);
     console.log('param2 name: ', this.chart2Parameter2Name, '  range: ', this.chart2Parameter2Range, ' selected: ',  this.chart2SelectedParameter2Option);
+
+    const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName, this.selectedChart2Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
+    if (parameters.length === 2) {
+
+      // render the time series
+      this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+      });
+    }
   }
 
   /**
