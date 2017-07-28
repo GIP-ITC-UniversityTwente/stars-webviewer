@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+
+import { AuthService } from './services/auth.service';
 import { StarsAPIService } from './services/stars-api.service';
 import { UserSelectionService } from './services/user-selection.service';
 
@@ -15,7 +17,17 @@ export class AppComponent {
   /**
    * Component Life-cycle methods
    */
-  constructor() {
-    // TODO: fetch the default data for first load ...
+  constructor(public auth: AuthService) {
+
+    auth.handleAuthentication();
+
+    if (!auth.isAuthenticated()) {
+      auth.login();
+      //
+      console.log('not logged in');
+    } else {
+      //
+      console.log('logged in');
+    }
   }
 }

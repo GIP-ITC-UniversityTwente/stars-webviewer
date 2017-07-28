@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AppConfiguration } from '../app-configuration';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,11 @@ export class HeaderComponent implements OnInit {
    * Properties
    */
   title = 'Crop Spectrotemporal Signature Library';
+
+  /**
+   * For depedency injecting AuthService
+   */
+  constructor(public auth: AuthService) { }
 
   /**
    * Life-cycle hook after component is created.
@@ -29,7 +35,7 @@ export class HeaderComponent implements OnInit {
   /**
    * For handling when user taps on the login/logout button.
    */
-  handleLoginButtonTap() {
-    console.log('login button tapped');
+  handleLogoutButtonTap() {
+    this.auth.logout();
   }
 }

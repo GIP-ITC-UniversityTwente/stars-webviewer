@@ -37,8 +37,8 @@ This aplication uses:
 
 * In the Auth0 console, rhe following changes are made in console > Clients  
 	* Create 'STARS Web Viewer' client app
-	* In console > Clients > Settings,  the __Domain__ is added to the app configuration.
-	* In console > Clients > Settings, the __Client ID__ is added to the app configuration.
+	* In console > Clients > Settings,  the __Domain__ is added to the authConfig.ts file.
+	* In console > Clients > Settings, the __Client ID__ is added to the authConfig.ts file.
 	* In console > Clients > Settings > Advanced Settings, the OAuth Json Web Token Signature Algorithm needs to be changed to RS256.
 
 * In the Auth0 console, we customize the color and logo for the login page by doing the following: 
@@ -68,7 +68,25 @@ To run this app, clone the repo, install node packages, and use the Angular-CLI 
 
 ## Build & Deploy the App
 
+First, go to authConfig.ts file.  Change the __callback url__ property to watch the URL of the server.  Note that localhost is used for development.
+
+````
+interface AuthConfig {
+  clientID: string;
+  domain: string;
+  callbackURL: string;
+}
+
+export const AUTH_CONFIG: AuthConfig = {
+  clientID: '4Q4AvhUTyB0rePqjOKhRaMb5yIYHxXSQ', // see dashboard > clients >  app > settings
+  domain: 'ccabanerospatialdev.auth0.com',      // see dashboard > clients >  app > settings
+  callbackURL: 'http://localhost:4200/callback' // <--- CHANGE HERE!!!
+};
+
+````
+
 To build the web app, use Terminal to cd to the root folder of the web app on your workstation.  Then, use the Angular-CLI. 
+
 
 ````
   ng build --prod
