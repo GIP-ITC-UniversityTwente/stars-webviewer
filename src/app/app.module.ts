@@ -5,11 +5,9 @@ import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { RouterModule } from '@angular/router';
 
 import 'hammerjs';
 
-import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { StudyAreaComponent } from './study-area/study-area.component';
@@ -35,8 +33,7 @@ import { AuthService } from './services/auth.service';
     HttpModule,
     BrowserAnimationsModule,
     MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule,
-    FlexLayoutModule,
-    RouterModule.forRoot(ROUTES)
+    FlexLayoutModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]
