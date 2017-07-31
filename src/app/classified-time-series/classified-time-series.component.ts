@@ -105,7 +105,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
 
     // spectral chart for millet
     const milletSpectralData = [spectralLarge, spectralMedium, spectralSmall];
-    Plotly.newPlot('ndviVsSizeChart',
+    Plotly.newPlot('classifiedChart1',
       milletSpectralData,
       milletSpectralLayout,
       {
@@ -182,7 +182,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
     };
 
     const milletTexturalData = [texturalLarge, texturalMedium, texturalSmall];
-    Plotly.newPlot('texturalVsSizeChart',
+    Plotly.newPlot('classifiedChart2',
       milletTexturalData,
       milletTexturalLayout,
       {

@@ -18,35 +18,44 @@
   <!-- Local geostats JS file-->
   <script src="assets/scripts/geostats.js"></script>
   <script type="application/javascript">
-
-    /**
-     * For handling when user changes the window size and we need to update the layoutof the Plotly charts
-     */
     window.onresize = function() {
-
-      //
-      console.log('window resize');
-
-      resizeTimeSeriesChart();
+      resizeTimeSeriesCharts();
+      resizeHistogramChart();
+      resizeClassifiedTimeSeriesCharts();
     };
 
-    function resizeTimeSeriesChart() {
+    /**
+     * Utility functions for resizing Plotly charts as they do not respond to window re-sizing
+     */
 
-      // get half the width of the time series card parent element
-      var timeSeriesCardWidth = document.getElementById('timeSeriesCard').offsetWidth;
-      //var derivedChartWidth = timeSeriesCardWidth / 1.5;
-      var derivedChartWidth = timeSeriesCardWidth * 0.499;
-
-      //
-      console.log('derived chart width: ', derivedChartWidth);
-
-      // update the time series chart widths based on parent
-      if (derivedChartWidth > 170) { // this 'magic' number is an observed threshold that will cause Plotly to throw an error
-        var update = {
-          width: derivedChartWidth
-        };
+    function resizeTimeSeriesCharts() {
+      var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
+      var derivedChartWidth = targetElementWidth * 0.499;
+      var minWidth = 180;
+      if (derivedChartWidth > minWidth) {
+        var update = { width: derivedChartWidth };
         Plotly.relayout('chart1', update);
         Plotly.relayout('chart2', update);
+      }
+    }
+
+    function resizeHistogramChart() {
+      var derivedChartWidth = document.getElementById('histogramCard').offsetWidth;
+      var minWidth = 180;
+      if (derivedChartWidth > minWidth) {
+        var update = { width: derivedChartWidth };
+        Plotly.relayout('histogram', update);
+      }
+    }
+
+    function resizeClassifiedTimeSeriesCharts() {
+      var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
+      var derivedChartWidth = targetElementWidth * 0.499;
+      var minWidth = 180;
+      if (derivedChartWidth > minWidth) {
+        var update = { width: derivedChartWidth };
+        Plotly.relayout('classifiedChart1', update);
+        Plotly.relayout('classifiedChart2', update);
       }
     }
   </script>
