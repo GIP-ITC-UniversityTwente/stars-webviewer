@@ -17,8 +17,42 @@
   <script src="https://openlayers.org/en/v4.2.0/build/ol.js" type="text/javascript"></script>
   <!-- Local geostats JS file-->
   <script src="assets/scripts/geostats.js"></script>
+  <script type="application/javascript">
+
+    /**
+     * For handling when user changes the window size and we need to update the layoutof the Plotly charts
+     */
+    window.onresize = function() {
+
+      //
+      console.log('window resize');
+
+      resizeTimeSeriesChart();
+    };
+
+    function resizeTimeSeriesChart() {
+
+      // get half the width of the time series card parent element
+      var timeSeriesCardWidth = document.getElementById('timeSeriesCard').offsetWidth;
+      //var derivedChartWidth = timeSeriesCardWidth / 1.5;
+      var derivedChartWidth = timeSeriesCardWidth * 0.499;
+
+      //
+      console.log('derived chart width: ', derivedChartWidth);
+
+      // update the time series chart widths based on parent
+      if (derivedChartWidth > 170) { // this 'magic' number is an observed threshold that will cause Plotly to throw an error
+        var update = {
+          width: derivedChartWidth
+        };
+        Plotly.relayout('chart1', update);
+        Plotly.relayout('chart2', update);
+      }
+    }
+  </script>
 </head>
 <body>
   <app-root>Loading...</app-root>
 </body>
 </html>
+

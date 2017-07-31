@@ -458,7 +458,9 @@ export class TimeSeriesBuilderService {
       xaxis: {
         title: 'Time',
         showgrid: true,
-        zeroline: true
+        zeroline: true,
+        ticks: 'outside',
+        showticklabels: true
       },
       yaxis: {
         title: 'Homogeneity at distance D',
