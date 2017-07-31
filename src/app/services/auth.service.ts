@@ -52,6 +52,9 @@ export class AuthService {
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
 
+    // Go back to the home route
+    // this.router.navigate(['/']);
+
     // Have user log back in
     if (!this.isAuthenticated()) {
       this.login();

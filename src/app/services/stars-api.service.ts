@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { AppConfiguration } from '../app-configuration';
+
+import { AuthService } from '../services/auth.service';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -8,27 +10,35 @@ import 'rxjs/add/operator/toPromise';
 export class StarsAPIService {
 
   /**
-   * Properties
-   */
-  private http: Http;
-
-  /**
    * Service Life-cycle methods
    */
-  constructor(http: Http) {
-    this.http = http;
+  constructor(private http: Http, public auth: AuthService) {
+  }
+
+  /**
+   * Utility for creating the authorization header
+   */
+  static createAuthorizationHeader() {
+    let token = localStorage.getItem('id_token');
+    let authHeader = new Headers();
+    authHeader.append('Authorization', 'Bearer ' + token);
+    return authHeader;
   }
 
   /**
    * Fetches study areas
    */
   fetchStudyAreas(): Promise<any> {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     const url = AppConfiguration.apiBaseURL + '/studyareas';
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -40,16 +50,20 @@ export class StarsAPIService {
    * @returns {Promise<any>}
    */
   fetchFarmFields(studyAreaId: number, startYear: number, endYear: number = undefined): Promise<any> {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = AppConfiguration.apiBaseURL + `/farmfields?studyAreaId=${studyAreaId}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -61,16 +75,20 @@ export class StarsAPIService {
    * @returns {Promise<any>}
    */
   fetchCropTypes(studyAreaId: number, startYear: number, endYear: number = undefined): Promise<any> {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = AppConfiguration.apiBaseURL + `/cropTypes?studyAreaId=${studyAreaId}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -82,15 +100,19 @@ export class StarsAPIService {
    * @returns {Promise<any>}
    */
   fetchImageCharacteristics(studyAreaId: number, startYear: number, endYear: number = undefined): Promise<any> {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = AppConfiguration.apiBaseURL + `/image/characteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -107,6 +129,7 @@ export class StarsAPIService {
    * @returns {Promise<any | never | any>}
    */
   fetchImageCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = undefined, secondParameter: number = undefined) {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url: string = AppConfiguration.apiBaseURL + `/image/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&sensorList=${sensorList}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
@@ -118,11 +141,14 @@ export class StarsAPIService {
       url += `&secondParameter=${secondParameter}`;
     }
 
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -134,16 +160,20 @@ export class StarsAPIService {
    * @returns {Promise<any | never | any>}
    */
   fetchFieldCharacteristics(studyAreaId: number, startYear: number, endYear: number = undefined) {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = `${AppConfiguration.apiBaseURL}/field/characteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -157,16 +187,20 @@ export class StarsAPIService {
    * @returns {Promise<any | never | any>}
    */
   fetchFieldCharacteristicTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, cropNames: string, characteristicId: number) {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = `${AppConfiguration.apiBaseURL}/field/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -177,16 +211,20 @@ export class StarsAPIService {
    * @param {number} endYear
    */
   fetchFieldConstantCharacteristic(studyAreaId: number, startYear: number, endYear: number = undefined) {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = `${AppConfiguration.apiBaseURL}/field/constant_characteristics?studyAreaId=${studyAreaId}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 
@@ -199,16 +237,20 @@ export class StarsAPIService {
    * @returns {Promise<never | any>}
    */
   fetchFieldConstantData(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string) {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = `${AppConfiguration.apiBaseURL}/field/constant_data?studyAreaId=${studyAreaId}&characteristicId=${characteristicId}&cropNames=${cropNames}&startYear=${startYear}`;
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url)
+    return this.http.get(url, authHeader)
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === 'token expired') {
+          this.auth.login();
+        }
       });
   }
 }
