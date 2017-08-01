@@ -25,27 +25,20 @@
     };
 
     /**
-     * Utility functions for resizing Plotly charts as they do not respond to window re-sizing
+     * Because Plotly charts DO NOT respond to window re-sizing, we do this ...
      */
 
     function resizeTimeSeriesCharts() {
 
       var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
-      //
-      console.log(targetElementWidth);
       var chart2Width = document.getElementById('chart2').offsetWidth;
       var smallSize = 1115;
-      // chart 2 is not visible
-      if (chart2Width == 0) {
+      if (chart2Width == 0) { // chart 2 IS NOT visible
         if (targetElementWidth > 0) {
-          //
-          console.log('chart2Width is 0');
           Plotly.relayout('chart1', { width: targetElementWidth });
           Plotly.relayout('chart2', { width: 0 });
         }
-      }
-      // chart 2 is visible
-      else {
+      } else { // chart 2 IS visible
 
         // parent card is too small to show both charts side by side
         if (targetElementWidth <= smallSize) {
@@ -54,8 +47,6 @@
 
         } else {
           if ((targetElementWidth * 0.499) > 0) {
-            //
-            console.log('chart2Width is not 0');
             Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
             Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
           }
@@ -64,22 +55,17 @@
     }
 
     function resizeHistogramChart() {
-      var derivedChartWidth = document.getElementById('histogramCard').offsetWidth;
-      var minWidth = 180;
-      if (derivedChartWidth > minWidth) {
-        var update = { width: derivedChartWidth };
-        Plotly.relayout('histogram', update);
+      var targetElementWidth = document.getElementById('histogramCard').offsetWidth;
+      if (targetElementWidth > 0) {
+        Plotly.relayout('histogram', { width: targetElementWidth });
       }
     }
 
     function resizeClassifiedTimeSeriesCharts() {
       var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
-      var derivedChartWidth = targetElementWidth * 0.499;
-      var minWidth = 180;
-      if (derivedChartWidth > minWidth) {
-        var update = { width: derivedChartWidth };
-        Plotly.relayout('classifiedChart1', update);
-        Plotly.relayout('classifiedChart2', update);
+      if ((targetElementWidth * 0.499) > 0) {
+        Plotly.relayout('classifiedChart1', { width: targetElementWidth * 0.499 });
+        Plotly.relayout('classifiedChart2', { width: targetElementWidth * 0.499 });
       }
     }
   </script>

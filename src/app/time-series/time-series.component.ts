@@ -563,19 +563,31 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
    * Handles when user taps on the 'add a chart' button.
    */
   handleAddChartButtonTap() {
+
+    // for managing the widths of charts since Plotly charts DO NOT automatically respond to window re-sizing
     const targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
+    const smallSize = 1115;
     if (this.chart2IsShowing) {
-      Plotly.relayout('chart1', { width: targetElementWidth });
-      Plotly.relayout('chart2', { width: 0 });
-      this.chart2IsShowing = false;
-      this.buttonLabel = '+ ADD A CHART';
-    } else {
-      if ((targetElementWidth * 0.499) > 0) {
-        Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
-        Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
-        this.chart2IsShowing = true;
-        this.buttonLabel = '- REMOVE CHART';
+      if (targetElementWidth > 0) {
+        Plotly.relayout('chart1', { width: targetElementWidth });
+        Plotly.relayout('chart2', { width: 0 });
+        this.chart2IsShowing = false;
+        this.buttonLabel = '+ ADD A CHART';
       }
+    } else {
+      //
+      console.log('targetElementWidth ', targetElementWidth, ' vs smallSize ', smallSize);
+      if (targetElementWidth <= smallSize) {
+        Plotly.relayout('chart1', { width: targetElementWidth });
+        Plotly.relayout('chart2', { width: targetElementWidth });
+      } else {
+        if ((targetElementWidth * 0.499) > 0) {
+          Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
+          Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
+        }
+      }
+      this.chart2IsShowing = true;
+      this.buttonLabel = '- REMOVE CHART';
     }
   }
 
