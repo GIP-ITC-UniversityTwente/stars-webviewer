@@ -142,9 +142,13 @@ export class TimeSeriesBuilderService {
    * @returns {string}
    */
   static fetchTimeSeriesLineColor(): string {
+
     const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
+    /*
     const randomIndex = TimeSeriesBuilderService.randomIntFromInterval(0, (colors.length - 1));
     return colors[randomIndex];
+    */
+    return colors[3];
   }
 
   /**
@@ -381,29 +385,10 @@ export class TimeSeriesBuilderService {
     //  CHART 1 PLACEHOLDER
     // ----------------------
 
-    const milletSpectralLineEnvelope = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d', '318d', '305d', '291d', '210d', '177d', '150d', '142d'],
-      y: [0.15, 0.15, 0.2, 0.43, 0.44, 0.31, 0.27, 0.3, 0.34, 0.48, 0.48, 0.25, 0.19, 0.17],
-      fill: 'tozerox',
-      fillcolor: 'rgba(0, 100, 80, 0.2)',
-      name: 'Millet Envelope',
-      showlegend: false,
-      type: 'scatter',
-      line: {color: 'transparent'}
-    };
+    const milletSpectralLineEnvelope = {"x":["2014-05-01","2014-06-24","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-06-24","2014-05-01"],"y":[0.086905,0.157471,0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415,0.253017,0.189081],"fill":"tozerox","fillcolor":"rgba(0, 87, 127, 0.2)","name":"","showlegend":false,"type":"scatter","line":{"color":"transparent"}};
 
     // data for millet spectral test sample
-    const milletSpectralLine = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.163984678685665, 0.163497392833233, 0.224976481497288, 0.455028122663498, 0.464507251977921, 0.321201853454113, 0.28456095457077],
-      mode: 'lines',
-      name: 'Millet',
-      line: {
-        color: '#6A7F00',
-        width: 3
-      },
-      type: 'scatter'
-    };
+    const milletSpectralLine = {"x":["2014-05-01","2014-06-24","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-06-24","2014-05-01"],"y":[0.137993,0.205244,0.296679,0.480262,0.666356,0.598557],"mode":"lines","name":"Groundnut","line":{"color":"#00577F","width":3},"type":"scatter"};
 
     // layout for millet spectral test sample
     const milletSpectralLayout = {
@@ -439,6 +424,7 @@ export class TimeSeriesBuilderService {
     // ----------------------
     //  CHART 2 PLACEHOLDER
     // ----------------------
+
 
     // data for millet textural test sample
     const milletTexturalLine = {
@@ -479,6 +465,7 @@ export class TimeSeriesBuilderService {
         displaylogo: false
       }
     );
+
   }
 
   /**

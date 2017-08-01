@@ -623,12 +623,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyAreaId, this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
       return response;
     }).then((data) => {
-      //
-      console.log(data);
       const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-      //
-      console.log('chartdata', chartData);
-
       const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
       this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
     });
