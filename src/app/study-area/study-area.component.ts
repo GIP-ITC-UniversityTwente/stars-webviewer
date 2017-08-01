@@ -55,7 +55,6 @@ export class StudyAreaComponent implements OnInit {
 
       // set the default values for application load
       this.initializeDefaultValues();
-
     }).catch((error) => {
       console.log(error);
     });
@@ -100,7 +99,7 @@ export class StudyAreaComponent implements OnInit {
   }
 
   /**
-   * For loading the app with some default parameters
+   * For loading the app with some default parameters for selected study area, start year, end year, and crop type
    */
   initializeDefaultValues() {
 

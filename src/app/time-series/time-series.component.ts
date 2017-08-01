@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AppConfiguration } from '../app-configuration';
@@ -13,7 +13,7 @@ declare const Plotly: any;
   templateUrl: './time-series.component.html',
   styleUrls: ['./time-series.component.css']
 })
-export class TimeSeriesComponent implements OnInit, OnDestroy {
+export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   /**
    * Properties
@@ -153,6 +153,13 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
     // default style-layout of charts
     this.initializeChartLayout();
+  }
+
+  /**
+   * Life-cycle hook
+   */
+  ngAfterViewChecked() {
+
   }
 
   /**
@@ -592,6 +599,42 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * For handling default selections on first load
+   */
+  initializeDefaultSelections() {
+
+    // simulates choosing 'Characteristic Type'
+    this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
+    this.chart1SelectedCharacteristicType = this.characteristicTypes[0];
+    this.chart1ImageOptionsAreVisible = true;
+    this.chart1FieldOptionsAreVisible = false;
+
+    // simulates choosing 'Image Type'
+    this.chart1SelectedImageType = 'Spectral';
+    this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allSpectralCharacteristicObjects);
+
+    // simulates choosing 'Image Characteristic'
+    this.chart1SelectedImageCharacteristicName = 'NDVI average';
+    this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+    this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+
+    // simulates choosing 'Image Source' (i.e. sensor)
+    this.selectedChart1Sensor = 'GeoEye-1_MS';
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyAreaId, this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+      return response;
+    }).then((data) => {
+      //
+      console.log(data);
+      const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+      //
+      console.log('chartdata', chartData);
+
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+      this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+    });
+  }
+
+  /**
    * Utility for initializing the image characteristic options
    * @param {number} studyAreaId
    * @param {number} startYear
@@ -603,6 +646,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     }).then((data) => {
       this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
       this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
+
+      // for setting default selections after we fetch image characteristics
+      this.initializeDefaultSelections();
     }).catch((error) => {
       console.log(error);
     });
