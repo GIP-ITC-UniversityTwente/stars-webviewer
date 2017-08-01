@@ -18,6 +18,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   /**
    * Properties
    */
+  buttonLabel = '+ ADD A CHART';
   chart2IsShowing = false;
 
   subscriptionToSelectedStudyArea: Subscription;
@@ -567,10 +568,14 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
       Plotly.relayout('chart1', { width: targetElementWidth });
       Plotly.relayout('chart2', { width: 0 });
       this.chart2IsShowing = false;
+      this.buttonLabel = '+ ADD A CHART';
     } else {
-      Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
-      Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
-      this.chart2IsShowing = true;
+      if ((targetElementWidth * 0.499) > 0) {
+        Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
+        Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
+        this.chart2IsShowing = true;
+        this.buttonLabel = '- REMOVE CHART';
+      }
     }
   }
 
