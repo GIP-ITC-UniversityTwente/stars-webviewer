@@ -1,9 +1,9 @@
 <div class="cardHeader">
   <div class="cardHeaderTitle">TIME SERIES</div>
-  <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" (click)="handleInfoButtonTap()" mdTooltip={{timeSeriesTooltip}} [mdTooltipPosition]='toolTipPosition' />
+  <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" mdTooltip={{timeSeriesTooltip}} [mdTooltipPosition]='toolTipPosition' />
   <button class="addChartButton" md-button (click)="handleAddChartButtonTap()"> + ADD A CHART</button>
 </div>
-<div class="chartWrapper multiChartDivider" >
+<div class="chartWrapper multiChartDivider">
   <div class="chartHeader">
     <div class="parameterOption">
       <div class="parameterOptionTitle">Characteristic Type</div><br/>
@@ -65,8 +65,7 @@
   </div>
   <div id="chart1"></div>
 </div>
-<!--<div [hidden]="!chart2IsShowing" class="chartWrapper">-->
-<div class="chartWrapper">
+<div [hidden]="!chart2IsShowing" class="chartWrapper">
   <div class="chartHeader">
     <div class="parameterOption">
       <div class="parameterOptionTitle">Characteristic Type</div><br/>

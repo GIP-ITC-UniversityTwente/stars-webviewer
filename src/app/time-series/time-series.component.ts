@@ -149,6 +149,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
 
     // fill out charts with test data
     TimeSeriesBuilderService.createTestCharts(Plotly);
+
+    // default style-layout of charts
+    this.initializeChartLayout();
   }
 
   /**
@@ -159,6 +162,14 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedStartYear.unsubscribe();
     this.subscriptionToSelectedEndYear.unsubscribe();
     this.subscriptionToSelectedCropTypes.unsubscribe();
+  }
+
+  /**
+   * For setting up the layout style when the charts load for the first time
+   */
+  initializeChartLayout() {
+    const targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
+    Plotly.relayout('chart1', { width: targetElementWidth });
   }
 
   /**
@@ -548,19 +559,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles when user taps on info icon for Image Characteristics.
-   */
-  handleInfoButtonTap() {
-    console.log('show info for image characteristics...');
-  }
-
-  /**
    * Handles when user taps on the 'add a chart' button.
    */
   handleAddChartButtonTap() {
+    const targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
     if (this.chart2IsShowing) {
+      Plotly.relayout('chart1', { width: targetElementWidth });
+      Plotly.relayout('chart2', { width: 0 });
       this.chart2IsShowing = false;
     } else {
+      Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
+      Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
       this.chart2IsShowing = true;
     }
   }

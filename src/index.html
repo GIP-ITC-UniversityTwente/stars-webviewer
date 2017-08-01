@@ -29,13 +29,20 @@
      */
 
     function resizeTimeSeriesCharts() {
+
       var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
-      var derivedChartWidth = targetElementWidth * 0.499;
+      var chart2Width = document.getElementById('chart2').offsetWidth;
       var minWidth = 180;
-      if (derivedChartWidth > minWidth) {
-        var update = { width: derivedChartWidth };
-        Plotly.relayout('chart1', update);
-        Plotly.relayout('chart2', update);
+      if (chart2Width == 0) {
+        if (targetElementWidth > minWidth) {
+          Plotly.relayout('chart1', { width: targetElementWidth });
+          Plotly.relayout('chart2', { width: 0 });
+        }
+      } else {
+        if ((targetElementWidth * 0.499) > minWidth) {
+          Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
+          Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
+        }
       }
     }
 
