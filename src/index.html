@@ -31,17 +31,34 @@
     function resizeTimeSeriesCharts() {
 
       var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
+      //
+      console.log(targetElementWidth);
       var chart2Width = document.getElementById('chart2').offsetWidth;
-      var minWidth = 180;
+      var smallSize = 1115;
+      // chart 2 is not visible
       if (chart2Width == 0) {
-        if (targetElementWidth > minWidth) {
+        if (targetElementWidth > 0) {
+          //
+          console.log('chart2Width is 0');
           Plotly.relayout('chart1', { width: targetElementWidth });
           Plotly.relayout('chart2', { width: 0 });
         }
-      } else {
-        if ((targetElementWidth * 0.499) > minWidth) {
-          Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
-          Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
+      }
+      // chart 2 is visible
+      else {
+
+        // parent card is too small to show both charts side by side
+        if (targetElementWidth <= smallSize) {
+          Plotly.relayout('chart1', { width: targetElementWidth });
+          Plotly.relayout('chart2', { width: targetElementWidth });
+
+        } else {
+          if ((targetElementWidth * 0.499) > 0) {
+            //
+            console.log('chart2Width is not 0');
+            Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
+            Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
+          }
         }
       }
     }
