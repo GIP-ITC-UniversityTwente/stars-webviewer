@@ -144,11 +144,9 @@ export class TimeSeriesBuilderService {
   static fetchTimeSeriesLineColor(): string {
 
     const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
-    /*
+    //return colors[3];
     const randomIndex = TimeSeriesBuilderService.randomIntFromInterval(0, (colors.length - 1));
     return colors[randomIndex];
-    */
-    return colors[3];
   }
 
   /**
@@ -375,6 +373,60 @@ export class TimeSeriesBuilderService {
     };
   }
 
+  /**
+   * Utility for creating an empty chart
+   * @param Plotly
+   */
+  static createEmptyCharts(Plotly: any) {
+
+    const texturalLine = {
+      x: [],
+      y: [],
+      mode: 'lines',
+      name: '',
+      line: {
+        color: '#2673A8',
+        width: 3
+      }
+    };
+
+    // layout for millet textural test sample
+    const texturalLayout = {
+      title: 'Time Series',
+      xaxis: {
+        title: 'Time',
+        showgrid: true,
+        zeroline: true,
+        ticks: 'outside',
+        showticklabels: true
+      },
+      yaxis: {
+        title: '',
+        showline: false
+      },
+      hovermode: 'closest'
+    };
+
+    Plotly.newPlot('chart1',
+      [texturalLine],
+      texturalLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      }
+    );
+
+    Plotly.newPlot('chart2',
+      [texturalLine],
+      texturalLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      }
+    );
+  }
 
   /**
    * Utility for testing patterns for creating chart spec.
@@ -425,13 +477,11 @@ export class TimeSeriesBuilderService {
     //  CHART 2 PLACEHOLDER
     // ----------------------
 
-
-    // data for millet textural test sample
-    const milletTexturalLine = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.429646278731525, 0.471472800523043, 0.353645605966449, 0.313254946377128, 0.240355986077338, 0.235981020890176, 0.218380955606699],
+    const texturalLine = {
+      x: [],
+      y: [],
       mode: 'lines',
-      name: 'Maize',
+      name: '',
       line: {
         color: '#2673A8',
         width: 3
@@ -439,8 +489,8 @@ export class TimeSeriesBuilderService {
     };
 
     // layout for millet textural test sample
-    const milletTexturalLayout = {
-      title: 'Textural Time Series',
+    const texturalLayout = {
+      title: 'Time Series',
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -449,23 +499,22 @@ export class TimeSeriesBuilderService {
         showticklabels: true
       },
       yaxis: {
-        title: 'Homogeneity at distance D',
+        title: '',
         showline: false
       },
       hovermode: 'closest'
     };
 
-    const milletTexturalData = [milletTexturalLine];
+    const texturalData = [texturalLine];
     Plotly.newPlot('chart2',
-      milletTexturalData,
-      milletTexturalLayout,
+      texturalData,
+      texturalLayout,
       {
         displayModeBar: 'hover',
         modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
         displaylogo: false
       }
     );
-
   }
 
   /**

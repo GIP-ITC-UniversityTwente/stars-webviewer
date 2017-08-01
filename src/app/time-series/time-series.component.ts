@@ -5,6 +5,7 @@ import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
 import { TimeSeriesBuilderService } from '../services/time-series-builder.service';
+import {isNullOrUndefined} from "util";
 
 declare const Plotly: any;
 
@@ -138,7 +139,94 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     // subscribe to crop types selections by the user
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
-        this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
+
+        if (cropTypes.length == 0) {
+          TimeSeriesBuilderService.createEmptyCharts(Plotly);
+        }
+        else if (cropTypes.length > 0) {
+
+          this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
+
+          //
+          console.log(this.chart1SelectedCharacteristicType);
+
+          // chart 1 - updates
+          if (this.chart1SelectedCharacteristicType === 'Image Characteristic') {
+
+            if (this.selectedChart1Sensor != undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter2Option === undefined) {
+
+              // update time series with no parameters
+              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+                return response;
+              }).then((data) => {
+                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+              });
+            } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option === undefined) {
+
+              // update time series with parameter 1
+              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option).then((response) => {
+                return response;
+              }).then((data) => {
+                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+              });
+            } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option !== undefined) {
+
+              // update time series with parameter 1 & 2
+              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
+                return response;
+              }).then((data) => {
+                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+              });
+            }
+          } else if (this.chart1SelectedCharacteristicType === 'Field Characteristic') {
+
+          }
+
+          // chart 2 updates
+          if (this.chart2SelectedCharacteristicType === 'Image Characteristic') {
+            if (this.selectedChart2Sensor != undefined && this.chart2SelectedParameter1Option === undefined && this.chart2SelectedParameter2Option === undefined) {
+
+              // update time series no parameters
+              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
+                return response;
+              }).then((data) => {
+                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+                this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart2');
+              });
+
+            } else if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option !== undefined && this.chart2SelectedParameter2Option === undefined) {
+
+              // update time series with parameter 1
+              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option).then((response) => {
+                return response;
+              }).then((data) => {
+                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+              });
+
+            } else if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option !== undefined && this.chart2SelectedParameter2Option !== undefined) {
+
+              // update time with parameter 1 & 2
+              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
+                return response;
+              }).then((data) => {
+                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+              });
+            }
+          } else if (this.chart2SelectedCharacteristicType === 'Field Characteristic') {
+
+          }
+        }
       }
     );
   }
@@ -178,6 +266,108 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   initializeChartLayout() {
     const targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
     Plotly.relayout('chart1', { width: targetElementWidth });
+  }
+
+  /**
+   * For handling default selections on first load
+   */
+  initializeDefaultSelections() {
+
+    // simulates choosing 'Characteristic Type'
+    this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
+    this.chart1SelectedCharacteristicType = this.characteristicTypes[0];
+    this.chart1ImageOptionsAreVisible = true;
+    this.chart1FieldOptionsAreVisible = false;
+
+    // simulates choosing 'Image Type'
+    this.chart1SelectedImageType = 'Spectral';
+    this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allSpectralCharacteristicObjects);
+
+    // simulates choosing 'Image Characteristic'
+    this.chart1SelectedImageCharacteristicName = 'NDVI average';
+    this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+    this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+
+    // simulates choosing 'Image Source' (i.e. sensor)
+    this.selectedChart1Sensor = 'GeoEye-1_MS';
+    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyAreaId, this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+      return response;
+    }).then((data) => {
+      const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+      this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+    });
+  }
+
+  /**
+   * Utility for initializing the image characteristic options
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   */
+  initializeImageCharacteristicsOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
+    this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
+      return response;
+    }).then((data) => {
+      this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
+      this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
+
+      // for setting default selections after we fetch image characteristics
+      this.initializeDefaultSelections();
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  /**
+   * Utility for initializing the field characteristic options
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   */
+  initializeFieldCharacteristicOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
+
+    this.starsAPIService.fetchFieldCharacteristics(studyAreaId, startYear, endYear).then((response) => {
+      return response;
+    }).then((data) => {
+      this.fieldTypes = data.results.fieldCharacteristics;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  /**
+   * Utility for rendering the image characteristics chart for the time series response.
+   * @param {any} chartData
+   * @param {any} chartLayout
+   * @param {string} targetDivId
+   */
+  renderImageCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
+    Plotly.newPlot(targetDivId,
+      chartData,
+      chartLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      });
+  }
+
+  /**
+   * Utility for rendering the field characteristics chart for the time series response.
+   * @param {any[]} chartData
+   * @param {string} chartLayout
+   * @param {string} targetDivId
+   */
+  renderFieldCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
+    Plotly.newPlot(targetDivId,
+      chartData,
+      chartLayout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      });
   }
 
   /**
@@ -302,6 +492,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       }
     }
   }
+
 
   /**
    * Handles when a user chooses a parameter 1 option for Chart 1.
@@ -596,107 +787,5 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       this.chart2IsShowing = true;
       this.buttonLabel = '- REMOVE CHART';
     }
-  }
-
-  /**
-   * For handling default selections on first load
-   */
-  initializeDefaultSelections() {
-
-    // simulates choosing 'Characteristic Type'
-    this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
-    this.chart1SelectedCharacteristicType = this.characteristicTypes[0];
-    this.chart1ImageOptionsAreVisible = true;
-    this.chart1FieldOptionsAreVisible = false;
-
-    // simulates choosing 'Image Type'
-    this.chart1SelectedImageType = 'Spectral';
-    this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allSpectralCharacteristicObjects);
-
-    // simulates choosing 'Image Characteristic'
-    this.chart1SelectedImageCharacteristicName = 'NDVI average';
-    this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
-    this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
-
-    // simulates choosing 'Image Source' (i.e. sensor)
-    this.selectedChart1Sensor = 'GeoEye-1_MS';
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyAreaId, this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
-      return response;
-    }).then((data) => {
-      const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
-      this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
-    });
-  }
-
-  /**
-   * Utility for initializing the image characteristic options
-   * @param {number} studyAreaId
-   * @param {number} startYear
-   * @param {number} endYear
-   */
-  initializeImageCharacteristicsOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
-    this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
-      return response;
-    }).then((data) => {
-      this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
-      this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
-
-      // for setting default selections after we fetch image characteristics
-      this.initializeDefaultSelections();
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
-
-  /**
-   * Utility for initializing the field characteristic options
-   * @param {number} studyAreaId
-   * @param {number} startYear
-   * @param {number} endYear
-   */
-  initializeFieldCharacteristicOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
-
-    this.starsAPIService.fetchFieldCharacteristics(studyAreaId, startYear, endYear).then((response) => {
-      return response;
-    }).then((data) => {
-      this.fieldTypes = data.results.fieldCharacteristics;
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
-
-  /**
-   * Utility for rendering the image characteristics chart for the time series response.
-   * @param {any} chartData
-   * @param {any} chartLayout
-   * @param {string} targetDivId
-   */
-  renderImageCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
-    Plotly.newPlot(targetDivId,
-      chartData,
-      chartLayout,
-      {
-        displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
-        displaylogo: false
-      });
-  }
-
-  /**
-   * Utility for rendering the field characteristics chart for the time series response.
-   * @param {any[]} chartData
-   * @param {string} chartLayout
-   * @param {string} targetDivId
-   */
-  renderFieldCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
-    Plotly.newPlot(targetDivId,
-      chartData,
-      chartLayout,
-      {
-        displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
-        displaylogo: false
-      });
   }
 }
