@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 export class UserSelectionService {
 
   // source study area
-  private studyAreaSource = new Subject<JSON>();
+  private studyAreaSource = new Subject<any>();
   // source start year
   private startYearSource = new Subject<number>();
   // source end year
@@ -26,7 +26,7 @@ export class UserSelectionService {
    * For changing the study area chosen by the user.
    * @param studyArea
    */
-  updateStudyArea(studyArea: JSON) {
+  updateStudyArea(studyArea: any) {
     this.studyAreaSource.next(studyArea);
   }
 

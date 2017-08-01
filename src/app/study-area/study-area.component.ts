@@ -53,6 +53,9 @@ export class StudyAreaComponent implements OnInit {
       this.initializeStartYearOptions(results, this.startYears);
       this.initializeEndYearOptions(results, this.endYears);
 
+      // set the default values for application load
+      this.initializeDefaultValues();
+
     }).catch((error) => {
       console.log(error);
     });
@@ -94,6 +97,52 @@ export class StudyAreaComponent implements OnInit {
     results.forEach(function(item) {
       endYears.push(item.properties.year_end);
     });
+  }
+
+  /**
+   * For loading the app with some default parameters
+   */
+  initializeDefaultValues() {
+
+    // set default study area
+    this.selectedStudyAreaName = 'Mali, Sikasso, around Sougoumba';
+    this.selectedStudyAreaId = this.fetchStudyAreaId(this.selectedStudyAreaName);
+    let studyAreaString = {"type":"Feature","properties":{"id":1000,"name":"Mali, Sikasso, around Sougoumba","year_start":2014,"year_end":2015},"geometry":{"type":"Polygon","coordinates":[[[-5.143373,12.13132],[-5.235212,12.130594],[-5.235968,12.220957],[-5.144098,12.221689],[-5.143373,12.13132]]]}};
+    this.userSelectionService.updateStudyArea(studyAreaString);
+
+    // set default start year
+    this.selectedStartYear = 2014;
+    this.userSelectionService.updateStartYear(this.selectedStartYear);
+
+    // set default end year
+    this.selectedEndYear = 2015;
+    this.userSelectionService.updateEndYear(this.selectedEndYear);
+
+    // set default crop type
+    let defaultCropName = 'Groundnut';
+    const crops = this.crops;
+    this.starsAPIService.fetchCropTypes(this.selectedStudyAreaId, this.selectedStartYear, this.selectedEndYear).then((response) => {
+      return response;
+    }).then((data) => {
+      const results = data.results;
+      if (results.length > 0) {
+        results.forEach(function(item){
+          if (item['name'] != null) {
+            if (item['name'] === defaultCropName) {
+              item['isChecked'] = true;
+              crops.push(item);
+            } else {
+              item['isChecked'] = false;
+              crops.push(item);
+            }
+          }
+        });
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+    this.selectedCrops = [defaultCropName];
+    this.userSelectionService.updateCropTypes(this.selectedCrops);
   }
 
   /**
