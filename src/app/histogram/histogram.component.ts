@@ -70,25 +70,34 @@ export class HistogramComponent implements OnInit {
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
 
-        // create the comma-delimited list of crops for an API request
-        let cropList = '';
-        cropTypes.forEach(function(item, index) {
-          if (index === cropTypes.length - 1) {
-            cropList += cropTypes[index];
-          } else {
-            cropList += cropTypes[index] + ',';
-          }
-        });
-        this.cropTypes = cropList;
+        if (cropTypes.length == 0) {
+          HistogramBuilderService.createEmptyHistogram(Plotly);
+        }
+        else if (cropTypes.length > 0){
 
-        // fetch field constant characteristics for drop down only after crops are chosen
-        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea['properties']['id'], this.startYear).then((response) => {
-          return response;
-        }).then((data) => {
-          this.fieldConstantCharacteristics = data.results.fieldConstants;
-        }).catch((error) => {
-          console.log(error);
-        });
+          // create the comma-delimited list of crops for an API request
+          let cropList = '';
+          cropTypes.forEach(function(item, index) {
+            if (index === cropTypes.length - 1) {
+              cropList += cropTypes[index];
+            } else {
+              cropList += cropTypes[index] + ',';
+            }
+          });
+          this.cropTypes = cropList;
+
+          // fetch field constant characteristics for drop down only after crops are chosen
+          this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea['properties']['id'], this.startYear).then((response) => {
+            return response;
+          }).then((data) => {
+            this.fieldConstantCharacteristics = data.results.fieldConstants;
+          }).catch((error) => {
+            console.log(error);
+          });
+
+          // make sure histogram is updated after crops are changed
+          this.updateHistogram();
+        }
       }
     );
   }
@@ -127,6 +136,14 @@ export class HistogramComponent implements OnInit {
    */
   onFieldConstantChange() {
 
+    this.updateHistogram();
+  }
+
+  /**
+   * For updating the histogram either after any global parameters change or after a field constant is changed.
+   */
+  updateHistogram() {
+
     // fetch field constants data
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
@@ -142,18 +159,16 @@ export class HistogramComponent implements OnInit {
         this.frequencyData.push(item['v']);
       }
 
-      // create histogram
+      this.geostatSeries = new geostats(this.frequencyData);
       if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
 
         // create a un-classified histogram
-        this.geostatSeries = new geostats(this.frequencyData);
         const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData);
         this.presentHistogramData(histoData, false);
 
       } else {
 
         // classify the data
-        this.geostatSeries = new geostats(this.frequencyData);
         HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
 
         // create histogram data

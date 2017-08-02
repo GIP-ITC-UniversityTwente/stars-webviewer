@@ -140,7 +140,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
         if (cropTypes.length == 0) {
-          //TimeSeriesBuilderService.createEmptyCharts(Plotly);
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
         }
