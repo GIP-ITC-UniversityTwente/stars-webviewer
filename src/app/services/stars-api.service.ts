@@ -10,19 +10,19 @@ import 'rxjs/add/operator/toPromise';
 export class StarsAPIService {
 
   /**
-   * Service Life-cycle methods
-   */
-  constructor(private http: Http, public auth: AuthService) {
-  }
-
-  /**
    * Utility for creating the authorization header
    */
   static createAuthorizationHeader() {
-    let token = localStorage.getItem('id_token');
-    let authHeader = new Headers();
+    const token = localStorage.getItem('id_token');
+    const authHeader = new Headers();
     authHeader.append('Authorization', 'Bearer ' + token);
     return authHeader;
+  }
+
+  /**
+   * Service Life-cycle methods
+   */
+  constructor(private http: Http, public auth: AuthService) {
   }
 
   /**

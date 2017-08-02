@@ -129,7 +129,7 @@ export class HistogramBuilderService {
    */
   static createEmptyHistogram(Plotly: any) {
 
-    const sampleData = {"message":"success","results":[]}
+    const sampleData = {'message': 'success', 'results': []};
     const frequencyData: number[] = [];
     for (const item of sampleData.results) {
       frequencyData.push(item['v']);

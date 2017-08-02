@@ -142,9 +142,7 @@ export class TimeSeriesBuilderService {
    * @returns {string}
    */
   static fetchTimeSeriesLineColor(): string {
-
     const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
-    //return colors[3];
     const randomIndex = TimeSeriesBuilderService.randomIntFromInterval(0, (colors.length - 1));
     return colors[randomIndex];
   }
