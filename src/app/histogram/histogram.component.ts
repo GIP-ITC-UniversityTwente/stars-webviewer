@@ -110,22 +110,27 @@ export class HistogramComponent implements OnInit {
     // default field constant
     this.selectedFieldConstantCharacteristicId = 1015;
 
-    // default histogram for initial load
-    HistogramBuilderService.createDefaultHistogram(Plotly);
+    // default field data sample
+    const sampleData = {"message":"success","results":[{"i":1035,"v":0.772941},{"i":1090,"v":1.1164},{"i":1110,"v":0.9225},{"i":1125,"v":1.0576},{"i":1135,"v":1.5904},{"i":1140,"v":1.47579},{"i":1180,"v":1.2164},{"i":1210,"v":2.312},{"i":1240,"v":0.676781}]}
+    for (const item of sampleData.results) {
+      this.frequencyData.push(item['v']);
+    }
+
+    // present as un-classified histogram by default
+    this.geostatSeries = new geostats(this.frequencyData);
+    const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData);
+    this.presentHistogramData(histoData, false);
   }
 
   /**
    * For handling when a user changes the target field characteristic.
    */
-  onFieldCharacteristicChange() {
+  onFieldConstantChange() {
 
     // fetch field constants data
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
     }).then((data) => {
-
-      //
-      console.log(JSON.stringify(data));
 
       // clear frequency data from a previously chosen field constant characteristic
       if (this.frequencyData.length > 0) {
@@ -141,15 +146,14 @@ export class HistogramComponent implements OnInit {
       if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
 
         // create a un-classified histogram
-        //this.geostatSeries = new geostats(this.frequencyData);
+        this.geostatSeries = new geostats(this.frequencyData);
         const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData);
         this.presentHistogramData(histoData, false);
 
       } else {
 
-        this.geostatSeries = new geostats(this.frequencyData);
-
         // classify the data
+        this.geostatSeries = new geostats(this.frequencyData);
         HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
 
         // create histogram data

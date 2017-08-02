@@ -182,6 +182,30 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   }
 
   /**
+   * For handling default selections on first load
+   */
+  initializeDefaultSelections() {
+
+    // simulates choosing 'Characteristic Type'
+    this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
+    this.chart1SelectedCharacteristicType = this.characteristicTypes[0];
+    this.chart1ImageOptionsAreVisible = true;
+    this.chart1FieldOptionsAreVisible = false;
+
+    // simulates choosing 'Image Type'
+    this.chart1SelectedImageType = 'Spectral';
+    this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allSpectralCharacteristicObjects);
+
+    // simulates choosing 'Image Characteristic'
+    this.chart1SelectedImageCharacteristicName = 'NDVI average';
+    this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+    this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+
+    // simulates choosing 'Image Source' (i.e. sensor)
+    this.selectedChart1Sensor = 'GeoEye-1_MS';
+  }
+
+  /**
    * Utility for updating time series charts
    */
   updateTimeSeries() {
@@ -274,30 +298,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   initializeChartLayout() {
     const targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
     Plotly.relayout('chart1', { width: targetElementWidth });
-  }
-
-  /**
-   * For handling default selections on first load
-   */
-  initializeDefaultSelections() {
-
-    // simulates choosing 'Characteristic Type'
-    this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
-    this.chart1SelectedCharacteristicType = this.characteristicTypes[0];
-    this.chart1ImageOptionsAreVisible = true;
-    this.chart1FieldOptionsAreVisible = false;
-
-    // simulates choosing 'Image Type'
-    this.chart1SelectedImageType = 'Spectral';
-    this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allSpectralCharacteristicObjects);
-
-    // simulates choosing 'Image Characteristic'
-    this.chart1SelectedImageCharacteristicName = 'NDVI average';
-    this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
-    this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
-
-    // simulates choosing 'Image Source' (i.e. sensor)
-    this.selectedChart1Sensor = 'GeoEye-1_MS';
   }
 
   /**

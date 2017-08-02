@@ -107,9 +107,6 @@ export class HistogramBuilderService {
       result.push(freqItem);
     });
 
-    //
-    console.log(JSON.stringify(result));
-
     return result;
   }
 
@@ -124,38 +121,6 @@ export class HistogramBuilderService {
       x: series,
       type: 'histogram'
     }];
-  }
-
-  /**
-   * Utility for creating a test histogram to demonstrate the general code required for the chart.
-   * @param Plotly
-   */
-  static createDefaultHistogram(Plotly: any) {
-
-    const sampleData = {"message":"success","results":[{"i":1035,"v":0.772941},{"i":1090,"v":1.1164},{"i":1110,"v":0.9225},{"i":1125,"v":1.0576},{"i":1135,"v":1.5904},{"i":1140,"v":1.47579},{"i":1180,"v":1.2164},{"i":1210,"v":2.312},{"i":1240,"v":0.676781}]}
-    const frequencyData: number[] = [];
-    for (const item of sampleData.results) {
-      frequencyData.push(item['v']);
-    }
-
-    const histogramData = HistogramBuilderService.createUnclassifiedHistogramDataObject(frequencyData);
-    const layout = {
-      title: 'Histogram of \'fresh biomass\'',
-      yaxis: { title: 'Count'},
-      bargap: 0.05,
-      hovermode: 'closest',
-      showlegend: false
-    };
-
-    Plotly.newPlot('histogram',
-      histogramData,
-      layout,
-      {
-        displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
-        displaylogo: false
-      }
-    );
   }
 
   /**

@@ -66,39 +66,6 @@ export class StudyAreaComponent implements OnInit {
   ngOnInit() { }
 
   /**
-   * For initializing the study area options.
-   * @param results - the results from the async call to the API for study areas
-   * @param studyAreas - the instance property that represents a collection of study areas
-   */
-  initializeStudyAreaOptions(results: JSON[], studyAreas: JSON[]) {
-    results.forEach(function(item) {
-      studyAreas.push(item);
-    });
-  }
-
-  /**
-   * For initializing the start year options a user can choose from.
-   * @param results - the results from the async call to the API for study areas
-   * @param startYears - the collection of all start years
-   */
-  initializeStartYearOptions(results: any, startYears: any) {
-    results.forEach(function(item) {
-      startYears.push(item.properties.year_start);
-    });
-  }
-
-  /**
-   * For initializing the end year options a user can choose from.
-   * @param results - the results from the async call to the API for study areas
-   * @param endYears - the collection of all end years
-   */
-  initializeEndYearOptions(results: any, endYears: any) {
-    results.forEach(function(item) {
-      endYears.push(item.properties.year_end);
-    });
-  }
-
-  /**
    * For loading the app with some default parameters for selected study area, start year, end year, and crop type
    */
   initializeDefaultValues() {
@@ -142,6 +109,39 @@ export class StudyAreaComponent implements OnInit {
     });
     this.selectedCrops = [defaultCropName];
     this.userSelectionService.updateCropTypes(this.selectedCrops);
+  }
+
+  /**
+   * For initializing the study area options.
+   * @param results - the results from the async call to the API for study areas
+   * @param studyAreas - the instance property that represents a collection of study areas
+   */
+  initializeStudyAreaOptions(results: JSON[], studyAreas: JSON[]) {
+    results.forEach(function(item) {
+      studyAreas.push(item);
+    });
+  }
+
+  /**
+   * For initializing the start year options a user can choose from.
+   * @param results - the results from the async call to the API for study areas
+   * @param startYears - the collection of all start years
+   */
+  initializeStartYearOptions(results: any, startYears: any) {
+    results.forEach(function(item) {
+      startYears.push(item.properties.year_start);
+    });
+  }
+
+  /**
+   * For initializing the end year options a user can choose from.
+   * @param results - the results from the async call to the API for study areas
+   * @param endYears - the collection of all end years
+   */
+  initializeEndYearOptions(results: any, endYears: any) {
+    results.forEach(function(item) {
+      endYears.push(item.properties.year_end);
+    });
   }
 
   /**

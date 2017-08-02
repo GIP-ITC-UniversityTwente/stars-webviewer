@@ -19,7 +19,7 @@
   </div>
   <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Field Constant</div><br/>
-    <md-select [(ngModel)]="selectedFieldConstantCharacteristicId" (change)="onFieldCharacteristicChange()">
+    <md-select [(ngModel)]="selectedFieldConstantCharacteristicId" (change)="onFieldConstantChange()">
       <md-option *ngFor="let fieldConstantCharacteristic of fieldConstantCharacteristics" [value]="fieldConstantCharacteristic.oid">
         {{fieldConstantCharacteristic.alias}}
       </md-option>
