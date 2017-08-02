@@ -41,9 +41,9 @@ export class AuthService {
     localStorage.setItem('expires_at', expiresAt);
 
     //
-    //console.log('access_token', authResult.accessToken);
-    //console.log('id_token', authResult.idToken);
-    //console.log('expires_at', expiresAt);
+    // console.log('access_token', authResult.accessToken);
+    // console.log('id_token', authResult.idToken);
+    // console.log('expires_at', expiresAt);
   }
 
   public logout(): void {
