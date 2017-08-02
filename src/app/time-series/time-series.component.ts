@@ -313,8 +313,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
       this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
 
-      // for setting default selections after we fetch image characteristics
+      // for setting default selections after we fetch image characteristics which requires image characteristics
       this.initializeDefaultSelections();
+
     }).catch((error) => {
       console.log(error);
     });

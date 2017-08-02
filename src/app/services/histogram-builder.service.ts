@@ -128,50 +128,59 @@ export class HistogramBuilderService {
 
   /**
    * Utility for creating a test histogram to demonstrate the general code required for the chart.
-   * @param plotly
+   * @param Plotly
    */
-  static createTestHistogram(plotly: any) {
+  static createDefaultHistogram(Plotly: any) {
 
-    // field based characteristic sample classification data
-    const data = [
-      {
-        name: 'Medium Field',
-        x: ['7000'],
-        y: [2],
-        type: 'bar',
-        marker: {
-          color: ['#A6A6A6']
-        }
-      },
-      {
-        name: 'Large Field',
-        x: ['11000', '15000'],
-        y: [3, 3],
-        type: 'bar',
-        marker: {
-          color: ['#ED7D31', '#ED7D31']
-        }
-      }
-      ,
-      {
-        name: 'Small Field',
-        x: ['0', '23000', '27000'],
-        y: [0, 1, 1],
-        type: 'bar',
-        marker: {
-          color: ['#0070C0', '#0070C0', '#0070C0']
-        }
-      }
-    ];
+    const sampleData = {"message":"success","results":[{"i":1035,"v":0.772941},{"i":1090,"v":1.1164},{"i":1110,"v":0.9225},{"i":1125,"v":1.0576},{"i":1135,"v":1.5904},{"i":1140,"v":1.47579},{"i":1180,"v":1.2164},{"i":1210,"v":2.312},{"i":1240,"v":0.676781}]}
+    const frequencyData: number[] = [];
+    for (const item of sampleData.results) {
+      frequencyData.push(item['v']);
+    }
 
+    const histogramData = HistogramBuilderService.createUnclassifiedHistogramDataObject(frequencyData);
     const layout = {
-      title: 'Histogram of field size',
-      bargap: 0.5,
-      hovermode: 'closest'
+      title: 'Histogram of \'fresh biomass\'',
+      yaxis: { title: 'Count'},
+      bargap: 0.05,
+      hovermode: 'closest',
+      showlegend: false
     };
 
-    plotly.newPlot('histogram',
-      data,
+    Plotly.newPlot('histogram',
+      histogramData,
+      layout,
+      {
+        displayModeBar: 'hover',
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      }
+    );
+  }
+
+  /**
+   * For presenting an empty histogram.
+   * @param Plotly
+   */
+  static createEmptyHistogram(Plotly: any) {
+
+    const sampleData = {"message":"success","results":[]}
+    const frequencyData: number[] = [];
+    for (const item of sampleData.results) {
+      frequencyData.push(item['v']);
+    }
+
+    const histogramData = HistogramBuilderService.createUnclassifiedHistogramDataObject(frequencyData);
+    const layout = {
+      title: 'Histogram',
+      yaxis: { title: 'Count'},
+      bargap: 0.05,
+      hovermode: 'closest',
+      showlegend: false
+    };
+
+    Plotly.newPlot('histogram',
+      histogramData,
       layout,
       {
         displayModeBar: 'hover',

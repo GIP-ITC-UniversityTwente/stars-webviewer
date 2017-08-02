@@ -85,9 +85,7 @@ export class HistogramComponent implements OnInit {
         this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea['properties']['id'], this.startYear).then((response) => {
           return response;
         }).then((data) => {
-
           this.fieldConstantCharacteristics = data.results.fieldConstants;
-
         }).catch((error) => {
           console.log(error);
         });
@@ -100,14 +98,20 @@ export class HistogramComponent implements OnInit {
    */
   ngOnInit() {
 
-    HistogramBuilderService.createTestHistogram(Plotly);
+    // set default selection
+    this.initializeDefaultSelection();
   }
 
   /**
-   * For handling when a user taps the info button for field characteristics.
+   * For selecting default values for first load
    */
-  handleInfoButtonTap() {
-    console.log('show info for field characteristics');
+  initializeDefaultSelection() {
+
+    // default field constant
+    this.selectedFieldConstantCharacteristicId = 1015;
+
+    // default histogram for initial load
+    HistogramBuilderService.createDefaultHistogram(Plotly);
   }
 
   /**
@@ -119,6 +123,9 @@ export class HistogramComponent implements OnInit {
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
     }).then((data) => {
+
+      //
+      console.log(JSON.stringify(data));
 
       // clear frequency data from a previously chosen field constant characteristic
       if (this.frequencyData.length > 0) {
@@ -134,10 +141,13 @@ export class HistogramComponent implements OnInit {
       if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
 
         // create a un-classified histogram
-        this.geostatSeries = new geostats(this.frequencyData);
+        //this.geostatSeries = new geostats(this.frequencyData);
         const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData);
         this.presentHistogramData(histoData, false);
+
       } else {
+
+        this.geostatSeries = new geostats(this.frequencyData);
 
         // classify the data
         HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
@@ -151,6 +161,7 @@ export class HistogramComponent implements OnInit {
 
     }).catch((error) => {
       console.log(error);
+      HistogramBuilderService.createEmptyHistogram(Plotly);
     });
   }
 
