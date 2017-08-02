@@ -140,7 +140,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
         if (cropTypes.length == 0) {
-          TimeSeriesBuilderService.createEmptyCharts(Plotly);
+          //TimeSeriesBuilderService.createEmptyCharts(Plotly);
+          TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+          TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
         }
         else if (cropTypes.length > 0) {
           this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
@@ -742,9 +744,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
-      //
-      console.log(JSON.stringify(data));
-
       const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
       const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart2SelectedFieldCharacteristicName);
       this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart2');
@@ -760,6 +759,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     const targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
     const smallSize = 1115;
     if (this.chart2IsShowing) {
+
+      // manage chart width
       if (targetElementWidth > 0) {
         Plotly.relayout('chart1', { width: targetElementWidth });
         Plotly.relayout('chart2', { width: 0 });
@@ -767,8 +768,20 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.buttonLabel = '+ ADD A CHART';
       }
     } else {
-      //
-      console.log('targetElementWidth ', targetElementWidth, ' vs smallSize ', smallSize);
+
+      // for resetting chart 2 options
+      this.chart2SelectedCharacteristicType = undefined;
+      this.chart2SelectedImageType = undefined;
+      this.chart2SelectedImageCharacteristicName = undefined;
+      this.chart2SelectedImageCharacteristicId = undefined;
+      this.selectedChart2Sensor = undefined;
+      this.chart2SelectedParameter1Option = undefined;
+      this.chart2SelectedParameter2Option = undefined;
+      this.chart2SelectedFieldCharacteristicId = undefined;
+      this.chart2SelectedFieldCharacteristicName = undefined;
+      TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
+
+      // manage chart width
       if (targetElementWidth <= smallSize) {
         Plotly.relayout('chart1', { width: targetElementWidth });
         Plotly.relayout('chart2', { width: targetElementWidth });

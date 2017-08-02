@@ -376,8 +376,9 @@ export class TimeSeriesBuilderService {
   /**
    * Utility for creating an empty chart
    * @param Plotly
+   * @param targetChartDivId
    */
-  static createEmptyCharts(Plotly: any) {
+  static createEmptyTimeSeriesChart(Plotly: any, targetChartDivId: string) {
 
     const texturalLine = {
       x: [],
@@ -407,17 +408,7 @@ export class TimeSeriesBuilderService {
       hovermode: 'closest'
     };
 
-    Plotly.newPlot('chart1',
-      [texturalLine],
-      texturalLayout,
-      {
-        displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
-        displaylogo: false
-      }
-    );
-
-    Plotly.newPlot('chart2',
+    Plotly.newPlot(targetChartDivId,
       [texturalLine],
       texturalLayout,
       {
@@ -477,44 +468,7 @@ export class TimeSeriesBuilderService {
     //  CHART 2 PLACEHOLDER
     // ----------------------
 
-    const texturalLine = {
-      x: [],
-      y: [],
-      mode: 'lines',
-      name: '',
-      line: {
-        color: '#2673A8',
-        width: 3
-      }
-    };
-
-    // layout for millet textural test sample
-    const texturalLayout = {
-      title: 'Time Series',
-      xaxis: {
-        title: 'Time',
-        showgrid: true,
-        zeroline: true,
-        ticks: 'outside',
-        showticklabels: true
-      },
-      yaxis: {
-        title: '',
-        showline: false
-      },
-      hovermode: 'closest'
-    };
-
-    const texturalData = [texturalLine];
-    Plotly.newPlot('chart2',
-      texturalData,
-      texturalLayout,
-      {
-        displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
-        displaylogo: false
-      }
-    );
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
   }
 
   /**
