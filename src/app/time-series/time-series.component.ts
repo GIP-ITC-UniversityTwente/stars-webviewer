@@ -139,93 +139,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     // subscribe to crop types selections by the user
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
-
         if (cropTypes.length == 0) {
           TimeSeriesBuilderService.createEmptyCharts(Plotly);
         }
         else if (cropTypes.length > 0) {
-
           this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
-
-          //
-          console.log(this.chart1SelectedCharacteristicType);
-
-          // chart 1 - updates
-          if (this.chart1SelectedCharacteristicType === 'Image Characteristic') {
-
-            if (this.selectedChart1Sensor != undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter2Option === undefined) {
-
-              // update time series with no parameters
-              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
-                return response;
-              }).then((data) => {
-                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
-                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
-              });
-            } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option === undefined) {
-
-              // update time series with parameter 1
-              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option).then((response) => {
-                return response;
-              }).then((data) => {
-                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
-                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
-              });
-            } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option !== undefined) {
-
-              // update time series with parameter 1 & 2
-              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
-                return response;
-              }).then((data) => {
-                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
-              });
-            }
-          } else if (this.chart1SelectedCharacteristicType === 'Field Characteristic') {
-
-          }
-
-          // chart 2 updates
-          if (this.chart2SelectedCharacteristicType === 'Image Characteristic') {
-            if (this.selectedChart2Sensor != undefined && this.chart2SelectedParameter1Option === undefined && this.chart2SelectedParameter2Option === undefined) {
-
-              // update time series no parameters
-              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
-                return response;
-              }).then((data) => {
-                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-                this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart2');
-              });
-
-            } else if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option !== undefined && this.chart2SelectedParameter2Option === undefined) {
-
-              // update time series with parameter 1
-              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option).then((response) => {
-                return response;
-              }).then((data) => {
-                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
-              });
-
-            } else if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option !== undefined && this.chart2SelectedParameter2Option !== undefined) {
-
-              // update time with parameter 1 & 2
-              this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
-                return response;
-              }).then((data) => {
-                const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-                const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-                this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
-              });
-            }
-          } else if (this.chart2SelectedCharacteristicType === 'Field Characteristic') {
-
-          }
+          this.updateTimeSeries();
         }
       }
     );
@@ -261,6 +180,93 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   }
 
   /**
+   * Utility for updating time series charts
+   */
+  updateTimeSeries() {
+
+    // chart 1 - updates
+    if (this.chart1SelectedCharacteristicType === 'Image Characteristic') {
+      if (this.selectedChart1Sensor != undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter2Option === undefined) {
+        // update image characteristic time series with no parameters
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        });
+      } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option === undefined) {
+        // update image characteristic time series with parameter 1
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        });
+      } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option !== undefined) {
+        // update image characteristic time series with parameter 1 & 2
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        });
+      }
+    } else if (this.chart1SelectedCharacteristicType === 'Field Characteristic') {
+      // update field characteristic time series
+      this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedFieldCharacteristicId).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
+        this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+      });
+    }
+    // chart 2 updates
+    if (this.chart2SelectedCharacteristicType === 'Image Characteristic') {
+      if (this.selectedChart2Sensor != undefined && this.chart2SelectedParameter1Option === undefined && this.chart2SelectedParameter2Option === undefined) {
+        // update image characteristic time series no parameters
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData,  chartLayout, 'chart2');
+        });
+      } else if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option !== undefined && this.chart2SelectedParameter2Option === undefined) {
+        // update image characteristic time series with parameter 1
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        });
+      } else if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option !== undefined && this.chart2SelectedParameter2Option !== undefined) {
+        // update image characteristic time series with parameter 1 & 2
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        });
+      }
+    } else if (this.chart2SelectedCharacteristicType === 'Field Characteristic') {
+      // update field characteristic time series
+      this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedFieldCharacteristicId).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart2SelectedFieldCharacteristicName);
+        this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart2');
+      });
+    }
+  }
+
+  /**
    * For setting up the layout style when the charts load for the first time
    */
   initializeChartLayout() {
@@ -290,13 +296,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     // simulates choosing 'Image Source' (i.e. sensor)
     this.selectedChart1Sensor = 'GeoEye-1_MS';
-    this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyAreaId, this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
-      return response;
-    }).then((data) => {
-      const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
-      this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
-    });
   }
 
   /**
@@ -493,7 +492,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
   }
 
-
   /**
    * Handles when a user chooses a parameter 1 option for Chart 1.
    */
@@ -556,10 +554,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
-
-      //
-      console.log(data);
-
       const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
       const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
       this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
