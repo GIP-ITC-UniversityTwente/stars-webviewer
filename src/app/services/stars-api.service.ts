@@ -15,6 +15,7 @@ export class StarsAPIService {
   static createAuthorizationHeader() {
     const token = localStorage.getItem('id_token');
     const authHeader = new Headers();
+    authHeader.append('content-type', 'application/x-www-form-urlencode');
     authHeader.append('Authorization', 'Bearer ' + token);
     return authHeader;
   }
@@ -31,7 +32,7 @@ export class StarsAPIService {
   fetchStudyAreas(): Promise<any> {
     const authHeader = StarsAPIService.createAuthorizationHeader();
     const url = AppConfiguration.apiBaseURL + '/studyareas';
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -56,7 +57,7 @@ export class StarsAPIService {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -81,7 +82,7 @@ export class StarsAPIService {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -105,7 +106,7 @@ export class StarsAPIService {
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -141,7 +142,7 @@ export class StarsAPIService {
       url += `&secondParameter=${secondParameter}`;
     }
 
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -166,7 +167,7 @@ export class StarsAPIService {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -193,7 +194,7 @@ export class StarsAPIService {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -217,7 +218,7 @@ export class StarsAPIService {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
@@ -243,7 +244,7 @@ export class StarsAPIService {
       url += `&endYear=${endYear}`;
     }
 
-    return this.http.get(url, authHeader)
+    return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
