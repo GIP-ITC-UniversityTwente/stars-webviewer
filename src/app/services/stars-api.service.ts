@@ -37,7 +37,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -62,7 +62,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -87,7 +87,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -111,7 +111,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -147,7 +147,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -172,7 +172,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -199,7 +199,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -223,7 +223,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
@@ -249,7 +249,7 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
-        if (error.message === 'token expired') {
+        if (error.name === 'Authorization required') {
           this.auth.login();
         }
       });
