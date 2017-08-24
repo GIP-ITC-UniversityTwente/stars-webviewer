@@ -232,7 +232,7 @@ export class HistogramComponent implements OnInit {
 
     const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
     const layout = {
-      title: 'Histogram of `' + targetFieldConstantAlias + '`',
+      title: 'Histogram of ' + targetFieldConstantAlias,
       yaxis: { title: 'Count'},
       bargap: 0.05,
       hovermode: 'closest',
