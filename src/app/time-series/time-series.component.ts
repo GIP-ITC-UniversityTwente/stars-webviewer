@@ -745,7 +745,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       }).then((data) => {
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart2');
       });
     }
   }
@@ -767,7 +767,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       }).then((data) => {
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart2');
       });
     }
   }
