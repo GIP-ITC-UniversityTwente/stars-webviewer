@@ -398,8 +398,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       // show field characteristic drop down options
       this.chart1FieldOptionsAreVisible = true;
     }
-
-
   }
 
   /**
@@ -408,8 +406,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   onChart1ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
+    this.chart1SelectedImageCharacteristicId = -1;
     this.chart1SelectedImageCharacteristicName = undefined;
     this.selectedChart1Sensor = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
 
     // add image characteristic drop down items
     if (this.chart1SelectedImageType === 'Spectral') {
@@ -581,7 +581,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart2SelectedImageCharacteristicId = -1;
     this.chart2SelectedImageCharacteristicName = undefined;
     this.selectedChart2Sensor = undefined;
-    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
     // show/hide dropdowns based on chosen characteristic type
     if (this.chart2SelectedCharacteristicType === this.characteristicTypes[0]) {
@@ -607,13 +607,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   onChart2ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
-    if (this.chart2SelectedImageCharacteristicName !== undefined) {
-      this.chart2SelectedImageCharacteristicName = undefined;
-    }
-
-    if (this.selectedChart2Sensor !== undefined) {
-      this.selectedChart2Sensor = undefined;
-    }
+    this.chart2SelectedImageCharacteristicId = -1;
+    this.chart2SelectedImageCharacteristicName = undefined;
+    this.selectedChart2Sensor = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
     // add image characteristic drop down items
     if (this.chart2SelectedImageType === 'Spectral') {
