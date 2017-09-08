@@ -79,6 +79,10 @@ body {
   color: #629440;
 }
 
+.mat-select {
+  padding-top: 2px;
+}
+
 .mat-checkbox-indeterminate.mat-warn .mat-checkbox-background, .mat-checkbox-checked.mat-warn .mat-checkbox-background {
   background-color: #629440;
 }
