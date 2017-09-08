@@ -7,5 +7,5 @@ interface AuthConfig {
 export const AUTH_CONFIG: AuthConfig = {
   clientID: '2yX67jth2pOwXEBN3vZWRPvlduh61qzh', // see dashboard > clients >  app > settings
   domain: 'stars-itc.eu.auth0.com',             // see dashboard > clients >  app > settings
-  callbackURL: 'https://stars.itc.nl'           // for local development use 'http://localhost:4200/callback'
+  callbackURL: 'http://localhost:4200/callback' //'https://stars.itc.nl'           // for local development use 'http://localhost:4200/callback'
 };

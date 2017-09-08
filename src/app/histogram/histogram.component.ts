@@ -229,6 +229,10 @@ export class HistogramComponent implements OnInit {
    */
   presentHistogramData(histogramData: any, isShowing: boolean) {
 
+    //
+    console.log('histogram data');
+    console.log(histogramData);
+
     const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
     const layout = {
       title: 'Histogram of ' + targetFieldConstantAlias,

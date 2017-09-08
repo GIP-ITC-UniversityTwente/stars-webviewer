@@ -420,7 +420,7 @@ export class TimeSeriesBuilderService {
   /**
    * Utility for testing patterns for creating chart spec.
    */
-  static createTestCharts(Plotly: any) {
+  static createDefaultTimeSeriesCharts(Plotly: any) {
 
     // ----------------------
     //  CHART 1 PLACEHOLDER

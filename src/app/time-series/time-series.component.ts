@@ -5,7 +5,6 @@ import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
 import { TimeSeriesBuilderService } from '../services/time-series-builder.service';
-import {isNullOrUndefined} from "util";
 
 declare const Plotly: any;
 
@@ -139,11 +138,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     // subscribe to crop types selections by the user
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
-        if (cropTypes.length == 0) {
+        if (cropTypes.length === 0) {
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
-        }
-        else if (cropTypes.length > 0) {
+        } else if (cropTypes.length > 0) {
           this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
           this.updateTimeSeries();
         }
@@ -157,7 +155,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   ngOnInit() {
 
     // fill out charts with test data
-    TimeSeriesBuilderService.createTestCharts(Plotly);
+    TimeSeriesBuilderService.createDefaultTimeSeriesCharts(Plotly);
 
     // default style-layout of charts
     this.initializeChartLayout();
@@ -211,7 +209,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     // chart 1 - updates
     if (this.chart1SelectedCharacteristicType === 'Image Characteristic') {
-      if (this.selectedChart1Sensor != undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter2Option === undefined) {
+      if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter2Option === undefined) {
         // update image characteristic time series with no parameters
         this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
           return response;
@@ -251,7 +249,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
     // chart 2 updates
     if (this.chart2SelectedCharacteristicType === 'Image Characteristic') {
-      if (this.selectedChart2Sensor != undefined && this.chart2SelectedParameter1Option === undefined && this.chart2SelectedParameter2Option === undefined) {
+      if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option === undefined && this.chart2SelectedParameter2Option === undefined) {
         // update image characteristic time series no parameters
         this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor).then((response) => {
           return response;
@@ -377,6 +375,14 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    */
   onChart1CharacteristicTypeChange() {
 
+    // clear down flowing drop downs & chart
+    this.chart1SelectedImageType = undefined;
+    this.chart1SelectedImageCharacteristicId = -1;
+    this.chart1SelectedImageCharacteristicName = undefined;
+    this.selectedChart1Sensor = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+
+    // show/hide dropdowns based on chosen characteristic type
     if (this.chart1SelectedCharacteristicType === this.characteristicTypes[0]) {
 
       // show image characteristic drop down options
@@ -392,6 +398,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       // show field characteristic drop down options
       this.chart1FieldOptionsAreVisible = true;
     }
+
+
   }
 
   /**
@@ -567,6 +575,15 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    * Handles when user choose a characteristic type for Chart 2.
    */
   onChart2CharacteristicTypeChange() {
+
+    // clear down flowing drop downs & chart
+    this.chart2SelectedImageType = undefined;
+    this.chart2SelectedImageCharacteristicId = -1;
+    this.chart2SelectedImageCharacteristicName = undefined;
+    this.selectedChart2Sensor = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+
+    // show/hide dropdowns based on chosen characteristic type
     if (this.chart2SelectedCharacteristicType === this.characteristicTypes[0]) {
 
       // show image characteristic drop down options
