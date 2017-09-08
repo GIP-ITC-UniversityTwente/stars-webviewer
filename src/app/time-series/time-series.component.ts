@@ -377,9 +377,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     // clear down flowing drop downs & chart
     this.chart1SelectedImageType = undefined;
-    this.chart1SelectedImageCharacteristicId = -1;
+    this.chart1SelectedImageCharacteristicId = undefined;
     this.chart1SelectedImageCharacteristicName = undefined;
     this.selectedChart1Sensor = undefined;
+    this.chart1Parameter1IsVisible = false;
+    this.chart1Parameter1Name = undefined;
+    this.chart1Parameter1Range = [];
+    this.chart1SelectedParameter1Option = undefined;
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
 
     // show/hide dropdowns based on chosen characteristic type
@@ -406,9 +414,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   onChart1ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
-    this.chart1SelectedImageCharacteristicId = -1;
+    this.chart1SelectedImageCharacteristicId = undefined;
     this.chart1SelectedImageCharacteristicName = undefined;
     this.selectedChart1Sensor = undefined;
+    this.chart1Parameter1IsVisible = false;
+    this.chart1Parameter1Name = undefined;
+    this.chart1Parameter1Range = [];
+    this.chart1SelectedParameter1Option = undefined;
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
 
     // add image characteristic drop down items
@@ -578,9 +594,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     // clear down flowing drop downs & chart
     this.chart2SelectedImageType = undefined;
-    this.chart2SelectedImageCharacteristicId = -1;
+    this.chart2SelectedImageCharacteristicId = undefined;
     this.chart2SelectedImageCharacteristicName = undefined;
     this.selectedChart2Sensor = undefined;
+    this.chart2Parameter1IsVisible = false;
+    this.chart2Parameter1Name = undefined;
+    this.chart2Parameter1Range = [];
+    this.chart2SelectedParameter1Option = undefined;
+    this.chart2Parameter2IsVisible = false;
+    this.chart2Parameter2Name = undefined;
+    this.chart2Parameter2Range = [];
+    this.chart2SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
     // show/hide dropdowns based on chosen characteristic type
@@ -607,9 +631,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   onChart2ImageTypeChange() {
 
     // clear previous dependent selections for image characteristic and sensor
-    this.chart2SelectedImageCharacteristicId = -1;
+    this.chart2SelectedImageCharacteristicId = undefined;
     this.chart2SelectedImageCharacteristicName = undefined;
     this.selectedChart2Sensor = undefined;
+    this.chart2Parameter1IsVisible = false;
+    this.chart2Parameter1Name = undefined;
+    this.chart2Parameter1Range = [];
+    this.chart2SelectedParameter1Option = undefined;
+    this.chart2Parameter2IsVisible = false;
+    this.chart2Parameter2Name = undefined;
+    this.chart2Parameter2Range = [];
+    this.chart2SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
     // add image characteristic drop down items
