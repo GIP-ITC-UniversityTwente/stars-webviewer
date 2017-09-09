@@ -46,6 +46,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   chart1SelectedImageCharacteristicId: number;
   chart1Sensors: any[] = [];
   selectedChart1Sensor: string;
+  chart1SelectedFieldCharacteristicName: string;
+  chart1SelectedFieldCharacteristicId: number;
 
   chart1Parameter1IsVisible = false;
   chart1Parameter1Name: string;
@@ -55,18 +57,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   chart1Parameter2Name: string;
   chart1Parameter2Range: number[];
   chart1SelectedParameter2Option: number;
-
-  chart2Parameter1IsVisible = false;
-  chart2Parameter1Name: string;
-  chart2Parameter1Range: number[];
-  chart2SelectedParameter1Option: number;
-  chart2Parameter2IsVisible = false;
-  chart2Parameter2Name: string;
-  chart2Parameter2Range: number[];
-  chart2SelectedParameter2Option: number;
-
-  chart1SelectedFieldCharacteristicName: string;
-  chart1SelectedFieldCharacteristicId: number;
 
   chart2ImageOptionsAreVisible = false;
   chart2FieldOptionsAreVisible = false;
@@ -79,6 +69,15 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   selectedChart2Sensor: string;
   chart2SelectedFieldCharacteristicName: string;
   chart2SelectedFieldCharacteristicId: number;
+
+  chart2Parameter1IsVisible = false;
+  chart2Parameter1Name: string;
+  chart2Parameter1Range: number[];
+  chart2SelectedParameter1Option: number;
+  chart2Parameter2IsVisible = false;
+  chart2Parameter2Name: string;
+  chart2Parameter2Range: number[];
+  chart2SelectedParameter2Option: number;
 
   // tooltip
   toolTipPosition = 'right';
@@ -388,6 +387,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart1Parameter2Name = undefined;
     this.chart1Parameter2Range = [];
     this.chart1SelectedParameter2Option = undefined;
+    this.chart1SelectedFieldCharacteristicName = undefined;
+    this.chart1SelectedFieldCharacteristicId = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
 
     // show/hide dropdowns based on chosen characteristic type
@@ -630,6 +631,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart2Parameter2Name = undefined;
     this.chart2Parameter2Range = [];
     this.chart2SelectedParameter2Option = undefined;
+    this.chart2SelectedFieldCharacteristicName = undefined;
+    this.chart2SelectedFieldCharacteristicId = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
     // show/hide dropdowns based on chosen characteristic type
