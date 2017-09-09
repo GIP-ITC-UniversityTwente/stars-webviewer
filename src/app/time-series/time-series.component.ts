@@ -867,6 +867,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       }
     } else {
 
+      /*
       // for resetting chart 2 options
       this.chart2SelectedCharacteristicType = undefined;
       this.chart2SelectedImageType = undefined;
@@ -877,6 +878,29 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       this.chart2SelectedParameter2Option = undefined;
       this.chart2SelectedFieldCharacteristicId = undefined;
       this.chart2SelectedFieldCharacteristicName = undefined;
+      TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
+      */
+
+      // clear down flowing drop downs & chart
+      this.chart2SelectedCharacteristicType = undefined;
+      this.chart2ImageOptionsAreVisible = false;
+      this.chart2FieldOptionsAreVisible = false;
+      this.chart2Parameter1IsVisible = false;
+      this.chart2Parameter2IsVisible = false;
+      this.chart2SelectedImageType = undefined;
+      this.chart2SelectedImageCharacteristicId = undefined;
+      this.chart2SelectedImageCharacteristicName = undefined;
+      this.selectedChart2Sensor = undefined;
+      this.chart2Parameter1IsVisible = false;
+      this.chart2Parameter1Name = undefined;
+      this.chart2Parameter1Range = [];
+      this.chart2SelectedParameter1Option = undefined;
+      this.chart2Parameter2IsVisible = false;
+      this.chart2Parameter2Name = undefined;
+      this.chart2Parameter2Range = [];
+      this.chart2SelectedParameter2Option = undefined;
+      this.chart2SelectedFieldCharacteristicName = undefined;
+      this.chart2SelectedFieldCharacteristicId = undefined;
       TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
       // manage chart width
