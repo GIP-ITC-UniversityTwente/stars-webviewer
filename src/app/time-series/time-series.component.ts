@@ -37,6 +37,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   allSpectralCharacteristicObjects: any[] = [];
   allTexturalCharacteristicObjects: any[] = [];
 
+  chart1DropDownsAreDisabled = false;
   chart1ImageOptionsAreVisible = false;
   chart1FieldOptionsAreVisible = false;
   chart1SelectedCharacteristicType: string;
@@ -58,6 +59,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   chart1Parameter2Range: number[];
   chart1SelectedParameter2Option: number;
 
+  chart2DropDownsAreDisabled = false;
   chart2ImageOptionsAreVisible = false;
   chart2FieldOptionsAreVisible = false;
   chart2SelectedCharacteristicType: string;
@@ -138,10 +140,24 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
         if (cropTypes.length === 0) {
+
+          // Disable TimeSeries drop downs
+          this.chart1DropDownsAreDisabled = true;
+          this.chart2DropDownsAreDisabled = true;
+
+          // Clear chart 1 and chart 2
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
         } else if (cropTypes.length > 0) {
+
+          // Enable time series drop downs
+          this.chart1DropDownsAreDisabled = false;
+          this.chart2DropDownsAreDisabled = false;
+
+          // Create Crop List
           this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
+
+          // Render chart(s)
           this.updateTimeSeries();
         }
       }
