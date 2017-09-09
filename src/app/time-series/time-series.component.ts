@@ -867,20 +867,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       }
     } else {
 
-      /*
-      // for resetting chart 2 options
-      this.chart2SelectedCharacteristicType = undefined;
-      this.chart2SelectedImageType = undefined;
-      this.chart2SelectedImageCharacteristicName = undefined;
-      this.chart2SelectedImageCharacteristicId = undefined;
-      this.selectedChart2Sensor = undefined;
-      this.chart2SelectedParameter1Option = undefined;
-      this.chart2SelectedParameter2Option = undefined;
-      this.chart2SelectedFieldCharacteristicId = undefined;
-      this.chart2SelectedFieldCharacteristicName = undefined;
-      TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
-      */
-
       // clear down flowing drop downs & chart
       this.chart2SelectedCharacteristicType = undefined;
       this.chart2ImageOptionsAreVisible = false;
