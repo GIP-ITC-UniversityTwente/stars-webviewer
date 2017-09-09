@@ -413,7 +413,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    */
   onChart1ImageTypeChange() {
 
-    // clear previous dependent selections for image characteristic and sensor
+    // clear down flowing drop downs & chart
     this.chart1SelectedImageCharacteristicId = undefined;
     this.chart1SelectedImageCharacteristicName = undefined;
     this.selectedChart1Sensor = undefined;
@@ -440,8 +440,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    */
   onChart1ImageCharacteristicChange() {
 
-    // clear previous dependent selection for sensor
+    // clear down flowing drop downs & chart
     this.selectedChart1Sensor = undefined;
+    this.chart1Parameter1IsVisible = false;
+    this.chart1Parameter1Name = undefined;
+    this.chart1Parameter1Range = [];
+    this.chart1SelectedParameter1Option = undefined;
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
 
     // add sensor drop down items
     if (this.chart1SelectedImageType === 'Spectral') {
@@ -630,7 +639,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    */
   onChart2ImageTypeChange() {
 
-    // clear previous dependent selections for image characteristic and sensor
+    // clear down flowing drop downs & chart
     this.chart2SelectedImageCharacteristicId = undefined;
     this.chart2SelectedImageCharacteristicName = undefined;
     this.selectedChart2Sensor = undefined;
@@ -657,10 +666,17 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    */
   onChart2ImageCharacteristicChange() {
 
-    // clear previous dependent selection for sensor
-    if (this.selectedChart2Sensor !== undefined) {
-      this.selectedChart2Sensor = undefined;
-    }
+    // clear down flowing drop downs & chart
+    this.selectedChart2Sensor = undefined;
+    this.chart2Parameter1IsVisible = false;
+    this.chart2Parameter1Name = undefined;
+    this.chart2Parameter1Range = [];
+    this.chart2SelectedParameter1Option = undefined;
+    this.chart2Parameter2IsVisible = false;
+    this.chart2Parameter2Name = undefined;
+    this.chart2Parameter2Range = [];
+    this.chart2SelectedParameter2Option = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
     // add sensor drop down items
     if (this.chart2SelectedImageType === 'Spectral') {
