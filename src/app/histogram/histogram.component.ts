@@ -31,6 +31,8 @@ export class HistogramComponent implements OnInit {
 
   selectedFieldConstantCharacteristicId: number;
   fieldConstantCharacteristics: any[] = [];
+  selectedNumberOfBins: number;
+  numberOfBins = [1, 2, 3, 4, 5];
   selectedClassificationMethod: string;
   classificationMethods: string[] = [];
   selectedClassSize: number;
@@ -181,6 +183,13 @@ export class HistogramComponent implements OnInit {
       console.log(error);
       HistogramBuilderService.createEmptyHistogram(Plotly);
     });
+  }
+
+  /**
+   * For handling when a user changes the number of bins
+   */
+  onNumberOfBinsChange() {
+    console.log('number of bins changed to', this.selectedNumberOfBins);
   }
 
   /**

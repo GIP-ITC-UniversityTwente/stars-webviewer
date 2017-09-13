@@ -18,6 +18,14 @@
     </md-select>
   </div>
   <div class="fieldMeasurementOption">
+    <div class="parameterOptionTitle">Number of Bins</div><br/>
+    <md-select [(ngModel)]="selectedNumberOfBins" (change)="onNumberOfBinsChange()">
+      <md-option *ngFor="let bin of numberOfBins" [value]="bin">
+        {{bin}}
+      </md-option>
+    </md-select>
+  </div>
+  <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Field Constant</div><br/>
     <md-select [(ngModel)]="selectedFieldConstantCharacteristicId" (change)="onFieldConstantChange()">
       <md-option *ngFor="let fieldConstantCharacteristic of fieldConstantCharacteristics" [value]="fieldConstantCharacteristic.oid">
