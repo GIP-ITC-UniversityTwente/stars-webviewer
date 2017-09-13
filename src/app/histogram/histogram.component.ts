@@ -32,7 +32,7 @@ export class HistogramComponent implements OnInit {
   selectedFieldConstantCharacteristicId: number;
   fieldConstantCharacteristics: any[] = [];
   selectedNumberOfBins: number;
-  numberOfBins = [1, 2, 3, 4, 5];
+  numberOfBins: number[] = [];
   selectedClassificationMethod: string;
   classificationMethods: string[] = [];
   selectedClassSize: number;
@@ -109,12 +109,13 @@ export class HistogramComponent implements OnInit {
   ngOnInit() {
 
     // set default selection
-    this.initializeDefaultSelection();
+    //this.initializeDefaultSelection();
   }
 
   /**
    * For selecting default values for first load
    */
+  /*
   initializeDefaultSelection() {
 
     // default field constant
@@ -131,21 +132,15 @@ export class HistogramComponent implements OnInit {
     const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData);
     this.presentHistogramData(histoData, false);
   }
-
-  /**
-   * For handling when a user changes the target field characteristic.
-   */
-  onFieldConstantChange() {
-
-    this.updateHistogram();
-  }
+  */
 
   /**
    * For updating the histogram either after any global parameters change or after a field constant is changed.
    */
   updateHistogram() {
 
-    // fetch field constants data
+    /*
+    // fetch field constants
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
     }).then((data) => {
@@ -163,8 +158,13 @@ export class HistogramComponent implements OnInit {
       this.geostatSeries = new geostats(this.frequencyData);
       if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
 
+        //
+        console.log('test...');
+        console.log(this.frequencyData);
+        console.log(this.frequencyData.length);
+
         // create a un-classified histogram
-        const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData);
+        const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.frequencyData.length);
         this.presentHistogramData(histoData, false);
 
       } else {
@@ -183,13 +183,81 @@ export class HistogramComponent implements OnInit {
       console.log(error);
       HistogramBuilderService.createEmptyHistogram(Plotly);
     });
+
+    */
+  }
+
+  /**
+   * For handling when a user changes the target field characteristic.
+   */
+  onFieldConstantChange() {
+
+    //this.updateHistogram();
+
+
+    console.log(this.selectedFieldConstantCharacteristicId);
+
+    // fetch field constants
+    this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
+      return response;
+    }).then((data) => {
+
+      // clear frequency data from a previously chosen field constant characteristic
+      if (this.frequencyData.length > 0) {
+        this.frequencyData = [];
+      }
+
+      // initialize (or update) frequency data
+      for (const item of data.results) {
+        this.frequencyData.push(item['v']);
+      }
+
+      // initialize the number of bins
+      this.frequencyData.forEach((item, index) => {
+        if(index >= 1) { // the value of 2 is the lowest number of bins allowed
+          this.numberOfBins.push(index + 1);
+        }
+      });
+    }).catch((error) => {
+      console.log(error);
+      HistogramBuilderService.createEmptyHistogram(Plotly);
+    });
   }
 
   /**
    * For handling when a user changes the number of bins
    */
   onNumberOfBinsChange() {
+
     console.log('number of bins changed to', this.selectedNumberOfBins);
+
+    this.geostatSeries = new geostats(this.frequencyData);
+
+    // un-classified histogram ...
+    if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
+
+      // create a un-classified histogram
+      const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+
+      //
+      console.log('testing histoData');
+      console.log(histoData);
+      console.log('vs ', this.selectedNumberOfBins);
+
+      this.presentHistogramData(histoData, false);
+
+    // classified histogram ...
+    } else {
+
+      // classify the data
+      HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+
+      // create histogram data
+      const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.geostatSeries.ranges);
+
+      // display histogram data
+      this.presentHistogramData(histoData, true);
+    }
   }
 
   /**
@@ -237,10 +305,6 @@ export class HistogramComponent implements OnInit {
    * @param {boolean} isShowing
    */
   presentHistogramData(histogramData: any, isShowing: boolean) {
-
-    //
-    console.log('histogram data');
-    console.log(histogramData);
 
     const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
     const layout = {

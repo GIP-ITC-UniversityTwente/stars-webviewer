@@ -113,13 +113,15 @@ export class HistogramBuilderService {
   /**
    * Utility for creating the data object for an un-classified histogram.
    * @param {number[]} series
+   * @param {numberOfBins} the number of bins
    */
-  static createUnclassifiedHistogramDataObject(series: number[]) {
+  static createUnclassifiedHistogramDataObject(series: number[], numberOfBins: number) {
 
     // build histogram data object per the Plotly spec
     return [{
       x: series,
-      type: 'histogram'
+      type: 'histogram',
+      nbinsx: numberOfBins
     }];
   }
 
@@ -135,7 +137,7 @@ export class HistogramBuilderService {
       frequencyData.push(item['v']);
     }
 
-    const histogramData = HistogramBuilderService.createUnclassifiedHistogramDataObject(frequencyData);
+    const histogramData = HistogramBuilderService.createUnclassifiedHistogramDataObject(frequencyData, frequencyData.length);
     const layout = {
       title: 'Histogram',
       yaxis: { title: 'Count'},
