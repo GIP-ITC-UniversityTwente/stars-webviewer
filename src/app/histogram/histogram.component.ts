@@ -192,10 +192,13 @@ export class HistogramComponent implements OnInit {
    */
   onFieldConstantChange() {
 
-    //this.updateHistogram();
-
-
-    console.log(this.selectedFieldConstantCharacteristicId);
+    // clear down flowing drop downs and charts
+    this.numberOfBins = [];
+    this.selectedNumberOfBins = undefined;
+    HistogramBuilderService.createEmptyHistogram(Plotly);
+    this.selectedClassificationMethod = undefined;
+    this.classificationMethods = [];
+    this.selectedClassSize = undefined;
 
     // fetch field constants
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
@@ -229,25 +232,17 @@ export class HistogramComponent implements OnInit {
    */
   onNumberOfBinsChange() {
 
-    console.log('number of bins changed to', this.selectedNumberOfBins);
-
     this.geostatSeries = new geostats(this.frequencyData);
-
-    // un-classified histogram ...
     if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
+
+      // un-classified histo ..
 
       // create a un-classified histogram
       const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
-
-      //
-      console.log('testing histoData');
-      console.log(histoData);
-      console.log('vs ', this.selectedNumberOfBins);
-
       this.presentHistogramData(histoData, false);
-
-    // classified histogram ...
     } else {
+
+      // classified histo ...
 
       // classify the data
       HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
