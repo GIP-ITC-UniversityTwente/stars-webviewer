@@ -22,7 +22,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
    */
   ngOnInit() {
 
-    this.createTestGraphs();
+    //this.createTestGraphs();
   }
 
   /**

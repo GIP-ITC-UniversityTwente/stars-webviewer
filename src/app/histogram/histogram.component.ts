@@ -36,7 +36,7 @@ export class HistogramComponent implements OnInit {
   selectedClassificationMethod: string;
   classificationMethods: string[] = [];
   selectedClassSize: number;
-  classSizes: number[] = [1, 2, 3, 4, 5];
+  classSizes: number[] = [];
   frequencyData: number[] = [];
   geostatSeries: any;
   toolTipPosition = 'right';
@@ -199,6 +199,7 @@ export class HistogramComponent implements OnInit {
     this.selectedClassificationMethod = undefined;
     this.classificationMethods = [];
     this.selectedClassSize = undefined;
+    this.classSizes = [];
 
     // fetch field constants
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
@@ -232,6 +233,7 @@ export class HistogramComponent implements OnInit {
    */
   onNumberOfBinsChange() {
 
+    // create histogram
     this.geostatSeries = new geostats(this.frequencyData);
     if (this.selectedClassSize === undefined && this.selectedClassificationMethod === undefined) {
 
@@ -253,6 +255,9 @@ export class HistogramComponent implements OnInit {
       // display histogram data
       this.presentHistogramData(histoData, true);
     }
+
+    // populate number of classes
+    this.classSizes = [1, 2, 3, 4, 5];
   }
 
   /**
@@ -260,6 +265,7 @@ export class HistogramComponent implements OnInit {
    */
   onClassSizeChange() {
 
+    // present the classification methods
     if (this.classificationMethods.length !== HistogramBuilderService.classificationMethods.length) {
       this.classificationMethods = HistogramBuilderService.classificationMethods;
     }
