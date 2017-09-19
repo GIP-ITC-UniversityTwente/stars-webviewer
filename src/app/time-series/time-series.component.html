@@ -14,7 +14,7 @@
       </md-select>
     </div>
     <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
-      <div class="parameterOptionTitle">Image Type</div><br/>
+      <div class="parameterOptionTitle">Characteristic Group</div><br/>
       <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageType" (change)="onChart1ImageTypeChange()">
         <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
           {{imageType}}
@@ -76,7 +76,7 @@
       </md-select>
     </div>
     <div class="parameterOption" *ngIf="chart2ImageOptionsAreVisible">
-      <div class="parameterOptionTitle">Image Type</div><br/>
+      <div class="parameterOptionTitle">Characteristic Group</div><br/>
       <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedImageType" (change)="onChart2ImageTypeChange()">
         <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
           {{imageType}}
