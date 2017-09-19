@@ -547,7 +547,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
         //
         console.log(data);
-        
+
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
