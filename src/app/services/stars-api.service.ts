@@ -32,6 +32,9 @@ export class StarsAPIService {
   fetchStudyAreas(): Promise<any> {
     const authHeader = StarsAPIService.createAuthorizationHeader();
     const url = AppConfiguration.apiBaseURL + '/studyareas';
+    //
+    console.log(authHeader);
+    console.log(url);
     return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())

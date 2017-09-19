@@ -46,7 +46,7 @@ export class HistogramBuilderService {
   }
 
   /**
-   * Utilitly for classifiying the frequency data using geostats.
+   * Utility for classifiying the frequency data using geostats.
    * @param {string} targetClassification
    * @param {number} classSize
    * @param geostatSeries

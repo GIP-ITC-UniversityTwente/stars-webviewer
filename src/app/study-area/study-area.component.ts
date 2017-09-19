@@ -22,11 +22,13 @@ export class StudyAreaComponent implements OnInit {
 
   // represents the start year options a user can choose
   selectedStartYear: number;
-  startYears: number[] = [];
+  startYear: number;
+  startYears: number[] = []; // will include start years and end years
 
   // represents the end year options a user can choose
   selectedEndYear: number = null;
-  endYears: number[] = [];
+  endYear: number;
+  endYears: number[] = []; // will include start years and end years
 
   // represents the crop options a user can choose
   selectedCrops: string[] = [];
@@ -50,11 +52,11 @@ export class StudyAreaComponent implements OnInit {
       // use the study areas response as the data for the study area options and associated start/end year options
       const results = data.results;
       this.initializeStudyAreaOptions(results, this.studyAreas);
-      this.initializeStartYearOptions(results, this.startYears);
-      this.initializeEndYearOptions(results, this.endYears);
+      this.initializeStartAndEndYearOptions(results);
 
       // set the default values for application load
-      this.initializeDefaultValues();
+      //this.initializeDefaultValues();
+
     }).catch((error) => {
       console.log(error);
     });
@@ -81,7 +83,7 @@ export class StudyAreaComponent implements OnInit {
     this.userSelectionService.updateStartYear(this.selectedStartYear);
 
     // set default end year
-    this.selectedEndYear = 2015;
+    this.selectedEndYear = 2014;
     this.userSelectionService.updateEndYear(this.selectedEndYear);
 
     // set default crop type
@@ -117,31 +119,37 @@ export class StudyAreaComponent implements OnInit {
    * @param studyAreas - the instance property that represents a collection of study areas
    */
   initializeStudyAreaOptions(results: JSON[], studyAreas: JSON[]) {
+
     results.forEach(function(item) {
       studyAreas.push(item);
     });
   }
 
   /**
-   * For initializing the start year options a user can choose from.
-   * @param results - the results from the async call to the API for study areas
-   * @param startYears - the collection of all start years
+   * For initializing the start and end year options a user can choose from.
+   * @param results
    */
-  initializeStartYearOptions(results: any, startYears: any) {
-    results.forEach(function(item) {
-      startYears.push(item.properties.year_start);
-    });
-  }
+  initializeStartAndEndYearOptions(results: any) {
 
-  /**
-   * For initializing the end year options a user can choose from.
-   * @param results - the results from the async call to the API for study areas
-   * @param endYears - the collection of all end years
-   */
-  initializeEndYearOptions(results: any, endYears: any) {
+    let responseStartYear: number;
+    let responseEndYear: number;
     results.forEach(function(item) {
-      endYears.push(item.properties.year_end);
+      // the start year and end year returned from the API
+      responseStartYear = item.properties.year_start;
+      responseEndYear = item.properties.year_end;
     });
+
+    // hold on to start and end year from API
+    this.startYear = responseStartYear;
+    this.endYear = responseEndYear;
+
+    // start years drop down will provide both start year and end year
+    this.startYears.push(this.startYear);
+    this.startYears.push(this.endYear);
+
+    // end years drop down will provide both start year and end year
+    this.endYears.push(this.startYear);
+    this.endYears.push(this.endYear);
   }
 
   /**
@@ -180,30 +188,30 @@ export class StudyAreaComponent implements OnInit {
    */
   onStartYearChange() {
 
-    // user selections
-    const studyAreaId = this.selectedStudyAreaId;
-    const startYear = this.selectedStartYear;
-    const crops = this.crops;
+    //
+    console.log('selected start year is: ', this.selectedStartYear);
+
+    // clear downstream
+    this.selectedEndYear = undefined;
+    this.selectedCrops = [];
+    this.crops = [];
 
     // inform other components that the start year has been declared
-    this.userSelectionService.updateStartYear(startYear);
+    this.userSelectionService.updateStartYear(this.startYear);
 
-    // fetch crops
-    this.starsAPIService.fetchCropTypes(studyAreaId, startYear).then((response) => {
-      return response;
-    }).then((data) => {
-      const results = data.results;
-      if (results.length > 0) {
-        results.forEach(function(item){
-          if (item['name'] != null) {
-            item['isChecked'] = false;
-            crops.push(item);
-          }
-        });
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
+    // after choosing start year, reset options and ensure that end year options that are less than the start year must be removed
+    this.startYears = [];
+    this.endYears = [];
+    if (this.selectedStartYear >= this.endYear) {
+      this.startYears.push(this.startYear);
+      this.startYears.push(this.endYear);
+      this.endYears.push(this.endYear);
+    } else {
+      this.startYears.push(this.startYear);
+      this.startYears.push(this.endYear);
+      this.endYears.push(this.startYear);
+      this.endYears.push(this.endYear);
+    }
   }
 
   /**
@@ -220,10 +228,16 @@ export class StudyAreaComponent implements OnInit {
     const endYear = this.selectedEndYear;
     const crops = this.crops;
 
+    //
+    console.log(this.selectedStudyAreaId);
+    console.log(this.selectedStartYear);
+    console.log(this.selectedEndYear);
+    console.log(this.crops);
+
     // inform other components that the end year has been declared
     this.userSelectionService.updateEndYear(endYear);
 
-    // get crop types
+    // get crop types now that we have start year and end year
     this.starsAPIService.fetchCropTypes(studyAreaId, startYear, endYear).then((response) => {
       return response;
     }).then((data) => {

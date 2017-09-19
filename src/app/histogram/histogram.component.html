@@ -18,7 +18,7 @@
     </md-select>
   </div>
   <div class="fieldMeasurementOption">
-    <div class="parameterOptionTitle">Number of Bins</div><br/>
+    <div class="parameterOptionTitle">Max. Number of Bins</div><br/>
     <md-select [(ngModel)]="selectedNumberOfBins" (change)="onNumberOfBinsChange()">
       <md-option *ngFor="let bin of numberOfBins" [value]="bin">
         {{bin}}

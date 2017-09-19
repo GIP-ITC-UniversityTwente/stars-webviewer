@@ -38,20 +38,33 @@ export class MapComponent implements OnInit, OnDestroy {
       studyArea => {
         this.studyArea = studyArea;
         this.addStudyAreaAsMapLayer(this.studyArea);
+
+        // clear previously chosen farm fields
+        this.clearFarmFieldsFromMap();
       }
     );
 
     // subscribe to the start year selection by the user
     this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
       startYear => {
+
+        // set start year
         this.startYear = startYear;
+
+        // clear previously chosen farm fields
+        this.clearFarmFieldsFromMap();
       }
     );
 
     // subscribe to the end year selection by the user
     this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
       endYear => {
+
+        // set end year
         this.endYear = endYear;
+
+        // clear previously chosen farm fields
+        this.clearFarmFieldsFromMap();
       }
     );
 
@@ -334,17 +347,24 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Utility for removing farmfields from the map
+   */
+  clearFarmFieldsFromMap() {
+    const mapLayersCollection = this.map.getLayers();
+    const farmFieldsLayer  = mapLayersCollection.item(3);
+    if (farmFieldsLayer !== undefined) {
+      this.map.removeLayer(farmFieldsLayer);
+    }
+  }
+
+  /**
    * Utility for adding the farm field's geojson as a map layer
    * @param farmFieldFeatures
    */
   addFarmFieldsAsMapLayer(farmFieldFeatures: any) {
 
     // remove any previously added farm fields on the map (as user changes the selected crops)
-    const mapLayersCollection = this.map.getLayers();
-    const farmFieldsLayer  = mapLayersCollection.item(3);
-    if(farmFieldsLayer !== undefined) {
-      this.map.removeLayer(farmFieldsLayer);
-    }
+    this.clearFarmFieldsFromMap();
 
     // because the API returns ALL farm fields, filter for the crops chosen by the user
     const cropTypes = this.cropTypes;
@@ -382,6 +402,7 @@ export class MapComponent implements OnInit, OnDestroy {
         style: polygonStyle
       });
 
+      const mapLayersCollection = this.map.getLayers();
       mapLayersCollection.insertAt(3, vectorLayer);
       this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
     }

@@ -22,9 +22,9 @@ export class AppComponent {
     auth.handleAuthentication();
 
     if (!auth.isAuthenticated()) {
-      auth.login();
       //
       console.log('not logged in');
+      auth.login();
     } else {
       //
       console.log('logged in');
