@@ -55,7 +55,7 @@ export class StudyAreaComponent implements OnInit {
       this.initializeStartAndEndYearOptions(results);
 
       // set the default values for application load
-      //this.initializeDefaultValues();
+      this.initializeDefaultValues();
 
     }).catch((error) => {
       console.log(error);
@@ -78,6 +78,7 @@ export class StudyAreaComponent implements OnInit {
     let studyAreaString = {"type":"Feature","properties":{"id":1000,"name":"Mali, Sikasso, around Sougoumba","year_start":2014,"year_end":2015},"geometry":{"type":"Polygon","coordinates":[[[-5.143373,12.13132],[-5.235212,12.130594],[-5.235968,12.220957],[-5.144098,12.221689],[-5.143373,12.13132]]]}};
     this.userSelectionService.updateStudyArea(studyAreaString);
 
+    /*
     // set default start year
     this.selectedStartYear = 2014;
     this.userSelectionService.updateStartYear(this.selectedStartYear);
@@ -111,6 +112,7 @@ export class StudyAreaComponent implements OnInit {
     });
     this.selectedCrops = [defaultCropName];
     this.userSelectionService.updateCropTypes(this.selectedCrops);
+    */
   }
 
   /**
@@ -189,15 +191,21 @@ export class StudyAreaComponent implements OnInit {
   onStartYearChange() {
 
     //
-    console.log('selected start year is: ', this.selectedStartYear);
+    //console.log('selected start year is: ', this.selectedStartYear);
 
     // clear downstream
     this.selectedEndYear = undefined;
     this.selectedCrops = [];
     this.crops = [];
 
+
+    const startYear = this.selectedStartYear;
+
+    //
+    console.log('selected start year: ', startYear);
+
     // inform other components that the start year has been declared
-    this.userSelectionService.updateStartYear(this.startYear);
+    this.userSelectionService.updateStartYear(startYear);
 
     // after choosing start year, reset options and ensure that end year options that are less than the start year must be removed
     this.startYears = [];
@@ -229,10 +237,7 @@ export class StudyAreaComponent implements OnInit {
     const crops = this.crops;
 
     //
-    console.log(this.selectedStudyAreaId);
-    console.log(this.selectedStartYear);
-    console.log(this.selectedEndYear);
-    console.log(this.crops);
+    console.log('selected end year: ', this.selectedEndYear);
 
     // inform other components that the end year has been declared
     this.userSelectionService.updateEndYear(endYear);

@@ -95,6 +95,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       studyArea => {
         this.studyArea = studyArea;
         this.studyAreaId = studyArea['properties']['id'];
+
+        // Clear chart 1 and chart 2
+        TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+        TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
       }
     );
 
@@ -103,11 +107,19 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       startYear => {
         this.startYear = startYear;
 
+        // Clear chart 1 and chart 2
+        TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+        TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
+
         // initialize characteristic types
         this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
 
         // initialize image types
         this.imageTypes = TimeSeriesBuilderService.fetchImageTypes();
+
+        //
+        console.log('start year: ', this.startYear);
+        console.log('end year: ', this.endYear);
 
         // initialize the image characteristic options
         this.initializeImageCharacteristicsOptions(this.studyAreaId, this.startYear, this.endYear);
@@ -122,11 +134,16 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       endYear => {
         this.endYear = endYear;
 
-        // initialize characteristic types
-        this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
+        // Clear chart 1 and chart 2
+        TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+        TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
         // initialize image types
         this.imageTypes = TimeSeriesBuilderService.fetchImageTypes();
+
+        //
+        console.log('start year: ', this.startYear);
+        console.log('end year: ', this.endYear);
 
         // initialize the image characteristic options
         this.initializeImageCharacteristicsOptions(this.studyAreaId, this.startYear, this.endYear);
@@ -319,6 +336,11 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    * @param {number} endYear
    */
   initializeImageCharacteristicsOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
+
+    //
+    console.log('start year: ', this.startYear);
+    console.log('end year: ', this.endYear);
+
     this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
       return response;
     }).then((data) => {
@@ -326,7 +348,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
 
       // for setting default selections after we fetch image characteristics which requires image characteristics
-      this.initializeDefaultSelections();
+      //this.initializeDefaultSelections();
 
     }).catch((error) => {
       console.log(error);
@@ -340,6 +362,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    * @param {number} endYear
    */
   initializeFieldCharacteristicOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
+
+    //
+    console.log('start year: ', this.startYear);
+    console.log('end year: ', this.endYear);
 
     this.starsAPIService.fetchFieldCharacteristics(studyAreaId, startYear, endYear).then((response) => {
       return response;
@@ -510,10 +536,18 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, this.selectedChart1Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
     if (parameters.length === 0) {
 
+      //
+      console.log('selected start year: ', this.startYear);
+      console.log('selected end year: ', this.endYear);
+
       // render the time series
       this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
         return response;
       }).then((data) => {
+
+        //
+        console.log(data);
+        
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');

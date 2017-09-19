@@ -433,7 +433,7 @@ export class TimeSeriesBuilderService {
 
     // layout for millet spectral test sample
     const milletSpectralLayout = {
-      title: 'Spectral Time Series',
+      title: 'Time Series',
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -451,7 +451,7 @@ export class TimeSeriesBuilderService {
     };
 
     // spectral chart for millet
-    const milletSpectralData = [milletSpectralLineEnvelope, milletSpectralLine];
+    const milletSpectralData = []//[milletSpectralLineEnvelope, milletSpectralLine];
     Plotly.newPlot('chart1',
       milletSpectralData,
       milletSpectralLayout,

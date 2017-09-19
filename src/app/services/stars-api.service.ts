@@ -33,13 +33,16 @@ export class StarsAPIService {
     const authHeader = StarsAPIService.createAuthorizationHeader();
     const url = AppConfiguration.apiBaseURL + '/studyareas';
     //
-    console.log(authHeader);
-    console.log(url);
+    //console.log(authHeader);
+    //console.log(url);
     return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -65,6 +68,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -90,6 +96,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -114,6 +123,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -150,6 +162,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -175,6 +190,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -202,6 +220,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -226,6 +247,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
@@ -252,6 +276,9 @@ export class StarsAPIService {
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
         if (error.name === 'Authorization required') {
           this.auth.login();
         }
