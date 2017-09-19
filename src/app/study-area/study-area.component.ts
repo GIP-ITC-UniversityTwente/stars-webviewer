@@ -190,19 +190,12 @@ export class StudyAreaComponent implements OnInit {
    */
   onStartYearChange() {
 
-    //
-    //console.log('selected start year is: ', this.selectedStartYear);
-
     // clear downstream
     this.selectedEndYear = undefined;
     this.selectedCrops = [];
     this.crops = [];
 
-
     const startYear = this.selectedStartYear;
-
-    //
-    console.log('selected start year: ', startYear);
 
     // inform other components that the start year has been declared
     this.userSelectionService.updateStartYear(startYear);
@@ -235,9 +228,6 @@ export class StudyAreaComponent implements OnInit {
     const startYear = this.selectedStartYear;
     const endYear = this.selectedEndYear;
     const crops = this.crops;
-
-    //
-    console.log('selected end year: ', this.selectedEndYear);
 
     // inform other components that the end year has been declared
     this.userSelectionService.updateEndYear(endYear);
