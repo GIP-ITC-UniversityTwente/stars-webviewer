@@ -21,6 +21,7 @@ export class MapComponent implements OnInit, OnDestroy {
   map: any;
   subscriptionToSelectedStudyArea: Subscription;
   studyArea: JSON;
+  studyAreaVectorSource: any;
   subscriptionToSelectedStartYear: Subscription;
   startYear: number;
   subscriptionToSelectedEndYear: Subscription;
@@ -41,6 +42,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
         // clear previously chosen farm fields
         this.clearFarmFieldsFromMap();
+        this.zoomToStudyAreaExtent();
       }
     );
 
@@ -53,6 +55,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
         // clear previously chosen farm fields
         this.clearFarmFieldsFromMap();
+        this.zoomToStudyAreaExtent();
       }
     );
 
@@ -65,6 +68,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
         // clear previously chosen farm fields
         this.clearFarmFieldsFromMap();
+        this.zoomToStudyAreaExtent();
       }
     );
 
@@ -270,7 +274,7 @@ export class MapComponent implements OnInit, OnDestroy {
       projection: 'EPSG:3857'
     });
 
-    const vectorSource = new ol.source.Vector({
+    this.studyAreaVectorSource = new ol.source.Vector({
       features: (geoJSON).readFeatures(studyAreaGeoJSON)
     });
 
@@ -286,14 +290,21 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     const vectorLayer = new ol.layer.Vector({
-      source: vectorSource,
+      source: this.studyAreaVectorSource,
       style: polygonStyle
     });
 
     const mapLayersCollection = this.map.getLayers();
     mapLayersCollection.insertAt(2, vectorLayer);
 
-    this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
+    this.zoomToStudyAreaExtent();
+  }
+
+  /**
+   * Utility for zooming to the extent of the study area
+   */
+  zoomToStudyAreaExtent() {
+    this.map.getView().fit(this.studyAreaVectorSource.getExtent(), this.map.getSize());
   }
 
   /**
