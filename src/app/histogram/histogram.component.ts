@@ -199,8 +199,9 @@ export class HistogramComponent implements OnInit {
     console.log('the bin end is: ', this.binEnd);
     console.log('the bin size is: ', this.binSize);
 
-    // create a collection of bins
+    // create a collection of bins & create a collection of midpoints for each bin
     const binCollection = [];
+    const midBinValues = [];
     let currentStart = this.binStart;
     let currentEnd = this.binStart;
     while (currentEnd < this.binEnd) {
@@ -210,6 +211,10 @@ export class HistogramComponent implements OnInit {
       currentStart = currentEnd - this.binSize;
       //
       console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+
+      // create the mid value for the bin
+      const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(3));
+      midBinValues.push(midPoint);
 
       // find the frequency data values that should be in the current bin
       const currentBin = [];
@@ -226,17 +231,7 @@ export class HistogramComponent implements OnInit {
     //
     console.log('the frequency data: ', this.frequencyData.sort());
     console.log('the binCollection: ', binCollection);
-
-    // discover the median value in each bin
-    const medianBinValues = [];
-    binCollection.forEach(function(bin) {
-      const binGeostat = new geostats(bin);
-      const medianForBin = binGeostat.median();
-      medianBinValues.push(medianForBin);
-    });
-
-    //
-    console.log('the medians for each bin: ', medianBinValues);
+    console.log('the mid point values: ', midBinValues);
 
     // derive a collection that is like binCollection but replaces each item with the representative median value
     const medianBinCollection = [];
@@ -244,8 +239,7 @@ export class HistogramComponent implements OnInit {
       let numberOfItems = item.length;
       const medianArray = [];
       while (numberOfItems > 0) {
-        console.log('Look up median, create an array, and put the median in n times');
-        const targetMedianValue = medianBinValues[index];
+        const targetMedianValue = midBinValues[index];
         medianArray.push(targetMedianValue);
         numberOfItems -= 1;
       }
@@ -253,7 +247,7 @@ export class HistogramComponent implements OnInit {
     });
 
     //
-    console.log('the medians repeated for each bin: ', medianBinCollection);
+    console.log('the midpoint repeated for each bin: ', medianBinCollection);
 
     // flatten out from an array of arrays to a single array
     const flatMedianBinCollection = [];
@@ -264,10 +258,11 @@ export class HistogramComponent implements OnInit {
     });
 
     //
-    console.log('the flattened medians are: ', flatMedianBinCollection);
+    console.log('the flattened midpoint collection is: ', flatMedianBinCollection);
 
     // series using the medians repeated for each bin
     this.geostatSeries = new geostats(flatMedianBinCollection);
+
 
     // classify the data
     HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);

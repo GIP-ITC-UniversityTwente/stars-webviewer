@@ -101,7 +101,7 @@ export class HistogramBuilderService {
 
       // create a frequency data item (per Plotly spec)
       const freqItem = {
-        name: 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
+        name: 'Class ' + index + ' (' + startRange + ' to ' + endRange + ')',
         x: values,
         type: 'histogram',
         marker: { color:  targetColor},
@@ -113,6 +113,16 @@ export class HistogramBuilderService {
           size: endRange - startRange // values.length
         }
       };
+
+      /*
+      const freqItem = {
+        name: 'Class ' + index + ' (' + startRange + ' to ' + endRange + ')',
+        x: values,
+        type: 'histogram',
+        marker: { color:  targetColor },
+        nbinsx: 1
+      };
+      */
 
       result.push(freqItem);
     });
