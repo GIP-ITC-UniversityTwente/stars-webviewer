@@ -128,9 +128,6 @@ export class HistogramComponent implements OnInit {
       return response;
     }).then((data) => {
 
-      //
-      console.log(data);
-
       // clear frequency data from a previously chosen field constant characteristic
       if (this.frequencyData.length > 0) {
         this.frequencyData = [];
@@ -198,46 +195,67 @@ export class HistogramComponent implements OnInit {
    */
   onClassificationChange() {
 
-    // TODO - INSTEAD OF CREATE geostatSeries USING RAW DATA, USE THE BINS
     console.log('the bin start is: ', this.binStart);
     console.log('the bin end is: ', this.binEnd);
     console.log('the bin size is: ', this.binSize);
 
+    // create a collection of bins
     const binCollection = [];
     let currentStart = this.binStart;
     let currentEnd = this.binStart;
     while (currentEnd < this.binEnd) {
 
-      // define the start and end for a bin
+      // define the start and end for the current bin
       currentEnd += this.binSize;
       currentStart = currentEnd - this.binSize;
       console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
 
-      // find the frequency data values that should be in the bin
+      // find the frequency data values that should be in the current bin
       const currentBin = [];
       this.frequencyData.forEach(function(item){
-        //
-        console.log(item);
         if (item > currentStart && item <= currentEnd) {
           currentBin.push(item);
         }
       });
 
-      // get the median of the current bin?
-
       // add the current bin into the bin collection
       binCollection.push(currentBin);
     }
+
     console.log('the frequency data: ', this.frequencyData.sort());
+    console.log('the binCollection: ', binCollection);
+
+    // discover the median value in each bin
+    const medianCollection = [];
+    binCollection.forEach(function(bin) {
+      const binGeostat = new geostats(bin);
+      const medianForBin = binGeostat.median();
+      medianCollection.push(medianForBin);
+    });
+
+    //
+    console.log('the medians for each bin: ', medianCollection);
+
+
 
     // TODO - CHANGE HERE
-    this.geostatSeries = new geostats(this.frequencyData);
+    //this.geostatSeries = new geostats(this.frequencyData);
+    this.geostatSeries = new geostats(medianCollection);
 
     // classify the data
     HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
 
+    //
+    //console.log('after classification: ', this.geostatSeries);
+
     // create histogram data
-    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.geostatSeries.ranges);
+    //
+    //console.log('the geostatSeries.ranges: ', this.geostatSeries.ranges);
+    //const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(this.frequencyData, this.geostatSeries.ranges);
+    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(medianCollection, this.geostatSeries.ranges);
+
+    //
+    console.log('the histo data: ', histoData);
 
     // display histogram data
     this.presentHistogramData(histoData, true);

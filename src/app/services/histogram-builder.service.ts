@@ -89,6 +89,9 @@ export class HistogramBuilderService {
       // get the values in the series for the current range
       const values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
 
+      //
+      console.log('values: ', values);
+
       // create color array (per Plotly spec)
       const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(index);
       const colorArray = [];
@@ -101,7 +104,14 @@ export class HistogramBuilderService {
         name: 'Class ' + index + ' (' + startRange + '-' + endRange + ')',
         x: values,
         type: 'histogram',
-        marker: { color:  targetColor}
+        marker: { color:  targetColor},
+        autobinx: false,
+        nbinsx: 1,
+        xbins: {
+          start: startRange,
+          end: endRange,
+          size: values.length 
+        }
       };
 
       result.push(freqItem);
