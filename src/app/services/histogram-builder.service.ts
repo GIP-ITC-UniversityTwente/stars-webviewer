@@ -17,11 +17,20 @@ export class HistogramBuilderService {
     const result = [];
     const lastValue = series[series.length - 1];
     series.forEach((item) => {
-      if (item >= start && item < end) {
-        result.push(item);
-      } else if (item === end && end === lastValue) {
-        result.push(item);
+      if (start < end) {
+        if (item >= start && item < end) {
+          result.push(item);
+        } else if (item === end && end === lastValue) {
+          result.push(item);
+        }
+      } else {
+        if (item >= end && item < start) {
+          result.push(item);
+        } else if (item === start && start === lastValue) {
+          result.push(item);
+        }
       }
+
     });
 
     return result;
@@ -86,8 +95,8 @@ export class HistogramBuilderService {
       const startRange = Number(sliced[0]);
       const endRange = Number(sliced[1]);
 
-      // get the values in the series for the current range
-      const values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
+      // get the values in the series for the current
+      let values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
 
       //
       console.log('values: ', values);
