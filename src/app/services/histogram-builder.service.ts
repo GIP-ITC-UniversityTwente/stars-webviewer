@@ -110,7 +110,7 @@ export class HistogramBuilderService {
         xbins: {
           start: startRange,
           end: endRange,
-          size: values.length
+          size: endRange - startRange // values.length
         }
       };
 
