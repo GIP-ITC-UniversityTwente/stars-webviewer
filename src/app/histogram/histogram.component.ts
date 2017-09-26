@@ -128,6 +128,10 @@ export class HistogramComponent implements OnInit {
       return response;
     }).then((data) => {
 
+      //
+      console.log('field constant data ...');
+      console.log(JSON.stringify(data.results));
+
       // clear frequency data from a previously chosen field constant characteristic
       if (this.frequencyData.length > 0) {
         this.frequencyData = [];
@@ -230,7 +234,7 @@ export class HistogramComponent implements OnInit {
 
     //
     console.log('the frequency data: ', this.frequencyData.sort());
-    console.log('the binCollection: ', binCollection);
+    console.log('the binCollection: ', JSON.stringify(binCollection));
     console.log('the mid point values: ', midBinValues);
 
     // derive a collection that is like binCollection but replaces each item with the representative median value
@@ -247,7 +251,7 @@ export class HistogramComponent implements OnInit {
     });
 
     //
-    console.log('the midpoint repeated for each bin: ', medianBinCollection);
+    console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
 
     // flatten out from an array of arrays to a single array
     const flatMedianBinCollection = [];
@@ -258,7 +262,7 @@ export class HistogramComponent implements OnInit {
     });
 
     //
-    console.log('the flattened midpoint collection is: ', flatMedianBinCollection);
+    console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
 
     // series using the medians repeated for each bin
     this.geostatSeries = new geostats(flatMedianBinCollection);
@@ -275,6 +279,36 @@ export class HistogramComponent implements OnInit {
 
     // display histogram data
     this.presentHistogramData(histoData, true);
+
+    // TODO: DEFINE THE INPUT TO THE CLASSIFIED HISTOGRAM SECTION
+    // TODO: BROADCAST TO COMPONENT THAT WE ARE READY TO SHOW THE CLASSIFIED HISTOGRAM
+    // - - - START TESTING API CALL
+    //
+    console.log('testing end year ...', this.endYear);
+
+    const tempImageCharId = 1;
+    this.starsAPIService.fetchFieldConstantTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1220,1160,1120,1165,1025,1060', 'bin0,bin1,bin2').then((response) => {
+      return response;
+    }).then((data) => {
+      //
+      console.log('data', data);
+    }).catch((error) => {
+      //
+      console.log(error);
+    });
+
+
+    // fetch field constants
+    this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
+      return response;
+    }).then((data) => {
+
+    }).catch((error) => {
+      console.log(error);
+      HistogramBuilderService.createEmptyHistogram(Plotly);
+    });
+
+    // - - - END TESTING API CALL
   }
 
   /**

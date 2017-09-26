@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { AppConfiguration } from '../app-configuration';
+import { StarsAPIService } from '../services/stars-api.service';
+import { UserSelectionService } from '../services/user-selection.service';
 
 declare const Plotly: any;
 
@@ -16,6 +19,71 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
    */
   toolTipPosition = 'right';
   classifiedTimeSeriesToolTip = AppConfiguration.classifiedTimeSeriesToolTip;
+
+  subscriptionToSelectedStudyArea: Subscription;
+  studyArea: JSON;
+  subscriptionToSelectedStartYear: Subscription;
+  startYear: number;
+  subscriptionToSelectedEndYear: Subscription;
+  endYear: number;
+  subscriptionToSelectedCropTypes: Subscription;
+  cropTypes: string;
+
+  /**
+   * For dependency injecting needed services.
+   */
+  constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
+
+    // subscribe to the study area selection by the user
+    this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
+      studyArea => {
+        this.studyArea = studyArea;
+      }
+    );
+
+    // subscribe to the start year selection by the user
+    this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
+      startYear => {
+        this.startYear = startYear;
+      }
+    );
+
+    // subscribe to the end year selection by the user
+    this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
+      endYear => {
+        this.endYear = endYear;
+      }
+    );
+
+    // subscribe to crop types selections by the user
+    this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
+      cropTypes => {
+
+        // create the comma-delimited list of crops for an API request
+        let cropList = '';
+        cropTypes.forEach(function(item, index) {
+          if (index === cropTypes.length - 1) {
+            cropList += cropTypes[index];
+          } else {
+            cropList += cropTypes[index] + ',';
+          }
+        });
+        this.cropTypes = cropList;
+
+        /*
+        // fetch field constant characteristics for drop down only after crops are chosen
+        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea['properties']['id'], this.startYear).then((response) => {
+          return response;
+        }).then((data) => {
+          this.fieldConstantCharacteristics = data.results.fieldConstants;
+        }).catch((error) => {
+          console.log(error);
+        });
+        */
+      }
+    );
+
+  }
 
   /**
    * Life-cycle hook after component is created.

@@ -294,13 +294,16 @@ export class StarsAPIService {
    * @param {number} endYear
    * @param {number} characteristicId
    * @param {string} cropNames
-   * @param {string} fmusList
    * @param {string} fmusListClass
+   * @param {string} classes
    */
-  fetchFieldConstantTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string, fmusList: string, fmusListClass: string) {
+  fetchFieldConstantTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string, fmusListClass: string, classes: string) {
     const authHeader = StarsAPIService.createAuthorizationHeader();
-    let url = `${AppConfiguration.apiBaseURL}/field/constant_data?studyAreaId=${studyAreaId}&characteristicId=${characteristicId}&cropName
-      .then(response => response.json())s=${cropNames}&startYear=${startYear}&fmusList=${fmusList}&fmusListClass=${fmusListClass}`;
+    let url = `${AppConfiguration.apiBaseURL}/field/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&startYear=${startYear}&fmusListClass=${fmusListClass}&classes=${classes}`;
+
+    //
+    console.log('url is: ', url);
+
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
     }

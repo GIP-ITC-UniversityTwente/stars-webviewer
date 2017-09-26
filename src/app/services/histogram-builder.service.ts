@@ -96,10 +96,10 @@ export class HistogramBuilderService {
       const endRange = Number(sliced[1]);
 
       // get the values in the series for the current
-      let values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
+      const values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
 
       //
-      console.log('values: ', values);
+      console.log('values: ', JSON.stringify(values));
 
       // create color array (per Plotly spec)
       const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(index);
