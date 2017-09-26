@@ -283,9 +283,8 @@ export class HistogramComponent implements OnInit {
     // TODO: DEFINE THE INPUT TO THE CLASSIFIED HISTOGRAM SECTION
     // TODO: BROADCAST TO COMPONENT THAT WE ARE READY TO SHOW THE CLASSIFIED HISTOGRAM
     // - - - START TESTING API CALL
-    //
-    console.log('testing end year ...', this.endYear);
 
+    /*
     const tempImageCharId = 1;
     this.starsAPIService.fetchFieldConstantTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1220,1160,1120,1165,1025,1060', 'bin0,bin1,bin2').then((response) => {
       return response;
@@ -296,16 +295,17 @@ export class HistogramComponent implements OnInit {
       //
       console.log(error);
     });
+    */
 
-
-    // fetch field constants
-    this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
+    const tempImageCharId = 1;
+    this.starsAPIService.fetchFieldConstantTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1160,1220,1120,1165,1025,1060', 'class0,class1,class2').then((response) => {
       return response;
     }).then((data) => {
-
+      //
+      console.log('data', data);
     }).catch((error) => {
+      //
       console.log(error);
-      HistogramBuilderService.createEmptyHistogram(Plotly);
     });
 
     // - - - END TESTING API CALL
