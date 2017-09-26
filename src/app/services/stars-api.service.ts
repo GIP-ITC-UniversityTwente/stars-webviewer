@@ -32,16 +32,17 @@ export class StarsAPIService {
   fetchStudyAreas(): Promise<any> {
     const authHeader = StarsAPIService.createAuthorizationHeader();
     const url = AppConfiguration.apiBaseURL + '/studyareas';
+
     //
-    //console.log(authHeader);
-    //console.log(url);
+    console.log('authorization header: ', authHeader);
+
     return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
         if (error.message === undefined) {
-          alert('No Results.  Please double-check your parameters.');
+          //alert('No Results.  Please double-check your parameters.');
         }
         if (error.name === 'Authorization required') {
           this.auth.login();
@@ -262,6 +263,7 @@ export class StarsAPIService {
    * @param {number} startYear
    * @param {number} endYear
    * @param {number} characteristicId
+   * @param {string} cropNames
    * @returns {Promise<never | any>}
    */
   fetchFieldConstantData(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string) {
@@ -274,6 +276,37 @@ export class StarsAPIService {
     return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
+      .catch((error) => {
+        console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
+        if (error.name === 'Authorization required') {
+          this.auth.login();
+        }
+      });
+  }
+
+  /**
+   * Fetches time series for a field constant
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @param {number} characteristicId
+   * @param {string} cropNames
+   * @param {string} fmusList
+   * @param {string} fmusListClass
+   */
+  fetchFieldConstantTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string, fmusList: string, fmusListClass: string) {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
+    let url = `${AppConfiguration.apiBaseURL}/field/constant_data?studyAreaId=${studyAreaId}&characteristicId=${characteristicId}&cropName
+      .then(response => response.json())s=${cropNames}&startYear=${startYear}&fmusList=${fmusList}&fmusListClass=${fmusListClass}`;
+    if (endYear !== undefined) {
+      url += `&endYear=${endYear}`;
+    }
+
+    return this.http.get(url, { headers: authHeader })
+      .toPromise()
       .catch((error) => {
         console.log(error.message);
         if (error.message === undefined) {
