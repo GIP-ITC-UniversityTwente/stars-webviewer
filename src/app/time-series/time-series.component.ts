@@ -460,9 +460,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       // for fetching a time series after a sensor is chosen
       this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
 
-      //
-      console.log('the chosen image characteristic id: ', this.chart1SelectedImageCharacteristicId);
-
     } else {
 
       //
@@ -474,6 +471,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       // for fetching a time series after a sensor is chosen
       this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
     }
+
+    //
+    console.log('the chosen image characteristic id: ', this.chart1SelectedImageCharacteristicId);
   }
 
   /**
