@@ -44,9 +44,6 @@ export class StudyAreaComponent implements OnInit {
    */
   constructor(private starsAPIService: StarsAPIService, private userSelectionService: UserSelectionService) {
 
-    //
-    console.log('study areas constructor', new Date().toLocaleString());
-
     // fetch study areas from the API
     starsAPIService.fetchStudyAreas().then((response) => {
       return response;
@@ -68,11 +65,7 @@ export class StudyAreaComponent implements OnInit {
   /**
    * Life-cycle hook after component is created.
    */
-  ngOnInit() {
-
-    //
-    console.log('study areas ngOnInit', new Date().toLocaleString());
-  }
+  ngOnInit() { }
 
   /**
    * For loading the app with some default parameters for selected study area, start year, end year, and crop type

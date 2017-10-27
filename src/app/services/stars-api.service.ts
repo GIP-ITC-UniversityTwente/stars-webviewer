@@ -33,9 +33,6 @@ export class StarsAPIService {
     const authHeader = StarsAPIService.createAuthorizationHeader();
     const url = AppConfiguration.apiBaseURL + '/studyareas';
 
-    //
-    console.log('authorization header: ', authHeader);
-
     return this.http.get(url, { headers: authHeader })
       .toPromise()
       .then(response => response.json())
@@ -300,9 +297,6 @@ export class StarsAPIService {
   fetchFieldConstantTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string, fmusListClass: string, classes: string) {
     const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = `${AppConfiguration.apiBaseURL}/field/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&startYear=${startYear}&fmusListClass=${fmusListClass}&classes=${classes}`;
-
-    //
-    console.log('url is: ', url);
 
     if (endYear !== undefined) {
       url += `&endYear=${endYear}`;
