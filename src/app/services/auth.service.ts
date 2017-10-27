@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as auth0 from 'auth0-js';
-
+import { Router } from '@angular/router';
 import { AUTH_CONFIG } from './authConfig';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class AuthService {
     scope: 'openid'
   });
 
-  constructor() {}
+  constructor(public router: Router) {}
 
   public login(): void {
     this.auth0.authorize();
@@ -26,7 +26,9 @@ export class AuthService {
       if (authResult && authResult.accessToken && authResult.idToken) {
         window.location.hash = '';
         this.setSession(authResult);
+        this.router.navigate(['/home']);
       } else if (err) {
+        this.router.navigate(['/home']);
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }

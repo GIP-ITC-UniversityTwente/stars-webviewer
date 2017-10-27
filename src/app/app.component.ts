@@ -21,6 +21,7 @@ export class AppComponent {
 
     auth.handleAuthentication();
 
+    /*
     if (!auth.isAuthenticated()) {
       //
       console.log('not logged in');
@@ -29,5 +30,6 @@ export class AppComponent {
       //
       console.log('logged in');
     }
+    */
   }
 }

@@ -1,0 +1,23 @@
+.leftContent {
+  width: 215px;
+  float: left;
+  background-color: #ffffff;
+}
+
+.rightContent {
+  margin-top: 15px;
+  padding:20px;
+  margin-left:215px;
+  background-color: #eeeeee;
+  border-left: 2px solid #dddddd;
+}
+
+.card {
+  margin-top: 20px;
+  padding:0;
+  overflow: hidden;
+}
+
+.cardContent {
+  box-sizing: content-box !important;
+}
