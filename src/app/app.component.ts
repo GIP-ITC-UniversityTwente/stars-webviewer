@@ -18,18 +18,6 @@ export class AppComponent {
    * Component Life-cycle methods
    */
   constructor(public auth: AuthService) {
-
     auth.handleAuthentication();
-
-    /*
-    if (!auth.isAuthenticated()) {
-      //
-      console.log('not logged in');
-      auth.login();
-    } else {
-      //
-      console.log('logged in');
-    }
-    */
   }
 }
