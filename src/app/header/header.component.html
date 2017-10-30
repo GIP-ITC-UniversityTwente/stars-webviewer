@@ -1,7 +1,11 @@
 <div class="header">
   <div class="logoImage"></div>
   <div class="headerTitle">{{title}}</div>
-  <!--<button class="headerButton" md-button (click)="auth.logout();">Logout</button>-->
-  <button mat-button class="headerButton" md-button (click)="handleLogoutButtonTap();">Logout</button>
-  <button mat-button class="headerButton" md-button (click)="handleHelpButtonTap();">Help</button>
+  <button mat-button class="headerButton" md-button (click)="handleLogoutButtonTap();">
+    <span *ngIf="!auth.isAuthenticated()">Login</span>
+    <span *ngIf="auth.isAuthenticated()">Logout</span>
+  </button>
+  <button *ngIf="auth.isAuthenticated()" mat-button class="headerButton" md-button (click)="handleHelpButtonTap();">
+    Help
+  </button>
 </div>
