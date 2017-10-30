@@ -1,37 +1,37 @@
 <div class="cardHeader" style="padding-right: 10px;">
   <div class="cardHeaderTitle">HISTOGRAM OF FIELD CONSTANTS</div>
-  <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" mdTooltip={{fieldConstantsToolTip}} [mdTooltipPosition]='toolTipPosition'/>
+  <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" matTooltip={{fieldConstantsToolTip}} [matTooltipPosition]='toolTipPosition'/>
   <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Classification Method</div><br/>
-    <md-select [(ngModel)]="selectedClassificationMethod" (change)="onClassificationChange()">
-      <md-option *ngFor="let classificationMethod of classificationMethods" [value]="classificationMethod">
+    <mat-select [(ngModel)]="selectedClassificationMethod" (change)="onClassificationChange()">
+      <mat-option *ngFor="let classificationMethod of classificationMethods" [value]="classificationMethod">
         {{classificationMethod}}
-      </md-option>
-    </md-select>
+      </mat-option>
+    </mat-select>
   </div>
   <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Number of Classes</div><br/>
-    <md-select [(ngModel)]="selectedClassSize" (change)="onClassSizeChange()">
-      <md-option *ngFor="let classSize of classSizes" [value]="classSize">
+    <mat-select [(ngModel)]="selectedClassSize" (change)="onClassSizeChange()">
+      <mat-option *ngFor="let classSize of classSizes" [value]="classSize">
         {{classSize}}
-      </md-option>
-    </md-select>
+      </mat-option>
+    </mat-select>
   </div>
   <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Max. Number of Bins</div><br/>
-    <md-select [(ngModel)]="selectedNumberOfBins" (change)="onNumberOfBinsChange()">
-      <md-option *ngFor="let bin of numberOfBins" [value]="bin">
+    <mat-select [(ngModel)]="selectedNumberOfBins" (change)="onNumberOfBinsChange()">
+      <mat-option *ngFor="let bin of numberOfBins" [value]="bin">
         {{bin}}
-      </md-option>
-    </md-select>
+      </mat-option>
+    </mat-select>
   </div>
   <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Field Constant</div><br/>
-    <md-select [(ngModel)]="selectedFieldConstantCharacteristicId" (change)="onFieldConstantChange()">
-      <md-option *ngFor="let fieldConstantCharacteristic of fieldConstantCharacteristics" [value]="fieldConstantCharacteristic.oid">
+    <mat-select [(ngModel)]="selectedFieldConstantCharacteristicId" (change)="onFieldConstantChange()">
+      <mat-option *ngFor="let fieldConstantCharacteristic of fieldConstantCharacteristics" [value]="fieldConstantCharacteristic.oid">
         {{fieldConstantCharacteristic.alias}}
-      </md-option>
-    </md-select>
+      </mat-option>
+    </mat-select>
   </div>
 </div>
 <div class="chartWrapper" style="width:100%;">

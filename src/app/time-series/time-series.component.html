@@ -1,65 +1,65 @@
 <div class="cardHeader">
   <div class="cardHeaderTitle">TIME SERIES</div>
-  <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" mdTooltip={{timeSeriesTooltip}} [mdTooltipPosition]='toolTipPosition' />
-  <button class="addChartButton" md-button (click)="handleAddChartButtonTap()">{{buttonLabel}}</button>
+  <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" matTooltip={{timeSeriesTooltip}} [matTooltipPosition]='toolTipPosition' />
+  <button class="addChartButton" mat-button (click)="handleAddChartButtonTap()">{{buttonLabel}}</button>
 </div>
 <div class="chartWrapper multiChartDivider">
   <div class="chartHeader">
     <div class="parameterOption">
       <div class="parameterOptionTitle">Characteristic Type</div><br/>
-      <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedCharacteristicType" (change)="onChart1CharacteristicTypeChange()">
-        <md-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
+      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedCharacteristicType" (change)="onChart1CharacteristicTypeChange()">
+        <mat-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
           {{characteristicType}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Characteristic Group</div><br/>
-      <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageType" (change)="onChart1ImageTypeChange()">
-        <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
+      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageType" (change)="onChart1ImageTypeChange()">
+        <mat-option *ngFor="let imageType of imageTypes" [value]="imageType">
           {{imageType}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
-      <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageCharacteristicName" (change)="onChart1ImageCharacteristicChange()">
-        <md-option *ngFor="let chart1ImageCharacteristic of chart1ImageCharacteristics" [value]="chart1ImageCharacteristic">
+      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageCharacteristicName" (change)="onChart1ImageCharacteristicChange()">
+        <mat-option *ngFor="let chart1ImageCharacteristic of chart1ImageCharacteristics" [value]="chart1ImageCharacteristic">
           {{chart1ImageCharacteristic}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Source</div><br/>
-      <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="selectedChart1Sensor" (change)="onChart1SensorChange()">
-        <md-option *ngFor="let chart1Sensor of chart1Sensors" [value]="chart1Sensor">
+      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="selectedChart1Sensor" (change)="onChart1SensorChange()">
+        <mat-option *ngFor="let chart1Sensor of chart1Sensors" [value]="chart1Sensor">
           {{chart1Sensor}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart1Parameter1IsVisible">
       <div class="parameterOptionTitle">{{chart1Parameter1Name}}</div><br/>
-      <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter1Option" (change)="onChart1Parameter1Change()">
-        <md-option *ngFor="let parameter1Option of chart1Parameter1Range" [value]="parameter1Option">
+      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter1Option" (change)="onChart1Parameter1Change()">
+        <mat-option *ngFor="let parameter1Option of chart1Parameter1Range" [value]="parameter1Option">
           {{parameter1Option}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart1Parameter2IsVisible">
       <div class="parameterOptionTitle">{{chart1Parameter2Name}}</div><br/>
-      <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter2Option" (change)="onChart1Parameter2Change()">
-        <md-option *ngFor="let parameter2Option of chart1Parameter2Range" [value]="parameter2Option">
+      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter2Option" (change)="onChart1Parameter2Change()">
+        <mat-option *ngFor="let parameter2Option of chart1Parameter2Range" [value]="parameter2Option">
           {{parameter2Option}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart1FieldOptionsAreVisible">
       <div class="parameterOptionTitle">Field Characteristic</div><br/>
-      <md-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedFieldCharacteristicName" (change)="onChart1FieldCharacteristicChange()">
-        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
+      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedFieldCharacteristicName" (change)="onChart1FieldCharacteristicChange()">
+        <mat-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
           {{fieldType.alias}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <br/>
   </div>
@@ -69,59 +69,59 @@
   <div class="chartHeader">
     <div class="parameterOption">
       <div class="parameterOptionTitle">Characteristic Type</div><br/>
-      <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedCharacteristicType" (change)="onChart2CharacteristicTypeChange()">
-        <md-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
+      <mat-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedCharacteristicType" (change)="onChart2CharacteristicTypeChange()">
+        <mat-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
           {{characteristicType}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart2ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Characteristic Group</div><br/>
-      <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedImageType" (change)="onChart2ImageTypeChange()">
-        <md-option *ngFor="let imageType of imageTypes" [value]="imageType">
+      <mat-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedImageType" (change)="onChart2ImageTypeChange()">
+        <mat-option *ngFor="let imageType of imageTypes" [value]="imageType">
           {{imageType}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart2ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Characteristic</div><br/>
-      <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedImageCharacteristicName" name="texturalCharacteristic" (change)="onChart2ImageCharacteristicChange()">
-        <md-option *ngFor="let chart2ImageCharacteristic of chart2ImageCharacteristics" [value]="chart2ImageCharacteristic">
+      <mat-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedImageCharacteristicName" name="texturalCharacteristic" (change)="onChart2ImageCharacteristicChange()">
+        <mat-option *ngFor="let chart2ImageCharacteristic of chart2ImageCharacteristics" [value]="chart2ImageCharacteristic">
           {{chart2ImageCharacteristic}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart2ImageOptionsAreVisible">
       <div class="parameterOptionTitle">Image Source</div><br/>
-      <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="selectedChart2Sensor" (change)="onChart2SensorChange()">
-        <md-option *ngFor="let chart2Sensor of chart2Sensors" [value]="chart2Sensor">
+      <mat-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="selectedChart2Sensor" (change)="onChart2SensorChange()">
+        <mat-option *ngFor="let chart2Sensor of chart2Sensors" [value]="chart2Sensor">
           {{chart2Sensor}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart2Parameter1IsVisible">
       <div class="parameterOptionTitle">{{chart2Parameter1Name}}</div><br/>
-      <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedParameter1Option" (change)="onChart2Parameter1Change()">
-        <md-option *ngFor="let parameter1Option of chart2Parameter1Range" [value]="parameter1Option">
+      <mat-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedParameter1Option" (change)="onChart2Parameter1Change()">
+        <mat-option *ngFor="let parameter1Option of chart2Parameter1Range" [value]="parameter1Option">
           {{parameter1Option}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart2Parameter2IsVisible">
       <div class="parameterOptionTitle">{{chart2Parameter2Name}}</div><br/>
-      <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedParameter2Option" (change)="onChart2Parameter2Change()">
-        <md-option *ngFor="let parameter2Option of chart2Parameter2Range" [value]="parameter2Option">
+      <mat-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedParameter2Option" (change)="onChart2Parameter2Change()">
+        <mat-option *ngFor="let parameter2Option of chart2Parameter2Range" [value]="parameter2Option">
           {{parameter2Option}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <div class="parameterOption" *ngIf="chart2FieldOptionsAreVisible">
       <div class="parameterOptionTitle">Field Characteristic</div><br/>
-      <md-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedFieldCharacteristicName" (change)="onChart2FieldCharacteristicChange()">
-        <md-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
+      <mat-select [disabled]=chart2DropDownsAreDisabled [(ngModel)]="chart2SelectedFieldCharacteristicName" (change)="onChart2FieldCharacteristicChange()">
+        <mat-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
           {{fieldType.alias}}
-        </md-option>
-      </md-select>
+        </mat-option>
+      </mat-select>
     </div>
     <br/>
   </div>
