@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule } from '@angular/material';
+import { MatMenuModule, MatIconModule, MatButtonModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatTooltipModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
@@ -38,7 +38,7 @@ import { ROUTES } from './app.routes';
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
-    MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule,
+    MatMenuModule, MatIconModule, MatButtonModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatTooltipModule,
     FlexLayoutModule,
     RouterModule.forRoot(ROUTES)
   ],
