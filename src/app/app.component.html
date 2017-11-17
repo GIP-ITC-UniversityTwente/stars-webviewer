@@ -1,6 +1,11 @@
 <!-- Component for the header of the application -->
 <app-header></app-header>
 <main class="container">
+  <!-- Block when a user is not Authenticated (e.g. first login or an expired JWT) -->
+  <div *ngIf="!auth.isAuthenticated()" class="blocker">
+    <span class="blockerPrompt">Please Log In</span>
+  </div>
+  <!-- App will route content here -->
   <router-outlet></router-outlet>
 </main>
 
