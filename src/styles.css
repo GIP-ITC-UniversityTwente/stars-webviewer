@@ -55,6 +55,11 @@ body {
   border-bottom: 1px solid #dfdfdf;
 }
 
+.parameterWrapper {
+  float: left;
+  width: 150px;
+}
+
 .parameterOption {
   height: 60px;
   float: left;

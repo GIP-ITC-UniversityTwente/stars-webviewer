@@ -5,61 +5,75 @@
 </div>
 <div class="chartWrapper multiChartDivider">
   <div class="chartHeader">
-    <div class="parameterOption">
-      <div class="parameterOptionTitle">Characteristic Type</div><br/>
-      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedCharacteristicType" (change)="onChart1CharacteristicTypeChange()">
-        <mat-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
-          {{characteristicType}}
-        </mat-option>
-      </mat-select>
+    <div class="parameterWrapper">
+      <div class="parameterOption">
+        <div class="parameterOptionTitle">Characteristic Type</div><br/>
+        <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedCharacteristicType" (change)="onChart1CharacteristicTypeChange()">
+          <mat-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">
+            {{characteristicType}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
-      <div class="parameterOptionTitle">Characteristic Group</div><br/>
-      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageType" (change)="onChart1ImageTypeChange()">
-        <mat-option *ngFor="let imageType of imageTypes" [value]="imageType">
-          {{imageType}}
-        </mat-option>
-      </mat-select>
+    <div class="parameterWrapper">
+      <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
+        <div class="parameterOptionTitle">Characteristic Group</div><br/>
+        <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageType" (change)="onChart1ImageTypeChange()">
+          <mat-option *ngFor="let imageType of imageTypes" [value]="imageType">
+            {{imageType}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
-      <div class="parameterOptionTitle">Image Characteristic</div><br/>
-      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageCharacteristicName" (change)="onChart1ImageCharacteristicChange()">
-        <mat-option *ngFor="let chart1ImageCharacteristic of chart1ImageCharacteristics" [value]="chart1ImageCharacteristic">
-          {{chart1ImageCharacteristic}}
-        </mat-option>
-      </mat-select>
+    <div class="parameterWrapper">
+      <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
+        <div class="parameterOptionTitle">Image Characteristic</div><br/>
+        <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedImageCharacteristicName" (change)="onChart1ImageCharacteristicChange()">
+          <mat-option *ngFor="let chart1ImageCharacteristic of chart1ImageCharacteristics" [value]="chart1ImageCharacteristic">
+            {{chart1ImageCharacteristic}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
-      <div class="parameterOptionTitle">Image Source</div><br/>
-      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="selectedChart1Sensor" (change)="onChart1SensorChange()">
-        <mat-option *ngFor="let chart1Sensor of chart1Sensors" [value]="chart1Sensor">
-          {{chart1Sensor}}
-        </mat-option>
-      </mat-select>
+    <div class="parameterWrapper">
+      <div class="parameterOption" *ngIf="chart1ImageOptionsAreVisible">
+        <div class="parameterOptionTitle">Image Source</div><br/>
+        <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="selectedChart1Sensor" (change)="onChart1SensorChange()">
+          <mat-option *ngFor="let chart1Sensor of chart1Sensors" [value]="chart1Sensor">
+            {{chart1Sensor}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div class="parameterOption" *ngIf="chart1Parameter1IsVisible">
-      <div class="parameterOptionTitle">{{chart1Parameter1Name}}</div><br/>
-      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter1Option" (change)="onChart1Parameter1Change()">
-        <mat-option *ngFor="let parameter1Option of chart1Parameter1Range" [value]="parameter1Option">
-          {{parameter1Option}}
-        </mat-option>
-      </mat-select>
+    <div class="parameterWrapper">
+      <div class="parameterOption" *ngIf="chart1Parameter1IsVisible">
+        <div class="parameterOptionTitle">{{chart1Parameter1Name}}</div><br/>
+        <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter1Option" (change)="onChart1Parameter1Change()">
+          <mat-option *ngFor="let parameter1Option of chart1Parameter1Range" [value]="parameter1Option">
+            {{parameter1Option}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div class="parameterOption" *ngIf="chart1Parameter2IsVisible">
-      <div class="parameterOptionTitle">{{chart1Parameter2Name}}</div><br/>
-      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter2Option" (change)="onChart1Parameter2Change()">
-        <mat-option *ngFor="let parameter2Option of chart1Parameter2Range" [value]="parameter2Option">
-          {{parameter2Option}}
-        </mat-option>
-      </mat-select>
+    <div class="parameterWrapper">
+      <div class="parameterOption" *ngIf="chart1Parameter2IsVisible">
+        <div class="parameterOptionTitle">{{chart1Parameter2Name}}</div><br/>
+        <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedParameter2Option" (change)="onChart1Parameter2Change()">
+          <mat-option *ngFor="let parameter2Option of chart1Parameter2Range" [value]="parameter2Option">
+            {{parameter2Option}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div class="parameterOption" *ngIf="chart1FieldOptionsAreVisible">
-      <div class="parameterOptionTitle">Field Characteristic</div><br/>
-      <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedFieldCharacteristicName" (change)="onChart1FieldCharacteristicChange()">
-        <mat-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
-          {{fieldType.alias}}
-        </mat-option>
-      </mat-select>
+    <div class="parameterWrapper">
+      <div class="parameterOption" *ngIf="chart1FieldOptionsAreVisible">
+        <div class="parameterOptionTitle">Field Characteristic</div><br/>
+        <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedFieldCharacteristicName" (change)="onChart1FieldCharacteristicChange()">
+          <mat-option *ngFor="let fieldType of fieldTypes" [value]="fieldType.alias">
+            {{fieldType.alias}}
+          </mat-option>
+        </mat-select>
+      </div>
     </div>
     <br/>
   </div>
