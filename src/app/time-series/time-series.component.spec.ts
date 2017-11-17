@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule } from '@angular/material';
+import { MatMenuModule, MatIconModule, MatButtonModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatTooltipModule } from '@angular/material';
 
 import { TimeSeriesComponent } from './time-series.component';
 import { StarsAPIService } from '../services/stars-api.service';
@@ -19,7 +19,7 @@ describe('TimeSeriesComponent', () => {
     userSelectionServiceStub = {};
 
     TestBed.configureTestingModule({
-      imports: [ BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule, MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule ],
+      imports: [ BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule, MatMenuModule, MatIconModule, MatButtonModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatTooltipModule],
       declarations: [ TimeSeriesComponent ],
       providers: [
         { provide: UserSelectionService, useValue: userSelectionServiceStub }, // stub of service

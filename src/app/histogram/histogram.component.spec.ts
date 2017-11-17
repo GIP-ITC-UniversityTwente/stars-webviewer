@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule } from '@angular/material';
+import { MatMenuModule, MatIconModule, MatButtonModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatTooltipModule } from '@angular/material';
 
 
 import { HistogramComponent } from './histogram.component';
@@ -23,7 +23,7 @@ describe('HistogramComponent', () => {
     starsAPIServiceStub = {};
 
     TestBed.configureTestingModule({
-      imports: [ BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule, MdMenuModule, MdIconModule, MdButtonModule, MdSelectModule, MdCheckboxModule, MdCardModule, MdTooltipModule ],
+      imports: [ BrowserModule, FormsModule, HttpModule, BrowserAnimationsModule, MatMenuModule, MatIconModule, MatButtonModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatTooltipModule ],
       declarations: [ HistogramComponent ],
       providers: [
         { provide: UserSelectionService, useValue: userSelectionServiceStub }, // stub of service
