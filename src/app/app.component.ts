@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 
 import { AuthService } from './services/auth.service';
 import { StarsAPIService } from './services/stars-api.service';
@@ -13,11 +13,10 @@ import { UserSelectionService } from './services/user-selection.service';
   ]
 })
 export class AppComponent {
-
   /**
    * Component Life-cycle methods
    */
-  constructor(public auth: AuthService) {
-    auth.handleAuthentication();
+  constructor(public auth: AuthService ) {
+      auth.handleAuthentication();
   }
 }

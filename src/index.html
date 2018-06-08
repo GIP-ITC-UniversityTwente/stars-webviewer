@@ -29,29 +29,31 @@
      */
 
     function resizeTimeSeriesCharts() {
+      if (typeof(document.getElementById('timeSeriesCard'))!='undefined'){
+          var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
+          var chart2Width = document.getElementById('chart2').offsetWidth;
+          var smallSize = 1115;
+          if (chart2Width == 0) { // chart 2 IS NOT visible
+            if (targetElementWidth > 0) {
+              Plotly.relayout('chart1', { width: targetElementWidth });
+              Plotly.relayout('chart2', { width: 0 });
+            }
+          } else { // chart 2 IS visible
 
-      var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
-      var chart2Width = document.getElementById('chart2').offsetWidth;
-      var smallSize = 1115;
-      if (chart2Width == 0) { // chart 2 IS NOT visible
-        if (targetElementWidth > 0) {
-          Plotly.relayout('chart1', { width: targetElementWidth });
-          Plotly.relayout('chart2', { width: 0 });
-        }
-      } else { // chart 2 IS visible
+            // parent card is too small to show both charts side by side
+            if (targetElementWidth <= smallSize) {
+              Plotly.relayout('chart1', { width: targetElementWidth });
+              Plotly.relayout('chart2', { width: targetElementWidth });
 
-        // parent card is too small to show both charts side by side
-        if (targetElementWidth <= smallSize) {
-          Plotly.relayout('chart1', { width: targetElementWidth });
-          Plotly.relayout('chart2', { width: targetElementWidth });
-
-        } else {
-          if ((targetElementWidth * 0.499) > 0) {
-            Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
-            Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
+            } else {
+              if ((targetElementWidth * 0.499) > 0) {
+                Plotly.relayout('chart1', { width: targetElementWidth * 0.499 });
+                Plotly.relayout('chart2', { width: targetElementWidth * 0.499 });
+              }
+            }
           }
-        }
       }
+
     }
 
     function resizeHistogramChart() {
