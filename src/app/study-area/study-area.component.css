@@ -1,3 +1,12 @@
+.mainSection {
+	position:fixed;
+	margin-top:40px;
+	overflow-y: auto;
+    overflow-x: hidden;
+    top: 0;
+    bottom: 0
+}
+
 .parameterSection {
   padding-left: 28px;
   margin-top: 50px;
