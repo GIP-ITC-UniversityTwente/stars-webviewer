@@ -235,7 +235,7 @@ export class TimeSeriesBuilderService {
         const envelopeDataObject = {
           x: envelopeX,
           y: envelopeY,
-          fill: 'tozerox',
+          fill: 'toself',
           fillcolor: backgroundColor,
           name: '',
           showlegend: false,
@@ -308,7 +308,7 @@ export class TimeSeriesBuilderService {
         const envelopeDataObject = {
           x: envelopeX,
           y: envelopeY,
-          fill: 'tozerox',
+          fill: 'toself',
           fillcolor: backgroundColor,
           name: '',
           showlegend: false,
@@ -426,7 +426,7 @@ export class TimeSeriesBuilderService {
     //  CHART 1 PLACEHOLDER
     // ----------------------
 
-    const milletSpectralLineEnvelope = {"x":["2014-05-01","2014-06-24","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-06-24","2014-05-01"],"y":[0.086905,0.157471,0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415,0.253017,0.189081],"fill":"tozerox","fillcolor":"rgba(0, 87, 127, 0.2)","name":"","showlegend":false,"type":"scatter","line":{"color":"transparent"}};
+    const milletSpectralLineEnvelope = {"x":["2014-05-01","2014-06-24","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-06-24","2014-05-01"],"y":[0.086905,0.157471,0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415,0.253017,0.189081],"fill":"toself","fillcolor":"rgba(0, 87, 127, 0.2)","name":"","showlegend":false,"type":"scatter","line":{"color":"transparent"}};
 
     // data for millet spectral test sample
     const milletSpectralLine = {"x":["2014-05-01","2014-06-24","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-06-24","2014-05-01"],"y":[0.137993,0.205244,0.296679,0.480262,0.666356,0.598557],"mode":"lines","name":"Groundnut","line":{"color":"#00577F","width":3},"type":"scatter"};

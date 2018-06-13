@@ -339,7 +339,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    * @param {string} targetDivId
    */
   renderImageCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
-
     Plotly.newPlot(targetDivId,
       chartData,
       chartLayout,
