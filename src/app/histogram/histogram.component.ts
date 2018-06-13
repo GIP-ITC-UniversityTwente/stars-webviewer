@@ -278,7 +278,7 @@ export class HistogramComponent implements OnInit {
     console.log('the histo data: ', histoData);
 
     // display histogram data
-    this.presentHistogramData(histoData, true);
+    this.presentHistogramData(histoData, true,true);
 
     // TODO: DEFINE THE INPUT TO THE CLASSIFIED HISTOGRAM SECTION
     // TODO: BROADCAST TO COMPONENT THAT WE ARE READY TO SHOW THE CLASSIFIED HISTOGRAM
@@ -329,18 +329,32 @@ export class HistogramComponent implements OnInit {
    * Utility for presenting a histogram for the input data
    * @param histogramData
    * @param {boolean} isShowing
+   * @param {boolean} isHistogram
    */
-  presentHistogramData(histogramData: any, isShowing: boolean) {
+  presentHistogramData(histogramData: any, isShowing: boolean,isHistogram:boolean=false) {
 
     const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
-    const layout = {
-      title: 'Histogram of ' + targetFieldConstantAlias,
-      yaxis: { title: 'Count'},
-      bargap: 0.05,
-      hovermode: 'closest',
-      showlegend: isShowing
-    };
+    let layout={};
+    if(isHistogram){
+        layout = {
+                title: 'Classified histogram of ' + targetFieldConstantAlias,
+                yaxis: { title: 'Count'},
+                bargap: 0.05,
+                hovermode: 'closest',
+                showlegend: isShowing
+              };
+    }else{
+        layout = {
+                title: 'Histogram of ' + targetFieldConstantAlias,
+                yaxis: { title: 'Count'},
+                bargap: 0.05,
+                hovermode: 'closest',
+                showlegend: isShowing
+              };
 
+    }
+    
+    
     Plotly.newPlot('histogram',
       histogramData,
       layout,

@@ -1,7 +1,21 @@
 .fieldMeasurementOption {
+  float:left;
+  padding-top: 9px;
+  margin-left: 20px;
+  font-size: 9pt;
+  color: #878484;
+  font-weight: 400;
+  width: 100px;
+}
+
+.classificationHeaderTitle {
+  padding-top:22px;
+  float:right;
+}
+.classificationFieldMeasurementOption {
   float:right;
   padding-top: 9px;
-  margin-right: 20px;
+  margin-left: 20px;
   font-size: 9pt;
   color: #878484;
   font-weight: 400;

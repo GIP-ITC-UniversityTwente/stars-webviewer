@@ -2,18 +2,10 @@
   <div class="cardHeaderTitle">HISTOGRAM OF FIELD CONSTANTS</div>
   <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" matTooltip={{fieldConstantsToolTip}} [matTooltipPosition]='toolTipPosition'/>
   <div class="fieldMeasurementOption">
-    <div class="parameterOptionTitle">Classification Method</div><br/>
-    <mat-select [(ngModel)]="selectedClassificationMethod" (change)="onClassificationChange()">
-      <mat-option *ngFor="let classificationMethod of classificationMethods" [value]="classificationMethod">
-        {{classificationMethod}}
-      </mat-option>
-    </mat-select>
-  </div>
-  <div class="fieldMeasurementOption">
-    <div class="parameterOptionTitle">Number of Classes</div><br/>
-    <mat-select [(ngModel)]="selectedClassSize" (change)="onClassSizeChange()">
-      <mat-option *ngFor="let classSize of classSizes" [value]="classSize">
-        {{classSize}}
+    <div class="parameterOptionTitle">Field Constant</div><br/>
+    <mat-select [(ngModel)]="selectedFieldConstantCharacteristicId" (change)="onFieldConstantChange()">
+      <mat-option *ngFor="let fieldConstantCharacteristic of fieldConstantCharacteristics" [value]="fieldConstantCharacteristic.oid">
+        {{fieldConstantCharacteristic.alias}}
       </mat-option>
     </mat-select>
   </div>
@@ -25,14 +17,26 @@
       </mat-option>
     </mat-select>
   </div>
-  <div class="fieldMeasurementOption">
-    <div class="parameterOptionTitle">Field Constant</div><br/>
-    <mat-select [(ngModel)]="selectedFieldConstantCharacteristicId" (change)="onFieldConstantChange()">
-      <mat-option *ngFor="let fieldConstantCharacteristic of fieldConstantCharacteristics" [value]="fieldConstantCharacteristic.oid">
-        {{fieldConstantCharacteristic.alias}}
+  <div class="classificationFieldMeasurementOption">
+    <div class="parameterOptionTitle">Classification Method</div><br/>
+    <mat-select [(ngModel)]="selectedClassificationMethod" (change)="onClassificationChange()">
+      <mat-option *ngFor="let classificationMethod of classificationMethods" [value]="classificationMethod">
+        {{classificationMethod}}
       </mat-option>
     </mat-select>
   </div>
+  <div class="classificationFieldMeasurementOption">
+    <div class="parameterOptionTitle">Number of Classes</div><br/>
+    <mat-select [(ngModel)]="selectedClassSize" (change)="onClassSizeChange()">
+      <mat-option *ngFor="let classSize of classSizes" [value]="classSize">
+        {{classSize}}
+      </mat-option>
+    </mat-select>
+  </div>
+
+ <img class="cardInfoRightButton" src="../../assets/icon_info.svg" alt="info" matTooltip={{fieldConstantsToolTip}} [matTooltipPosition]='toolTipPosition'/>
+ <div class=classificationHeaderTitle>CLASSIFY</div>
+
 </div>
 <div class="chartWrapper" style="width:100%;">
   <div id="histogram"></div>

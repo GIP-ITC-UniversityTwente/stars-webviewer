@@ -28,6 +28,14 @@ body {
 
 .cardInfoButton {
   position: relative;
+  float :left;
+  top: 21px;
+  left: 3px;
+  cursor: pointer;
+}
+.cardInfoRightButton {
+  position: relative;
+  float :right;
   top: 21px;
   left: 3px;
   cursor: pointer;
