@@ -17,7 +17,14 @@
   <script src="https://openlayers.org/en/v4.2.0/build/ol.js" type="text/javascript"></script>
   <!-- Local geostats JS file-->
   <script src="assets/scripts/geostats.js"></script>
+    <!-- Layer switcher-->
+  <script src="assets/scripts/ol-layerswitcher.js"></script>
+  <link rel="stylesheet" href="assets/scripts/ol-layerswitcher.css" />
+  <!-- Openlayers popup-->
+  <script src="assets/scripts/ol-popup.js"></script>
+  <link rel="stylesheet" href="assets/scripts/ol-popup.css" />
   <script type="application/javascript">
+  	map=null;
     window.onresize = function() {
       resizeTimeSeriesCharts();
       resizeHistogramChart();

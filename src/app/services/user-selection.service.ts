@@ -12,6 +12,8 @@ export class UserSelectionService {
   private endYearSource = new Subject<number>();
   // source crop types
   private cropTypesSource = new Subject<string[]>();
+  // source group/classes data
+  private groupedTimeSeriesDataSource = new Subject<any>();
 
   // observable study area
   studyArea$ = this.studyAreaSource.asObservable();
@@ -21,6 +23,8 @@ export class UserSelectionService {
   endYear$ = this.endYearSource.asObservable();
   // observable crop types
   cropTypes$ = this.cropTypesSource.asObservable();
+  // observable crop types
+  groupedTimeSeriesData$ = this.groupedTimeSeriesDataSource.asObservable();
 
   /**
    * For changing the study area chosen by the user.
@@ -53,4 +57,13 @@ export class UserSelectionService {
   updateCropTypes(cropTypes: string[]) {
     this.cropTypesSource.next(cropTypes);
   }
+  
+  /**
+   * For changing the data from 
+   * @param groupedTimeSeriesData
+   */
+  updateGroupedTimeSeriesData(groupedTimeSeriesData: any) {
+    this.groupedTimeSeriesDataSource.next(groupedTimeSeriesData);
+  }
+  
 }

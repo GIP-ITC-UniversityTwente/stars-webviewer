@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AppConfiguration } from '../app-configuration';
 import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
+import { TimeSeriesBuilderService } from '../services/time-series-builder.service';
 
 declare const Plotly: any;
 
@@ -12,13 +13,12 @@ declare const Plotly: any;
   templateUrl: './classified-time-series.component.html',
   styleUrls: ['./classified-time-series.component.css']
 })
-export class ClassifiedTimeSeriesComponent implements OnInit {
+export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
 
   /**
    * Properties
    */
-  toolTipPosition = 'right';
-  classifiedTimeSeriesToolTip = AppConfiguration.classifiedTimeSeriesToolTip;
+
 
   subscriptionToSelectedStudyArea: Subscription;
   studyArea: JSON;
@@ -28,58 +28,163 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
   endYear: number;
   subscriptionToSelectedCropTypes: Subscription;
   cropTypes: string;
+  subscriptionToGroupedTimeSeriesData: Subscription;
+  groupedTimeSeriesData: any;
+  
 
+  studyAreaId: number;
+  cropList: string;
+  characteristicTypes: string[] = [];
+  imageTypes: string[] = [];
+  fieldTypes: any[] = [];
+  allSpectralCharacteristicObjects: any[] = [];
+  allTexturalCharacteristicObjects: any[] = [];
+
+  classesList = 'class0,class1,class2';
+  fmusList = '1085;1105,1230,1115;1160,1220,1120,1165,1025,1060';
+  chart1DropDownsAreDisabled = false;
+  chart1ImageOptionsAreVisible = false;
+  chart1FieldOptionsAreVisible = false;
+  chart1SelectedCharacteristicType: string;
+  chart1SelectedImageType: string;
+  chart1ImageCharacteristics: any[] = [];
+  chart1SelectedImageCharacteristicName: string;
+  chart1SelectedImageCharacteristicId: number;
+  chart1Sensors: any[] = [];
+  selectedChart1Sensor: string;
+  chart1SelectedFieldCharacteristicName: string;
+  chart1SelectedFieldCharacteristicId: number;
+
+  chart1Parameter1IsVisible = false;
+  chart1Parameter1Name: string;
+  chart1Parameter1Range: number[];
+  chart1SelectedParameter1Option: number;
+  chart1Parameter2IsVisible = false;
+  chart1Parameter2Name: string;
+  chart1Parameter2Range: number[];
+  chart1SelectedParameter2Option: number;
+
+  chart2DropDownsAreDisabled = false;
+  chart2ImageOptionsAreVisible = false;
+  chart2FieldOptionsAreVisible = false;
+  chart2SelectedCharacteristicType: string;
+  chart2SelectedImageType: string;
+  chart2ImageCharacteristics: any[] = [];
+  chart2SelectedImageCharacteristicName: string;
+  chart2SelectedImageCharacteristicId: number;
+  chart2Sensors: any[] = [];
+  selectedChart2Sensor: string;
+  chart2SelectedFieldCharacteristicName: string;
+  chart2SelectedFieldCharacteristicId: number;
+
+  chart2Parameter1IsVisible = false;
+  chart2Parameter1Name: string;
+  chart2Parameter1Range: number[];
+  chart2SelectedParameter1Option: number;
+  chart2Parameter2IsVisible = false;
+  chart2Parameter2Name: string;
+  chart2Parameter2Range: number[];
+  chart2SelectedParameter2Option: number;
+
+  // tooltip
+
+  toolTipPosition = 'right';
+  classifiedTimeSeriesToolTip = AppConfiguration.classifiedTimeSeriesToolTip;
+  
   /**
    * For dependency injecting needed services.
    */
   constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
 
-    // subscribe to the study area selection by the user
-    this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
-      studyArea => {
-        this.studyArea = studyArea;
-      }
-    );
+      // subscribe to the study area selection by the user
+      this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
+        studyArea => {
+          this.studyArea = studyArea;
+          this.studyAreaId = studyArea['properties']['id'];
 
-    // subscribe to the start year selection by the user
-    this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
-      startYear => {
-        this.startYear = startYear;
-      }
-    );
+          // Clear chart
+          TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+        }
+      );
 
-    // subscribe to the end year selection by the user
-    this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
-      endYear => {
-        this.endYear = endYear;
-      }
-    );
+      // subscribe to the start year selection by the user
+      this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
+        startYear => {
+          this.startYear = startYear;
 
-    // subscribe to crop types selections by the user
-    this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
-      cropTypes => {
+          // Clear chart
+          TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
 
-        // create the comma-delimited list of crops for an API request
-        let cropList = '';
-        cropTypes.forEach(function(item, index) {
-          if (index === cropTypes.length - 1) {
-            cropList += cropTypes[index];
-          } else {
-            cropList += cropTypes[index] + ',';
+          // initialize characteristic types
+          this.characteristicTypes = TimeSeriesBuilderService.fetchCharacteristicTypes();
+
+          // initialize image types
+          this.imageTypes = TimeSeriesBuilderService.fetchImageTypes();
+
+          // initialize the image characteristic options
+          this.initializeImageCharacteristicsOptions(this.studyAreaId, this.startYear, this.endYear);
+
+          // initializes the field characteristic options
+          this.initializeFieldCharacteristicOptions(this.studyAreaId, this.startYear, this.endYear);
+        }
+      );
+
+      // subscribe to the end year selection by the user
+      this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
+        endYear => {
+          this.endYear = endYear;
+
+          // Clear chart
+          TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+
+          // initialize image types
+          this.imageTypes = TimeSeriesBuilderService.fetchImageTypes();
+
+          // initialize the image characteristic options
+          this.initializeImageCharacteristicsOptions(this.studyAreaId, this.startYear, this.endYear);
+
+          // initializes the field characteristic options
+          this.initializeFieldCharacteristicOptions(this.studyAreaId, this.startYear, this.endYear);
+        }
+      );
+
+      // subscribe to crop types selections by the user
+      this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
+        cropTypes => {
+          if (cropTypes.length === 0) {
+
+            // Disable TimeSeries drop downs
+            this.chart1DropDownsAreDisabled = true;
+
+            // Clear chart
+            TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+          } else if (cropTypes.length > 0) {
+
+            // Enable time series drop downs
+            this.chart1DropDownsAreDisabled = false;
+
+            // Create Crop List
+            this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);
+
+            // Render chart(s)
+            this.updateTimeSeries();
           }
-        });
-        this.cropTypes = cropList;
-
-        /*
-        // fetch field constant characteristics for drop down only after crops are chosen
-        this.starsAPIService.fetchFieldConstantCharacteristic(this.studyArea['properties']['id'], this.startYear).then((response) => {
-          return response;
-        }).then((data) => {
-          this.fieldConstantCharacteristics = data.results.fieldConstants;
-        }).catch((error) => {
-          console.log(error);
-        });
-        */
+        }
+      );
+    
+    // subscribe to the groupedTimeSeriesData
+    this.subscriptionToGroupedTimeSeriesData = this.userSelectionService.groupedTimeSeriesData$.subscribe(
+      groupedTimeSeriesData => {
+        console.log('Grouped timeseries');
+        this.groupedTimeSeriesData = groupedTimeSeriesData;
+        //this.createTestGraphs();
+        console.log(groupedTimeSeriesData);
+        const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(groupedTimeSeriesData);
+        console.log(chartData);
+        //const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
+        //this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+        
+        
       }
     );
 
@@ -91,8 +196,24 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
   ngOnInit() {
 
     //this.createTestGraphs();
-  }
+      
+      // create blank time series
+      TimeSeriesBuilderService.createDefaultTimeSeriesCharts(Plotly,'classifiedChart1');
 
+      // default style-layout of charts
+      this.initializeChartLayout();
+  }
+  /**
+   * Lifecycle hook that is called when destroyed.
+   */
+  ngOnDestroy() {
+    this.subscriptionToSelectedStudyArea.unsubscribe();
+    this.subscriptionToSelectedStartYear.unsubscribe();
+    this.subscriptionToSelectedEndYear.unsubscribe();
+    this.subscriptionToSelectedCropTypes.unsubscribe();
+    this.subscriptionToGroupedTimeSeriesData.unsubscribe();
+  }
+  
   /**
    * For handling when a user taps the info button for the classified section
    */
@@ -101,162 +222,385 @@ export class ClassifiedTimeSeriesComponent implements OnInit {
   }
 
   /**
-   * Utility for creating test graphs
+   * Utility for updating time series charts
    */
-  createTestGraphs() {
-    // test sample
-    const spectralLarge = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.172186501324177,
-        0.164392687380314,
-        0.233714044094086,
-        0.511275425553322,
-        0.459536194801331,
-        0.328727185726166,
-        0.305574923753738],
-      mode: 'lines',
-      name: 'Large Field',
-      line: {
-        color: '#ED7D31',
-        width: 3
+  updateTimeSeries() {
+
+    // chart - updates
+    if (this.chart1SelectedCharacteristicType === 'Image Characteristic') {
+      if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter2Option === undefined) {
+        // update image characteristic time series with no parameters
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+        });
+      } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option === undefined) {
+        // update image characteristic time series with parameter 1
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+        });
+      } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option !== undefined) {
+        // update image characteristic time series with parameter 1 & 2
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
+          return response;
+        }).then((data) => {
+          const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+        });
       }
-    };
+    } else if (this.chart1SelectedCharacteristicType === 'Field Characteristic') {
+        
+      // update field characteristic time series
+        console.log('updateTimeSeries');
+        // Get The Group classes just like in the histogram data
+        this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.chart1SelectedFieldCharacteristicId, this.cropList, '1085;1105,1230,1115;1160,1220,1120,1165,1025,1060', 'class0,class1,class2').then((response) => {
+            return response;
+          }).then((data) => {
+            const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data);
+            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic per class', this.chart1SelectedFieldCharacteristicName);
+            this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+          }).catch((error) => {
+            //
+            console.log(error);
+          });
+      
+    }
+  }
 
-    const spectralMedium = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.159075021743774,
-        0.159485226869583,
-        0.230874255299568,
-        0.430628561973572,
-        0.437032335996628,
-        0.301825460791588,
-        0.274069619178772],
-      mode: 'lines',
-      name: 'Medium Field',
-      line: {
-        color: '#A6A6A6',
-        width: 3
-      }
-    };
+  /**
+   * For setting up the layout style when the charts load for the first time
+   */
+  initializeChartLayout() {
+    const targetElementWidth = document.getElementById('classifiedTimeSeriesCard').offsetWidth;
+    Plotly.relayout('classifiedChart1', { width: targetElementWidth });
+  }
 
-    const spectralSmall = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.166699558496475,
-        0.169587473074595,
-        0.209321816762288,
-        0.458195855220159,
-        0.513612816731135,
-        0.34847895304362,
-        0.288037200768789],
-      mode: 'lines',
-      name: 'Small Field',
-      line: {
-        color: '#0070C0',
-        width: 3
-      }
-    };
+  /**
+   * Utility for initializing the image characteristic options
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   */
+  initializeImageCharacteristicsOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
 
-    // layout for millet spectral test sample
-    const milletSpectralLayout = {
-      title: 'NDVI by field size class',
-      xaxis: {
-        title: 'Time',
-        showgrid: true,
-        zeroline: true
-      },
-      yaxis: {
-        title: 'NDVI',
-        showline: false
-      },
-      hovermode: 'closest'
-    };
+    this.starsAPIService.fetchImageCharacteristics(studyAreaId, startYear, endYear).then((response) => {
+      return response;
+    }).then((data) => {
+      this.allSpectralCharacteristicObjects = data.results.spectralCharacteristics;
+      this.allTexturalCharacteristicObjects = data.results.texturalCharacteristics;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
-    // spectral chart for millet
-    const milletSpectralData = [spectralLarge, spectralMedium, spectralSmall];
-    Plotly.newPlot('classifiedChart1',
-      milletSpectralData,
-      milletSpectralLayout,
+  /**
+   * Utility for initializing the field characteristic options
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   */
+  initializeFieldCharacteristicOptions(studyAreaId: number, startYear: number, endYear: number = undefined) {
+
+    this.starsAPIService.fetchFieldCharacteristics(studyAreaId, startYear, endYear).then((response) => {
+      return response;
+    }).then((data) => {
+      this.fieldTypes = data.results.fieldCharacteristics;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  /**
+   * Utility for rendering the image characteristics chart for the time series response.
+   * @param {any} chartData
+   * @param {any} chartLayout
+   * @param {string} targetDivId
+   */
+  renderImageCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
+    Plotly.newPlot(targetDivId,
+      chartData,
+      chartLayout,
       {
         displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
-      }
-    );
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      });
+  }
 
-    // data for millet textural vs size test sample
-    const texturalLarge = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.415549235418439,
-        0.374856048263609,
-        0.351025509648025,
-        0.303790537640452,
-        0.224534968845546,
-        0.228838828857988,
-        0.189544670749456],
-      mode: 'lines',
-      name: 'Large Field',
-      line: {
-        color: '#ED7D31',
-        width: 3
-      }
-    };
-
-    const texturalMedium = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.463320282101631,
-        0.536173478141427,
-        0.337403660267591,
-        0.27685378100723,
-        0.218739508278668,
-        0.222100229747593,
-        0.20152266677469],
-      mode: 'lines',
-      name: 'Medium Field',
-      line: {
-        color: '#A6A6A6',
-        width: 3
-      }
-    };
-
-    const texturalSmall = {
-      x: ['142d', '150d', '177d', '210d', '291d', '305d', '318d'],
-      y: [0.432596058274309,
-        0.374107008799911,
-        0.356859012196461,
-        0.333457679177324,
-        0.246811929158866,
-        0.233219016653796,
-        0.213154709277054],
-      mode: 'lines',
-      name: 'Small Field',
-      line: {
-        color: '#0070C0',
-        width: 3
-      }
-    };
-
-    // layout for millet textural test sample
-    const milletTexturalLayout = {
-      title: 'Homogeneity by field size class',
-      xaxis: {
-        title: 'Time',
-        showgrid: true,
-        zeroline: true
-      },
-      yaxis: {
-        title: 'Homogeneity',
-        showline: false
-      },
-      hovermode: 'closest'
-    };
-
-    const milletTexturalData = [texturalLarge, texturalMedium, texturalSmall];
-    Plotly.newPlot('classifiedChart2',
-      milletTexturalData,
-      milletTexturalLayout,
+  /**
+   * Utility for rendering the field characteristics chart for the time series response.
+   * @param {any[]} chartData
+   * @param {string} chartLayout
+   * @param {string} targetDivId
+   */
+  renderFieldCharacteristicTimeSeriesChart(chartData: any, chartLayout: any, targetDivId: string) {
+    Plotly.newPlot(targetDivId,
+      chartData,
+      chartLayout,
       {
         displayModeBar: 'hover',
-        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines']
+        modeBarButtonsToRemove: ['sendDataToCloud', 'zoom2d', 'select2d', 'lasso2d', 'resetScale2d', 'hoverClosestCartesian', 'hoverCompareCartesian', 'toggleSpikelines'],
+        displaylogo: false
+      });
+  }
+
+  /**
+   * Handles when user choose a characteristic type for Chart 1.
+   */
+  onChart1CharacteristicTypeChange() {
+
+    // clear down flowing drop downs & chart
+    this.chart1SelectedImageType = undefined;
+    this.chart1SelectedImageCharacteristicId = undefined;
+    this.chart1SelectedImageCharacteristicName = undefined;
+    this.selectedChart1Sensor = undefined;
+    this.chart1Parameter1IsVisible = false;
+    this.chart1Parameter1Name = undefined;
+    this.chart1Parameter1Range = [];
+    this.chart1SelectedParameter1Option = undefined;
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
+    this.chart1SelectedFieldCharacteristicName = undefined;
+    this.chart1SelectedFieldCharacteristicId = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+
+    // show/hide dropdowns based on chosen characteristic type
+    if (this.chart1SelectedCharacteristicType === this.characteristicTypes[0]) {
+
+      // show image characteristic drop down options
+      this.chart1ImageOptionsAreVisible = true;
+
+      // hide field characteristic drop down options
+      this.chart1FieldOptionsAreVisible = false;
+    } else {
+
+      // hide image characteristic drop down options
+      this.chart1ImageOptionsAreVisible = false;
+
+      // show field characteristic drop down options
+      this.chart1FieldOptionsAreVisible = true;
+    }
+  }
+
+  /**
+   * Handles when user chooses an image type for Chart 1.
+   */
+  onChart1ImageTypeChange() {
+
+    // clear down flowing drop downs & chart
+    this.chart1SelectedImageCharacteristicId = undefined;
+    this.chart1SelectedImageCharacteristicName = undefined;
+    this.selectedChart1Sensor = undefined;
+    this.chart1Parameter1IsVisible = false;
+    this.chart1Parameter1Name = undefined;
+    this.chart1Parameter1Range = [];
+    this.chart1SelectedParameter1Option = undefined;
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+
+    // add image characteristic drop down items
+    if (this.chart1SelectedImageType === 'Spectral') {
+      this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allSpectralCharacteristicObjects);
+    } else {
+      this.chart1ImageCharacteristics = TimeSeriesBuilderService.createUniqueCharacteristicNames(this.allTexturalCharacteristicObjects);
+    }
+  }
+
+  /**
+   * Handles when user chooses an image characteristic for Chart 1.
+   */
+  onChart1ImageCharacteristicChange() {
+
+    // clear down flowing drop downs & chart
+    this.selectedChart1Sensor = undefined;
+    this.chart1Parameter1IsVisible = false;
+    this.chart1Parameter1Name = undefined;
+    this.chart1Parameter1Range = [];
+    this.chart1SelectedParameter1Option = undefined;
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+
+    // add sensor drop down items
+    if (this.chart1SelectedImageType === 'Spectral') {
+
+      // load spectral sensor drop down options
+      this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+
+      // for fetching a time series after a sensor is chosen
+      this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+
+    } else {
+
+      //
+      console.log(this.allTexturalCharacteristicObjects);
+
+      // load textural sensor drop down options
+      this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
+
+      // for fetching a time series after a sensor is chosen
+      this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
+    }
+
+    //
+    console.log('the chosen image characteristic id: ', this.chart1SelectedImageCharacteristicId);
+  }
+
+  /**
+   * Handles when a user chooses a sensor for Chart 1.
+   */
+  onChart1SensorChange() {
+
+    // clear down flowing drop downs & chart
+    this.chart1Parameter1IsVisible = false;
+    this.chart1Parameter1Name = undefined;
+    this.chart1Parameter1Range = [];
+    this.chart1SelectedParameter1Option = undefined;
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+
+    // check if chosen sensor will require additional parameters
+    const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, this.selectedChart1Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
+    if (parameters.length === 0) {
+
+      // render the time series
+      this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
+        return response;
+      }).then((data) => {
+
+        const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+      });
+    } else if (parameters.length > 0) {
+
+      // present parameters - we cannot yet render the time series
+      if (parameters.length === 1) {
+
+        //
+        console.log('here for 1');
+
+        // handle selection visibility
+        this.chart1Parameter1IsVisible = true;
+        this.chart1Parameter2IsVisible = false;
+
+        // present parameter 1 to user
+        const parameter1 = parameters[0];
+        this.chart1Parameter1Name = TimeSeriesBuilderService.fetchParameterName(parameter1);
+        this.chart1Parameter1Range = TimeSeriesBuilderService.fetchParameterRange(parameter1);
+      } else {
+
+        //
+        console.log('here for 2');
+
+        // handle selection visibility
+        this.chart1Parameter1IsVisible = true;
+        this.chart1Parameter2IsVisible = true;
+
+        // present parameter 1 to user
+        const parameter1 = parameters[0];
+        this.chart1Parameter1Name = TimeSeriesBuilderService.fetchParameterName(parameter1);
+        this.chart1Parameter1Range = TimeSeriesBuilderService.fetchParameterRange(parameter1);
+
+        // present parameter 2 to user
+        const parameter2 = parameters[1];
+        this.chart1Parameter2Name = TimeSeriesBuilderService.fetchParameterName(parameter2);
+        this.chart1Parameter2Range = TimeSeriesBuilderService.fetchParameterRange(parameter2);
       }
-    );
+    }
+  }
+
+  /**
+   * Handles when a user chooses a parameter 1 option for Chart 1.
+   */
+  onChart1Parameter1Change() {
+
+    // clear down flowing drop downs & chart
+    this.chart1Parameter2IsVisible = false;
+    this.chart1Parameter2Name = undefined;
+    this.chart1Parameter2Range = [];
+    this.chart1SelectedParameter2Option = undefined;
+    TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
+
+    const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, this.selectedChart1Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
+    if (parameters.length === 1) {
+
+      // render the time series
+      this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+      });
+    }
+  }
+
+  /**
+   * Handles when a user chooses a parameter 2 option for Chart 1
+   */
+  onChart1Parameter2Change() {
+    //
+    console.log('param1 name: ', this.chart1Parameter1Name, ' range: ', this.chart1Parameter1Range, ' selected: ',   this.chart1SelectedParameter1Option);
+    console.log('param2 name: ', this.chart1Parameter2Name, '  range: ', this.chart1Parameter2Range, ' selected: ',  this.chart1SelectedParameter2Option);
+
+    const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, this.selectedChart1Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
+    if (parameters.length === 2) {
+
+      // render the time series
+      this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+        this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+      });
+    }
+  }
+
+  /**
+   * Handles when a user chooses a field characteristic for Chart 1.
+   */
+  onChart1FieldCharacteristicChange() {
+    // fetch the field characteristic id
+    const targetFieldCharName = this.chart1SelectedFieldCharacteristicName;
+    let fieldCharId: number = undefined;
+    this.fieldTypes.forEach(function(item){
+      if (item.alias === targetFieldCharName) {
+        fieldCharId = item.oid;
+      }
+    });
+    this.chart1SelectedFieldCharacteristicId = fieldCharId;
+    
+    // Get The Group classes just like in the histogram data
+    this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, fieldCharId, this.cropList, this.fmusList, this.classesList).then((response) => {
+        return response;
+      }).then((data) => {
+        const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic per class', this.chart1SelectedFieldCharacteristicName);
+        this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
+      }).catch((error) => {
+        //
+        console.log(error);
+      });
+
   }
 }

@@ -294,7 +294,7 @@ export class StarsAPIService {
    * @param {string} fmusListClass
    * @param {string} classes
    */
-  fetchFieldConstantTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string, fmusListClass: string, classes: string) {
+  fetchFieldClassifiedTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, characteristicId: number, cropNames: string, fmusListClass: string, classes: string) {
     const authHeader = StarsAPIService.createAuthorizationHeader();
     let url = `${AppConfiguration.apiBaseURL}/field/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&startYear=${startYear}&fmusListClass=${fmusListClass}&classes=${classes}`;
 
@@ -304,6 +304,7 @@ export class StarsAPIService {
 
     return this.http.get(url, { headers: authHeader })
       .toPromise()
+      .then(response => response.json())
       .catch((error) => {
         console.log(error.message);
         if (error.message === undefined) {

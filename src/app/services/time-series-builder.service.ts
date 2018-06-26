@@ -248,14 +248,13 @@ export class TimeSeriesBuilderService {
         chartData.push(lineDataObject);
       }
     }
-
+    console.log(chartData);
     return chartData;
   }
 
   static createFieldCharacteristicTimeSeriesData(apiResponse: any) {
 
     const chartData = [];
-
     for (const item of apiResponse.results) {
       const cropName = item.crop;
       const dateCollection = [];
@@ -341,9 +340,100 @@ export class TimeSeriesBuilderService {
         chartData.push(lineDataObject);
       }
     }
-
     return chartData;
   }
+  
+  static createFieldClassifiedTimeSeriesData(apiResponse: any) {
+
+      const chartData = [];
+      for (const item of apiResponse.results) {
+        const cropName = item.crop;
+        const className = item.class;
+        const dateCollection = [];
+        const avgValueCollection = [];
+        const maxValueCollection = [];
+        const minValueCollection = [];
+        
+        for (const crop of item.cseries[0]) {   // note variation - need to do [0]
+          dateCollection.push(crop.acquisition_date);
+          avgValueCollection.push(crop.avgvalue);
+          if (crop.hasOwnProperty('maxvalue') && crop.hasOwnProperty('minvalue')) {
+            if (crop.maxvalue != null) {
+              maxValueCollection.push(crop.maxvalue);
+            }
+            if (crop.minvalue != null) {
+              minValueCollection.push(crop.minvalue);
+            }
+          }
+        }
+
+        // draw line and envelope
+        if (avgValueCollection.length === maxValueCollection.length) {
+
+          // chart's line
+          const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+          const lineDataObject = {
+            x: dateCollection,
+            y: avgValueCollection,
+            mode: 'lines',
+            name: className+' ('+cropName+')',
+            line: {
+              color: lineColor,
+              width: 3
+            },
+            type: 'scatter'
+          };
+
+          // chart's envelope
+          const envelopeY = minValueCollection;
+          for (let i = maxValueCollection.length - 1; i >= 0; i--) {
+            envelopeY.push(maxValueCollection[i]);
+          }
+
+          const envelopeX = dateCollection;
+          for (let j = dateCollection.length - 1; j >= 0; j--) {
+            envelopeX.push(dateCollection[j]);
+          }
+
+          const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
+          const envelopeDataObject = {
+            x: envelopeX,
+            y: envelopeY,
+            fill: 'toself',
+            fillcolor: backgroundColor,
+            name: '',
+            showlegend: false,
+            type: 'scatter',
+            line: {color: 'transparent'}
+          };
+
+          // add line & envelope to chart data
+          chartData.push(envelopeDataObject);
+          chartData.push(lineDataObject);
+        } else {
+
+          // only draw line ...
+
+          // chart's line
+          const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+          const lineDataObject = {
+            x: dateCollection,
+            y: avgValueCollection,
+            mode: 'lines',
+            name: className+' ('+cropName+')',
+            line: {
+              color: lineColor,
+              width: 3
+            },
+            type: 'scatter'
+          };
+
+          // add line & envelope to chart data
+          chartData.push(lineDataObject);
+        }
+      }
+      return chartData;
+    }
 
   /**
    * Utility for creating an image characteristics time series layout object.
@@ -420,8 +510,7 @@ export class TimeSeriesBuilderService {
   /**
    * Utility for testing patterns for creating chart spec.
    */
-  static createDefaultTimeSeriesCharts(Plotly: any) {
-
+  static createDefaultTimeSeriesCharts(Plotly: any, targetChartDivId: string='chart1') {
     // ----------------------
     //  CHART 1 PLACEHOLDER
     // ----------------------
@@ -452,7 +541,7 @@ export class TimeSeriesBuilderService {
 
     // spectral chart for millet
     const milletSpectralData = []//[milletSpectralLineEnvelope, milletSpectralLine];
-    Plotly.newPlot('chart1',
+    Plotly.newPlot(targetChartDivId,
       milletSpectralData,
       milletSpectralLayout,
       {

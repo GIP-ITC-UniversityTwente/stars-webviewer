@@ -284,9 +284,12 @@ export class HistogramComponent implements OnInit {
     // TODO: BROADCAST TO COMPONENT THAT WE ARE READY TO SHOW THE CLASSIFIED HISTOGRAM
     // - - - START TESTING API CALL
 
+    // broadcast classes and groups to other components
+    
+    
     /*
     const tempImageCharId = 1;
-    this.starsAPIService.fetchFieldConstantTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1220,1160,1120,1165,1025,1060', 'bin0,bin1,bin2').then((response) => {
+    this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1220,1160,1120,1165,1025,1060', 'bin0,bin1,bin2').then((response) => {
       return response;
     }).then((data) => {
       //
@@ -297,12 +300,15 @@ export class HistogramComponent implements OnInit {
     });
     */
 
-    const tempImageCharId = 1;
-    this.starsAPIService.fetchFieldConstantTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1160,1220,1120,1165,1025,1060', 'class0,class1,class2').then((response) => {
+    const tempImageCharId = 1060;
+    this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1160,1220,1120,1165,1025,1060', 'class0,class1,class2').then((response) => {
       return response;
     }).then((data) => {
       //
-      console.log('data', data);
+      //console.log('data', data);
+      // inform other components that the grouped data exists
+      this.userSelectionService.updateGroupedTimeSeriesData(data);
+      
     }).catch((error) => {
       //
       console.log(error);

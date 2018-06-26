@@ -6,7 +6,7 @@ import { StarsAPIService } from '../services/stars-api.service';
 import { UserSelectionService } from '../services/user-selection.service';
 
 declare const ol: any;
-
+declare const Popup: any;
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -19,6 +19,11 @@ export class MapComponent implements OnInit, OnDestroy {
    */
 
   map: any;
+  baseLayers:any;
+  overlayLayers:any;
+  topographyLayers:any;
+  selectInteraction:any;
+  mapPopup:any;
   subscriptionToSelectedStudyArea: Subscription;
   studyArea: JSON;
   studyAreaVectorSource: any;
@@ -28,12 +33,13 @@ export class MapComponent implements OnInit, OnDestroy {
   endYear: number;
   subscriptionToSelectedCropTypes: Subscription;
   cropTypes: string[] = [];
+  layerSwitcher:any;
 
   /**
    * For dependency injecting needed Services.
    */
   constructor(private userSelectionService: UserSelectionService, private starsAPIService: StarsAPIService) {
-
+    
     // subscribe to the study area selection by the user
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
@@ -95,8 +101,9 @@ export class MapComponent implements OnInit, OnDestroy {
     this.initializeMap();
     this.addTopoMapLayer();
     this.addAerialMapLayer();
-    this.initializeLayerVisibility(this.map);
-    // this.initializeFeatureClick(this.map);
+    this.addTopographyLayers();
+    this.initializeFeatureClick(this.map);
+    
   }
 
   /**
@@ -112,8 +119,26 @@ export class MapComponent implements OnInit, OnDestroy {
   /**
    * For initializing the map.
    */
+  
   initializeMap() {
-
+   // create basemap group
+    this.baseLayers=new ol.layer.Group({
+          title: 'Base',
+          layers: []
+        }
+    );
+ // create layers group
+    this.overlayLayers=new ol.layer.Group({
+        title: 'Layers',
+        layers: []
+      }
+  );
+    // create topography group
+    this.topographyLayers=new ol.layer.Group({
+        title: 'Topography',
+        layers: []
+      }
+  );
     // create map
     this.map = new ol.Map({
       target: 'map',
@@ -124,8 +149,16 @@ export class MapComponent implements OnInit, OnDestroy {
         center: ol.proj.fromLonLat([AppConfiguration.mapCenterLng, AppConfiguration.mapCenterLat]),
         zoom: AppConfiguration.mapZoom
       }),
-      interactions: ol.interaction.defaults({mouseWheelZoom: false})
+      interactions: ol.interaction.defaults({mouseWheelZoom: false}),
+      layers:[this.baseLayers,this.topographyLayers,this.overlayLayers]
     });
+
+    this.layerSwitcher = new ol.control.LayerSwitcher({
+        tipLabel: 'Legend' // Optional label for button
+    });
+   this.map.addControl(this.layerSwitcher);
+    // map goes global for debug purposes ONLY!!
+    eval("map = this.map;");
   }
 
   /**
@@ -137,11 +170,96 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     const topoLayer = new ol.layer.Tile({
-      source: topoSource
+      source: topoSource,
+      type: 'base',
+      visible:false,
+      title:'Open topo map'
     });
 
-    const mapLayersCollection = this.map.getLayers();
+    let mapLayersCollection = this.baseLayers.getLayers();
     mapLayersCollection.insertAt(0, topoLayer);
+  }
+  
+  /**
+   * Utility for adding the Topography layers to the map.
+   */
+  addTopographyLayers() {
+      const slopeLayer= new ol.layer.Tile({
+          title:'Slope',
+          visible:false,
+          source: new ol.source.TileWMS({
+            url: 'https://stars.itc.nl/mapservices/topography',
+            params: {'LAYERS': 'slope', 'TILED': true},
+            serverType: 'mapserver'
+          })
+        });
+      
+      const mapLayersCollection = this.topographyLayers.getLayers();
+      mapLayersCollection.insertAt(0, slopeLayer);
+      
+      const aspectLayer= new ol.layer.Tile({
+          title:'Aspect',
+          visible:false,
+          source: new ol.source.TileWMS({
+            url: 'https://stars.itc.nl/mapservices/topography',
+            params: {'LAYERS': 'aspect', 'TILED': true},
+            serverType: 'mapserver'
+          })
+        });
+      mapLayersCollection.insertAt(1, aspectLayer);
+      const srtmLayer= new ol.layer.Image({
+          title:'Elevation (SRTM)',
+          visible:false,
+          source: new ol.source.ImageWMS({
+            url: 'https://stars.itc.nl/mapservices/topography',
+            params: {'LAYERS': 'srtm', 'TILED': false},
+            serverType: 'mapserver'
+          })
+        });
+      mapLayersCollection.insertAt(2, srtmLayer);
+      const tpi30Layer= new ol.layer.Tile({
+          title:'TPI 30 meters',
+          visible:false,
+          source: new ol.source.TileWMS({
+            url: 'https://stars.itc.nl/mapservices/topography',
+            params: {'LAYERS': 'tpi30', 'TILED': true},
+            serverType: 'mapserver'
+          })
+        });
+      mapLayersCollection.insertAt(3, tpi30Layer);
+      
+      const tpi300Layer= new ol.layer.Tile({
+          title:'TPI 300 meters',
+          visible:false,
+          source: new ol.source.TileWMS({
+            url: 'https://stars.itc.nl/mapservices/topography',
+            params: {'LAYERS': 'tpi300', 'TILED': true},
+            serverType: 'mapserver'
+          })
+        });
+      mapLayersCollection.insertAt(4, tpi300Layer);
+      
+      const tpi1000Layer= new ol.layer.Tile({
+          title:'TPI 1000 meters',
+          visible:false,
+          source: new ol.source.TileWMS({
+            url: 'https://stars.itc.nl/mapservices/topography',
+            params: {'LAYERS': 'tpi1000', 'TILED': true},
+            serverType: 'mapserver'
+          })
+        });
+      mapLayersCollection.insertAt(5, tpi1000Layer);
+      
+//      const tpi2000Layer= new ol.layer.Tile({
+//          title:'TPI 2000 meters',
+//          visible:false,
+//          source: new ol.source.TileWMS({
+//            url: 'https://stars.itc.nl/mapservices/topography',
+//            params: {'LAYERS': 'tpi2000', 'TILED': true},
+//            serverType: 'mapserver'
+//          })
+//        });
+//      mapLayersCollection.insertAt(5, tpi2000Layer);
   }
 
   /**
@@ -154,11 +272,14 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     const bingLayer = new ol.layer.Tile({
-      source: bingSource
+      source: bingSource,
+      type: 'base',
+      title:'Bing maps'
     });
 
-    const mapLayersCollection = this.map.getLayers();
+    let mapLayersCollection = this.baseLayers.getLayers();
     mapLayersCollection.insertAt(1, bingLayer);
+    console.log(mapLayersCollection);
   }
 
   /**
@@ -166,11 +287,12 @@ export class MapComponent implements OnInit, OnDestroy {
    * @param map
    */
   initializeLayerVisibility(map: any) {
+    const baseLayers=this.baseLayers
     this.map.on('moveend', function(){
       const zoomLevel = map.getView().getZoom();
-      const mapLayersCollection = map.getLayers();
-      const topoLayer = mapLayersCollection.item(0);
-      const aerialLayer = mapLayersCollection.item(1);
+      const baseLayersCollection = baseLayers.getLayers();
+      const topoLayer = baseLayersCollection.item(0);
+      const aerialLayer = baseLayersCollection.item(1);
 
       if (zoomLevel >= 9) {
 
@@ -189,36 +311,54 @@ export class MapComponent implements OnInit, OnDestroy {
   /**
    * Utility for handling when user clicks on a map feature.
    */
-  initializeFeatureClick(map: any) {
-
+  initializeFeatureClick(layer:any) {
+    const map=this.map;
     // style for selected feature
     const polygonStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: 'rgba(0, 0, 255, 1.0)',
+        color: 'rgba(255, 255, 0, 1.0)',
         width: 4
       }),
       fill: new ol.style.Fill({
-        color: 'rgba(0, 0, 255, 0.1)'
+        color: 'rgba(255, 255, 0, 0.1)'
       })
     });
-
     // for the select feature interaction
-    const selectClick = new ol.interaction.Select({
+    this.selectInteraction = new ol.interaction.Select({
       condition: ol.events.condition.click,
+      layers:[layer],
       style: polygonStyle
     });
 
     // click the feature, highlight on selection, and showing a popup
-    map.addInteraction(selectClick);
-    selectClick.on('select', function(evt) {
+    this.map.addInteraction(this.selectInteraction);
+
+    if(typeof(this.mapPopup)=='undefined'){
+        this.mapPopup = new Popup();
+        map.addOverlay(this.mapPopup);
+    }
+    
+    const mapPopup=this.mapPopup;
+    
+    this.selectInteraction.on('select', function(evt) {
       const features = evt.target.getFeatures();
       const feature = features.item(0);
+      if(evt.selected.length===0){
+          if(mapPopup.isOpened()){
+              mapPopup.hide()
+          }
+          return null;
+      }
       const cropType = feature.get('croptype');
+      const fieldType=feature.get('fieldwork') ? 'Fieldwork' : 'Non fieldwork'
+      const farmArea=(Math.round(feature.getGeometry().getArea())/10000).toFixed(3);
+      console.log(feature);
       if(cropType !== undefined) {
-        console.log('Show popup that says ... ' + cropType);
-        // TODO ENDED HERE
-        // TODO ZOOM TO FARM FIELD
-        // TODO SHOW POPUP WITH CROP TYPE NAME
+        let featureCenter=ol.extent.getCenter(feature.getGeometry().getExtent());
+        if(mapPopup.isOpened()){
+            mapPopup.hide()
+        }
+        mapPopup.show(featureCenter, '<div><p><b>'+fieldType+'</b></p><p> <b>Crop</b>: '+cropType+'</p><p> <b>Area</b>: '+farmArea+' ha</p></div>');
       }
     });
   }
@@ -280,7 +420,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     const polygonStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: 'rgba(102, 153, 67, 1.0)',
+        color: 'rgba(255, 117, 24, 1.0)',
         lineDash: [4],
         width: 4
       }),
@@ -290,16 +430,16 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     const vectorLayer = new ol.layer.Vector({
+        title:'Study area',
       source: this.studyAreaVectorSource,
       style: polygonStyle
     });
 
-    const mapLayersCollection = this.map.getLayers();
-    mapLayersCollection.insertAt(2, vectorLayer);
+    const mapLayersCollection = this.overlayLayers.getLayers();
+    mapLayersCollection.insertAt(0, vectorLayer);
 
     this.zoomToStudyAreaExtent();
   }
-
   /**
    * Utility for zooming to the extent of the study area
    */
@@ -361,10 +501,11 @@ export class MapComponent implements OnInit, OnDestroy {
    * Utility for removing farmfields from the map
    */
   clearFarmFieldsFromMap() {
-    const mapLayersCollection = this.map.getLayers();
-    const farmFieldsLayer  = mapLayersCollection.item(3);
+    const mapLayersCollection = this.overlayLayers.getLayers();
+    const farmFieldsLayer  = mapLayersCollection.item(1);
     if (farmFieldsLayer !== undefined) {
-      this.map.removeLayer(farmFieldsLayer);
+       mapLayersCollection.remove(farmFieldsLayer);
+       this.map.removeInteraction(this.selectInteraction)
     }
   }
 
@@ -409,13 +550,24 @@ export class MapComponent implements OnInit, OnDestroy {
       });
 
       const vectorLayer = new ol.layer.Vector({
+        title:'Farm fields',
         source: vectorSource,
         style: polygonStyle
       });
 
-      const mapLayersCollection = this.map.getLayers();
-      mapLayersCollection.insertAt(3, vectorLayer);
+      const mapLayersCollection = this.overlayLayers.getLayers();
+      mapLayersCollection.insertAt(1, vectorLayer);
+      this.initializeFeatureClick(vectorLayer);
       this.map.getView().fit(vectorSource.getExtent(), this.map.getSize());
     }
+  }
+  /**
+   * Utility for adding the farm field's geojson as a map layer
+   * @param farmFieldFeatures
+   */
+  showLayersControl() {
+      console.log(this.layerSwitcher);
+      //this.layerSwitcher.hidePanel();
+
   }
 }
