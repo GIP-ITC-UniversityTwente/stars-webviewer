@@ -89,17 +89,16 @@ export class HistogramBuilderService {
   static createClassifiedHistogramDataObject(series: number[], ranges: string[]) {
     const result = [];
     ranges.forEach(function(item, index) {
-
       // get the start and end values for the current range
       const sliced = item.split(' - ');
       const startRange = Number(sliced[0]);
-      const endRange = Number(sliced[1]);
+      let endRange = Number(sliced[1]);
 
       // get the values in the series for the current
       const values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
 
       //
-      console.log('values: ', JSON.stringify(values));
+      //console.log('values: ', values);
 
       // create color array (per Plotly spec)
       const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(index);
@@ -107,10 +106,10 @@ export class HistogramBuilderService {
       values.forEach(function(){
         colorArray.push(targetColor);
       });
-
       // create a frequency data item (per Plotly spec)
+      const newIndex=index+1
       const freqItem = {
-        name: 'Class ' + index + ' (' + startRange + ' to ' + endRange + ')',
+        name: 'Class ' + newIndex + ' (' + startRange.toFixed(2) + ' to ' + endRange.toFixed(2) + ')',
         x: values,
         type: 'histogram',
         marker: { color:  targetColor},
@@ -123,16 +122,6 @@ export class HistogramBuilderService {
         }
       };
 
-      /*
-      const freqItem = {
-        name: 'Class ' + index + ' (' + startRange + ' to ' + endRange + ')',
-        x: values,
-        type: 'histogram',
-        marker: { color:  targetColor },
-        nbinsx: 1
-      };
-      */
-
       result.push(freqItem);
     });
 
@@ -144,8 +133,8 @@ export class HistogramBuilderService {
    * @param {number[]} series
    * @param {numberOfBins} the number of bins
    */
-  static createUnclassifiedHistogramDataObject(series: number[], numberOfBins: number) {
-
+  static createUnclassifiedHistogramDataObject(series: number[], numberOfBins: any) {
+      console.log(numberOfBins);
     // build histogram data object per the Plotly spec
     return [{
       x: series,
@@ -153,7 +142,7 @@ export class HistogramBuilderService {
       nbinsx: numberOfBins
     }];
   }
-
+  
   /**
    * For presenting an empty histogram.
    * @param Plotly

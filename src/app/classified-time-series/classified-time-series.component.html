@@ -4,7 +4,7 @@
 <!--   <button class="addChartButton" mat-button (click)="handleAddChartButtonTap()">{{buttonLabel}}</button> -->
     
     <div class="classifiedParameterWrapper">
-      <div class="parameterOption">
+      <div class="parameterOption" *ngIf="chart1CharacteristicTypeIsVisible">
         <div class="parameterOptionTitle">Characteristic Type</div><br/>
         <mat-select [disabled]=chart1DropDownsAreDisabled [(ngModel)]="chart1SelectedCharacteristicType" (change)="onChart1CharacteristicTypeChange()">
           <mat-option *ngFor="let characteristicType of characteristicTypes" [value]="characteristicType">

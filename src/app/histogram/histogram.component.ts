@@ -31,13 +31,15 @@ export class HistogramComponent implements OnInit {
 
   selectedFieldConstantCharacteristicId: number;
   fieldConstantCharacteristics: any[] = [];
-  selectedNumberOfBins: number;
-  numberOfBins: number[] = [];
+  selectedNumberOfBins: any;
+  numberOfBins: any[] = [];
   selectedClassificationMethod: string;
   classificationMethods: string[] = [];
   selectedClassSize: number;
   classSizes: number[] = [];
   frequencyData: number[] = [];
+  fieldConstantData: any[] = [];
+  classifiedFmuIDs: any[] = [];//same as binCollection but with the fmu's ID
   binStart: number;
   binEnd: number;
   binSize: number;
@@ -122,7 +124,8 @@ export class HistogramComponent implements OnInit {
     this.classificationMethods = [];
     this.selectedClassSize = undefined;
     this.classSizes = [];
-
+    this.fieldConstantData=[];
+    
     // fetch field constants
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
@@ -135,19 +138,39 @@ export class HistogramComponent implements OnInit {
       // clear frequency data from a previously chosen field constant characteristic
       if (this.frequencyData.length > 0) {
         this.frequencyData = [];
+        this.fieldConstantData=[];
       }
-
+      
+      this.fieldConstantData=data.results;
+      
       // initialize (or update) frequency data
       for (const item of data.results) {
         this.frequencyData.push(item['v']);
       }
 
       // initialize the number of bins
-      this.frequencyData.forEach((item, index) => {
-        if(index >= 1) { // the value of 2 is the lowest number of bins allowed
-          this.numberOfBins.push(index + 1);
-        }
-      });
+//      this.frequencyData.forEach((item, index) => {
+//        if(index >= 1) { // the value of 2 is the lowest number of bins allowed
+//          this.numberOfBins.push(index + 1);
+//        }
+//      });
+      this.numberOfBins=['auto','2','3','4','5','6','7','8','9','10'];
+      this.selectedNumberOfBins='auto';
+      // create a un-classified histogram
+      const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+      this.presentHistogramData(histoData, false);
+      console.log('Histodata',histoData);
+      
+      
+      // hold on to the defined bins after the histogram is created
+      this.binStart = histoData[0]['xbins']['start'];
+      this.binEnd = histoData[0]['xbins']['end'];
+      this.binSize = histoData[0]['xbins']['size'];
+
+      // populate number of classes (for now this is standardized as 1-5 and is not dynamic)
+      this.classSizes = [1, 2, 3, 4, 5];
+      
+      
     }).catch((error) => {
       console.log(error);
       HistogramBuilderService.createEmptyHistogram(Plotly);
@@ -169,7 +192,7 @@ export class HistogramComponent implements OnInit {
     // create a un-classified histogram
     const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
     this.presentHistogramData(histoData, false);
-
+    console.log(histoData);
     // hold on to the defined bins after the histogram is created
     this.binStart = histoData[0]['xbins']['start'];
     this.binEnd = histoData[0]['xbins']['end'];
@@ -198,23 +221,26 @@ export class HistogramComponent implements OnInit {
    * For handling when a user changes the target classification when viewing the frequency data.
    */
   onClassificationChange() {
-
-    console.log('the bin start is: ', this.binStart);
-    console.log('the bin end is: ', this.binEnd);
-    console.log('the bin size is: ', this.binSize);
-
+    
+    //console.log('the bin start is: ', this.binStart);
+    //console.log('the bin end is: ', this.binEnd);
+    //console.log('the bin size is: ', this.binSize);
+    
     // create a collection of bins & create a collection of midpoints for each bin
+    this.classifiedFmuIDs=[];
+    
     const binCollection = [];
     const midBinValues = [];
     let currentStart = this.binStart;
     let currentEnd = this.binStart;
+    let fieldConstantData=this.fieldConstantData;
+    let classifiedFmuIDs=this.classifiedFmuIDs;
     while (currentEnd < this.binEnd) {
-
       // define the start and end for the current bin
       currentEnd += this.binSize;
       currentStart = currentEnd - this.binSize;
-      //
-      console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+      
+      //console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
 
       // create the mid value for the bin
       const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(3));
@@ -227,15 +253,16 @@ export class HistogramComponent implements OnInit {
           currentBin.push(item);
         }
       });
-
+      //console.log('LAST currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
       // add the current bin into the bin collection
       binCollection.push(currentBin);
+      //console.log('currentBin ',currentBin);
     }
 
     //
-    console.log('the frequency data: ', this.frequencyData.sort());
-    console.log('the binCollection: ', JSON.stringify(binCollection));
-    console.log('the mid point values: ', midBinValues);
+    //console.log('the frequency data: ', this.frequencyData.sort());
+    //console.log('the binCollection: ', JSON.stringify(binCollection));
+    //console.log('the mid point values: ', midBinValues);
 
     // derive a collection that is like binCollection but replaces each item with the representative median value
     const medianBinCollection = [];
@@ -251,7 +278,7 @@ export class HistogramComponent implements OnInit {
     });
 
     //
-    console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
+    //console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
 
     // flatten out from an array of arrays to a single array
     const flatMedianBinCollection = [];
@@ -260,61 +287,52 @@ export class HistogramComponent implements OnInit {
         flatMedianBinCollection.push(subItem);
       });
     });
-
+    
+    //console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
+    // flatten out from an array of arrays of binCollection to a single array
+    const flatBinCollection = [];
+    binCollection.forEach(function(item) {
+      item.forEach(function(subItem) {
+          flatBinCollection.push(subItem);
+      });
+    });
+    //console.log('the flattened binCollection is: ', JSON.stringify(flatBinCollection));
     //
-    console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
+
 
     // series using the medians repeated for each bin
     this.geostatSeries = new geostats(flatMedianBinCollection);
-
+    //console.log('geostatSeries ',this.geostatSeries)
 
     // classify the data
     HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
-
+    //console.log('geostatSeries after classify ',this.geostatSeries)
+    //console.log('selectedClassSize ',this.selectedClassSize);
     // create histogram data
-    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatMedianBinCollection, this.geostatSeries.ranges);
+    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, this.geostatSeries.ranges);
 
     //
-    console.log('the histo data: ', histoData);
-
+    //console.log('the histo data: ', histoData);
+   
     // display histogram data
     this.presentHistogramData(histoData, true,true);
-
-    // TODO: DEFINE THE INPUT TO THE CLASSIFIED HISTOGRAM SECTION
-    // TODO: BROADCAST TO COMPONENT THAT WE ARE READY TO SHOW THE CLASSIFIED HISTOGRAM
-    // - - - START TESTING API CALL
+    
+    
+    // get the classified FMU's out of the histData object
+    
+    histoData.forEach(function(item) {
+        //console.log(item.x);
+        let currentClassFmusIDs=[];
+        item.x.forEach(function(subitem) {
+            const obj = fieldConstantData.find(o => o.v === subitem);
+            currentClassFmusIDs.push(obj.i);
+        });
+        classifiedFmuIDs.push(currentClassFmusIDs);
+    });
 
     // broadcast classes and groups to other components
-    
-    
-    /*
-    const tempImageCharId = 1;
-    this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1220,1160,1120,1165,1025,1060', 'bin0,bin1,bin2').then((response) => {
-      return response;
-    }).then((data) => {
-      //
-      console.log('data', data);
-    }).catch((error) => {
-      //
-      console.log(error);
-    });
-    */
+    this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
 
-    const tempImageCharId = 1060;
-    this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, tempImageCharId, this.cropTypes, '1085;1105,1230,1115;1160,1220,1120,1165,1025,1060', 'class0,class1,class2').then((response) => {
-      return response;
-    }).then((data) => {
-      //
-      //console.log('data', data);
-      // inform other components that the grouped data exists
-      this.userSelectionService.updateGroupedTimeSeriesData(data);
-      
-    }).catch((error) => {
-      //
-      console.log(error);
-    });
-
-    // - - - END TESTING API CALL
   }
 
   /**

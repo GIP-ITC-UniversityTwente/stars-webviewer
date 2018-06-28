@@ -13,7 +13,9 @@ export class UserSelectionService {
   // source crop types
   private cropTypesSource = new Subject<string[]>();
   // source group/classes data
-  private groupedTimeSeriesDataSource = new Subject<any>();
+  private classifiedFmuIDsSource = new Subject<any>();
+  // source group/classes data
+  private chart1TimeSeriesStatusSource = new Subject<any>();
 
   // observable study area
   studyArea$ = this.studyAreaSource.asObservable();
@@ -24,7 +26,9 @@ export class UserSelectionService {
   // observable crop types
   cropTypes$ = this.cropTypesSource.asObservable();
   // observable crop types
-  groupedTimeSeriesData$ = this.groupedTimeSeriesDataSource.asObservable();
+  classifiedFmuIDs$ = this.classifiedFmuIDsSource.asObservable();
+  // observable chart1SelectedCharacteristicType type
+  chart1TimeSeriesStatus$ = this.chart1TimeSeriesStatusSource.asObservable();
 
   /**
    * For changing the study area chosen by the user.
@@ -62,8 +66,38 @@ export class UserSelectionService {
    * For changing the data from 
    * @param groupedTimeSeriesData
    */
-  updateGroupedTimeSeriesData(groupedTimeSeriesData: any) {
-    this.groupedTimeSeriesDataSource.next(groupedTimeSeriesData);
+  updateClassifiedFmuIDs(classifiedFmuIDs: any) {
+    this.classifiedFmuIDsSource.next(classifiedFmuIDs);
+  }
+  
+  /**
+   * For changing the data from 
+   * @param chart1SelectedCharacteristicType
+   */
+  updateChart1TimeSeriesStatus (
+          active:boolean,
+          chart1SelectedCharacteristicType:any,
+          chart1SelectedImageType:any,
+          chart1SelectedImageCharacteristicName:any,
+          chart1SelectedImageCharacteristicId:any,
+          selectedChart1Sensor:any,
+          chart1SelectedParameter1Option:any,
+          chart1SelectedParameter2Option:any,
+          chart1SelectedFieldCharacteristicName:any,
+          chart1SelectedFieldCharacteristicId:any
+          ) {
+    this.chart1TimeSeriesStatusSource.next({
+        active:active,
+        chart1SelectedCharacteristicType:chart1SelectedCharacteristicType,
+        chart1SelectedImageType:chart1SelectedImageType,
+        chart1SelectedImageCharacteristicName:chart1SelectedImageCharacteristicName,
+        chart1SelectedImageCharacteristicId:chart1SelectedImageCharacteristicId,
+        selectedChart1Sensor:selectedChart1Sensor,
+        chart1SelectedParameter1Option:chart1SelectedParameter1Option,
+        chart1SelectedParameter2Option:chart1SelectedParameter2Option,
+        chart1SelectedFieldCharacteristicName:chart1SelectedFieldCharacteristicName,
+        chart1SelectedFieldCharacteristicId:chart1SelectedFieldCharacteristicId
+        }); 
   }
   
 }

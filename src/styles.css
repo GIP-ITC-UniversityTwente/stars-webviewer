@@ -128,6 +128,7 @@ body {
     color: grey;
     font-size: small;
 }
+
 /* ============== OL Popup Overwrite  =========== */
 .ol-popup {
   display: none;
@@ -174,4 +175,10 @@ body {
 }
 .ol-popup-closer:after {
   content: "✖";
+}
+
+/* ============== Display plotly modebar in the center  =========== */
+.js-plotly-plot .plotly .modebar {
+    left: 2px;
+    z-index: 1;
 }

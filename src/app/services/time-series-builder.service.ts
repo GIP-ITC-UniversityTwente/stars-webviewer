@@ -251,6 +251,77 @@ export class TimeSeriesBuilderService {
     console.log(chartData);
     return chartData;
   }
+  
+  /**
+   * Utility for creating a classified image characteristics time series data object (per Plotly's spec) for creating a time series from the STARS API web response.
+   * @param apiResponse
+   * @returns {Array}
+   */
+  static createImageClassifiedTimeSeriesData(apiResponse: any) {
+
+    const chartData = [];
+
+    for (const item of apiResponse.results) {
+      const cropName = item.crop;
+      const className = item.cls;
+      for (const crop of item.cseries) {
+        const dateCollection = [];
+        const avgValueCollection = [];
+        const maxValueCollection = [];
+        const minValueCollection = [];
+
+        for (const sensor of crop.sseries) {
+          dateCollection.push(sensor.acquisition_date);
+          avgValueCollection.push(sensor.avgvalue);
+          maxValueCollection.push(sensor.maxvalue);
+          minValueCollection.push(sensor.minvalue);
+        }
+
+        // chart's line
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+        const lineDataObject = {
+          x: dateCollection,
+          y: avgValueCollection,
+          mode: 'lines',
+          name: className+' ('+cropName+')',
+          line: {
+            color: lineColor,
+            width: 3
+          },
+          type: 'scatter'
+        };
+
+        // chart's envelope
+        const envelopeY = minValueCollection;
+        for (let i = maxValueCollection.length - 1; i >= 0; i--) {
+          envelopeY.push(maxValueCollection[i]);
+        }
+
+        const envelopeX = dateCollection;
+        for (let j = dateCollection.length - 1; j >= 0; j--) {
+          envelopeX.push(dateCollection[j]);
+        }
+
+        const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
+        const envelopeDataObject = {
+          x: envelopeX,
+          y: envelopeY,
+          fill: 'toself',
+          fillcolor: backgroundColor,
+          name: '',
+          showlegend: false,
+          type: 'scatter',
+          line: {color: 'transparent'}
+        };
+
+        // add line & envelope to chart data
+        chartData.push(envelopeDataObject);
+        chartData.push(lineDataObject);
+      }
+    }
+    //console.log(chartData);
+    return chartData;
+  }
 
   static createFieldCharacteristicTimeSeriesData(apiResponse: any) {
 

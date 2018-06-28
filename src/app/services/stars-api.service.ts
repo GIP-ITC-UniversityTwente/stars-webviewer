@@ -315,4 +315,45 @@ export class StarsAPIService {
         }
       });
   }
+  
+  /**
+   * Fetches a time series for a classified image characteristic based on the input parameters.
+   * @param {number} studyAreaId
+   * @param {number} startYear
+   * @param {number} endYear
+   * @param {string} cropNames
+   * @param {number} characteristicId
+   * @param {string} sensorList
+   * @param {number} firstParameter
+   * @param {any} secondParameter
+   * @param {string} fmusListClass
+   * @param {string} classes
+   * @returns {Promise<any | never | any>}
+   */
+  fetchImageClassifiedTimeSeries(studyAreaId: number, startYear: number, endYear: number = undefined, cropNames: string, characteristicId: number,  sensorList: string, firstParameter: number = undefined, secondParameter: number = undefined, fmusListClass: string, classes: string) {
+    const authHeader = StarsAPIService.createAuthorizationHeader();
+    let url: string = AppConfiguration.apiBaseURL + `/image/timeseries?studyAreaId=${studyAreaId}&cropNames=${cropNames}&characteristicId=${characteristicId}&sensorList=${sensorList}&startYear=${startYear}&fmusListClass=${fmusListClass}&classes=${classes}`;
+    if (endYear !== undefined) {
+      url += `&endYear=${endYear}`;
+    }
+    if (firstParameter !== undefined) {
+      url += `&firstParameter=${firstParameter}`;
+    }
+    if (secondParameter !== undefined) {
+      url += `&secondParameter=${secondParameter}`;
+    }
+
+    return this.http.get(url, { headers: authHeader })
+      .toPromise()
+      .then(response => response.json())
+      .catch((error) => {
+        console.log(error.message);
+        if (error.message === undefined) {
+          alert('No Results.  Please double-check your parameters.');
+        }
+        if (error.name === 'Authorization required') {
+          this.auth.login();
+        }
+      });
+  }
 }

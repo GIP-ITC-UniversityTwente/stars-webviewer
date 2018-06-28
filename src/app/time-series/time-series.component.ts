@@ -37,6 +37,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   allSpectralCharacteristicObjects: any[] = [];
   allTexturalCharacteristicObjects: any[] = [];
 
+  chart1IsActive = false;
   chart1DropDownsAreDisabled = false;
   chart1ImageOptionsAreVisible = false;
   chart1FieldOptionsAreVisible = false;
@@ -98,6 +99,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
         // Clear chart 1 and chart 2
         TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+        //broadcast to other components that chart 1 is activated
+        this.broadcastChart1Status();
         TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
       }
     );
@@ -109,6 +112,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
         // Clear chart 1 and chart 2
         TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+      //broadcast to other components that chart 1 is activated
+        this.broadcastChart1Status();
         TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
         // initialize characteristic types
@@ -132,6 +137,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
         // Clear chart 1 and chart 2
         TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+      //broadcast to other components that chart 1 is activated
+        this.broadcastChart1Status();
         TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
 
         // initialize image types
@@ -156,6 +163,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
           // Clear chart 1 and chart 2
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+        //broadcast to other components that chart 1 is activated
+          this.broadcastChart1Status();
           TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
         } else if (cropTypes.length > 0) {
 
@@ -209,7 +218,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     // chart 1 - updates
     if (this.chart1SelectedCharacteristicType === 'Image Characteristic') {
-      if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter2Option === undefined) {
+      if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option === undefined && this.chart1SelectedParameter1Option === undefined) {
         // update image characteristic time series with no parameters
         this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor).then((response) => {
           return response;
@@ -217,6 +226,9 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
           const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
           this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+          //broadcast to other components that chart 1 is activated
+          this.broadcastChart1Status(true);
+          
         });
       } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option === undefined) {
         // update image characteristic time series with parameter 1
@@ -226,15 +238,20 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
           const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
           this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+          //broadcast to other components that chart 1 is activated
+          this.broadcastChart1Status(true);
         });
       } else if (this.selectedChart1Sensor !== undefined && this.chart1SelectedParameter1Option !== undefined && this.chart1SelectedParameter2Option !== undefined) {
         // update image characteristic time series with parameter 1 & 2
-        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart2SelectedImageCharacteristicId, this.selectedChart2Sensor, this.chart2SelectedParameter1Option, this.chart2SelectedParameter2Option).then((response) => {
+        this.starsAPIService.fetchImageCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option).then((response) => {
           return response;
         }).then((data) => {
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
           this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+          //broadcast to other components that chart 1 is activated
+          this.broadcastChart1Status(true);
+          
         });
       }
     } else if (this.chart1SelectedCharacteristicType === 'Field Characteristic') {
@@ -245,6 +262,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
         this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+      //broadcast to other components that chart 1 is activated
+        this.broadcastChart1Status(true);
       });
     }
     // chart 2 updates
@@ -265,7 +284,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         }).then((data) => {
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
           const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart2');
         });
       } else if (this.selectedChart2Sensor !== undefined && this.chart2SelectedParameter1Option !== undefined && this.chart2SelectedParameter2Option !== undefined) {
         // update image characteristic time series with parameter 1 & 2
@@ -274,7 +293,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         }).then((data) => {
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
           const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart2SelectedImageType, this.chart2SelectedImageCharacteristicName);
-          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+          this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart2');
         });
       }
     } else if (this.chart2SelectedCharacteristicType === 'Field Characteristic') {
@@ -296,7 +315,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     const targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
     Plotly.relayout('chart1', { width: targetElementWidth });
   }
+  broadcastChart1Status(status:any=false) {
+    //broadcast Chart1TimeSeriesActivated
+      this.chart1IsActive=status;
+      this.userSelectionService.updateChart1TimeSeriesStatus(status,this.chart1SelectedCharacteristicType,this.chart1SelectedImageType,this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicId,this.selectedChart1Sensor,this.chart1SelectedParameter1Option,this.chart1SelectedParameter2Option,this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicId);
 
+    }
   /**
    * Utility for initializing the image characteristic options
    * @param {number} studyAreaId
@@ -387,6 +411,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart1SelectedFieldCharacteristicName = undefined;
     this.chart1SelectedFieldCharacteristicId = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+  //broadcast to other components that chart 1 is activated
+    this.broadcastChart1Status();
 
     // show/hide dropdowns based on chosen characteristic type
     if (this.chart1SelectedCharacteristicType === this.characteristicTypes[0]) {
@@ -424,6 +450,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart1Parameter2Range = [];
     this.chart1SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+  //broadcast to other components that chart 1 is activated
+    this.broadcastChart1Status();
 
     // add image characteristic drop down items
     if (this.chart1SelectedImageType === 'Spectral') {
@@ -449,6 +477,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart1Parameter2Range = [];
     this.chart1SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+  //broadcast to other components that chart 1 is activated
+    this.broadcastChart1Status();
 
     // add sensor drop down items
     if (this.chart1SelectedImageType === 'Spectral') {
@@ -473,6 +503,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     //
     console.log('the chosen image characteristic id: ', this.chart1SelectedImageCharacteristicId);
+
   }
 
   /**
@@ -490,6 +521,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart1Parameter2Range = [];
     this.chart1SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+  //broadcast to other components that chart 1 is activated
+    this.broadcastChart1Status();
 
     // check if chosen sensor will require additional parameters
     const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, this.selectedChart1Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
@@ -503,6 +536,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+        //broadcast to other components that chart 1 is activated
+        this.broadcastChart1Status(true);
       });
     } else if (parameters.length > 0) {
 
@@ -553,6 +588,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     this.chart1Parameter2Range = [];
     this.chart1SelectedParameter2Option = undefined;
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
+  //broadcast to other components that chart 1 is activated
+    this.broadcastChart1Status();
 
     const parameters = TimeSeriesBuilderService.fetchParametersForImageCharacteristic(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName, this.selectedChart1Sensor, this.allSpectralCharacteristicObjects, this.allTexturalCharacteristicObjects);
     if (parameters.length === 1) {
@@ -564,6 +601,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+      //broadcast to other components that chart 1 is activated
+        this.broadcastChart1Status(true);
       });
     }
   }
@@ -586,6 +625,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+      //broadcast to other components that chart 1 is activated
+        this.broadcastChart1Status(true);
       });
     }
   }
@@ -612,6 +653,8 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
       const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
       this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
+    //broadcast to other components that chart 1 is activated
+      this.broadcastChart1Status(true);
     });
   }
 
