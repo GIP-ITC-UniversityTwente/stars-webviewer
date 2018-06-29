@@ -29,6 +29,7 @@ export class HistogramComponent implements OnInit {
   subscriptionToSelectedCropTypes: Subscription;
   cropTypes: string;
 
+  chartIsActive=false;
   selectedFieldConstantCharacteristicId: number;
   fieldConstantCharacteristics: any[] = [];
   selectedNumberOfBins: any;
@@ -79,6 +80,7 @@ export class HistogramComponent implements OnInit {
 
         if (cropTypes.length === 0) {
           HistogramBuilderService.createEmptyHistogram(Plotly);
+          this.chartIsActive=false;
         } else if (cropTypes.length > 0) {
 
           // create the comma-delimited list of crops for an API request
@@ -120,6 +122,7 @@ export class HistogramComponent implements OnInit {
     this.numberOfBins = [];
     this.selectedNumberOfBins = undefined;
     HistogramBuilderService.createEmptyHistogram(Plotly);
+    this.chartIsActive=false;
     this.selectedClassificationMethod = undefined;
     this.classificationMethods = [];
     this.selectedClassSize = undefined;
@@ -158,6 +161,7 @@ export class HistogramComponent implements OnInit {
       this.selectedNumberOfBins='auto';
       // create a un-classified histogram
       const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+      this.chartIsActive=true;
       this.presentHistogramData(histoData, false);
       console.log('Histodata',histoData);
       
@@ -174,6 +178,7 @@ export class HistogramComponent implements OnInit {
     }).catch((error) => {
       console.log(error);
       HistogramBuilderService.createEmptyHistogram(Plotly);
+      this.chartIsActive=false;
     });
   }
 
@@ -184,6 +189,7 @@ export class HistogramComponent implements OnInit {
 
     // clear down flowing drop downs and charts
     HistogramBuilderService.createEmptyHistogram(Plotly);
+    this.chartIsActive=false;
     this.selectedClassificationMethod = undefined;
     this.classificationMethods = [];
     this.selectedClassSize = undefined;
@@ -191,6 +197,7 @@ export class HistogramComponent implements OnInit {
 
     // create a un-classified histogram
     const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+    this.chartIsActive=true;
     this.presentHistogramData(histoData, false);
     console.log(histoData);
     // hold on to the defined bins after the histogram is created
@@ -310,6 +317,7 @@ export class HistogramComponent implements OnInit {
     //console.log('selectedClassSize ',this.selectedClassSize);
     // create histogram data
     const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, this.geostatSeries.ranges);
+    this.chartIsActive=true;
 
     //
     //console.log('the histo data: ', histoData);

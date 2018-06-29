@@ -4,3 +4,16 @@
   float: right;
   margin-right: 15px;
 }
+.hidden {
+	visibility: hidden;
+    height: 0px;
+}
+.centeredNotice {
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+    font-size: 15pt;
+    color: #878484;
+    font-weight: 400;
+}

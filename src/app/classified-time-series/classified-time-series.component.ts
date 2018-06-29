@@ -48,6 +48,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
   //fmusList: string='1105,1230,30440,30530,30550,30595,1115,1120,1160,1165,1220,30415,30425,30435,30485,30495,30500,30555,30610;1025,1060,30430,30455,30525;30535;30410';
   classesList: string;
   fmusList: string;
+  chart1CharacteristicsTypeDisabled = true;
   chart1DropDownsAreDisabled = false;
   chart1ImageOptionsAreVisible = false;
   chart1FieldOptionsAreVisible = false;
@@ -168,7 +169,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
 
             // Disable TimeSeries drop downs
             this.chart1DropDownsAreDisabled = true;
-
+            this.chart1CharacteristicsTypeDisabled=true;
             // Clear chart
             TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
             this.chart1IsActive=false;
@@ -176,6 +177,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
 
             // Enable time series drop downs
             this.chart1DropDownsAreDisabled = false;
+            this.chart1CharacteristicsTypeDisabled=false;
 
             // Create Crop List
             this.cropList = TimeSeriesBuilderService.createCropList(cropTypes);

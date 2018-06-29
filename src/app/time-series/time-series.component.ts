@@ -38,6 +38,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   allTexturalCharacteristicObjects: any[] = [];
 
   chart1IsActive = false;
+  chart1CharacteristicsTypeDisabled = true;
   chart1DropDownsAreDisabled = false;
   chart1ImageOptionsAreVisible = false;
   chart1FieldOptionsAreVisible = false;
@@ -159,6 +160,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
           // Disable TimeSeries drop downs
           this.chart1DropDownsAreDisabled = true;
+          this.chart1CharacteristicsTypeDisabled=true;
           this.chart2DropDownsAreDisabled = true;
 
           // Clear chart 1 and chart 2
@@ -170,6 +172,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
           // Enable time series drop downs
           this.chart1DropDownsAreDisabled = false;
+          this.chart1CharacteristicsTypeDisabled=false;
           this.chart2DropDownsAreDisabled = false;
 
           // Create Crop List

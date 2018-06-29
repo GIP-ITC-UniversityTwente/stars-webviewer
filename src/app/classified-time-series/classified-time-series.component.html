@@ -76,6 +76,7 @@
     <br/>
 </div>
 <div class="chartWrapper multiChartDivider" style="width:100%;">
-  <div id="classifiedChart1"></div>
+	<div class="centeredNotice" *ngIf="!chart1IsActive && chart1CharacteristicTypeIsVisible" > Please select the options above to display classified timeseries.</div>
+  <div id="classifiedChart1" [ngClass]="{ hidden:!chart1IsActive}"></div>
 </div>
 
