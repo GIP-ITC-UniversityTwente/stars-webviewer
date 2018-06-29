@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class HistogramBuilderService {
 
   // This standardizes the classification methods available to the application when calling methods from the geostats library
-  static classificationMethods = ['Jenks', 'Equal Interval', 'Quantile', 'Unique Values', 'Standard Deviation', 'Arithmetic Progression', 'Geometric Progression'];
+  static classificationMethods = ['Jenks', 'Equal Interval', 'Quantile', 'Standard Deviation', 'Arithmetic Progression', 'Geometric Progression'];
 
   /**
    * Utility for fetching numbers in the input series that are greater than or equal to the input start number and less then the input end number.
@@ -68,12 +68,10 @@ export class HistogramBuilderService {
     } else if (targetClassification === HistogramBuilderService.classificationMethods[2]) {
       geostatSeries.getClassQuantile(classSize);
     } else if (targetClassification === HistogramBuilderService.classificationMethods[3]) {
-      geostatSeries.getClassUniqueValues(classSize);
-    } else if (targetClassification === HistogramBuilderService.classificationMethods[4]) {
       geostatSeries.getClassStdDeviation(classSize);
-    } else if (targetClassification === HistogramBuilderService.classificationMethods[5]) {
+    } else if (targetClassification === HistogramBuilderService.classificationMethods[4]) {
       geostatSeries.getClassArithmeticProgression(classSize);
-    } else if (targetClassification === HistogramBuilderService.classificationMethods[6]) {
+    } else if (targetClassification === HistogramBuilderService.classificationMethods[5]) {
       geostatSeries.getClassGeometricProgression(classSize);
     } else {
       geostatSeries.getJenks(classSize);
@@ -134,7 +132,7 @@ export class HistogramBuilderService {
    * @param {numberOfBins} the number of bins
    */
   static createUnclassifiedHistogramDataObject(series: number[], numberOfBins: any) {
-      console.log(numberOfBins);
+      //console.log(numberOfBins);
     // build histogram data object per the Plotly spec
     return [{
       x: series,

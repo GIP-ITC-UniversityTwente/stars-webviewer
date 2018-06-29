@@ -77,8 +77,8 @@
     </div>
     <br/>
   </div>
-  <div class="centeredNotice" *ngIf="!chart1IsActive && chart1CharacteristicsTypeDisabled"> Please select the options from the left panel.</div>
-  <div class="centeredNotice" *ngIf="!chart1IsActive && !chart1CharacteristicsTypeDisabled"> Please select the options above to display timeseries data.</div>
+  <div class="centeredNotice" *ngIf="!chart1IsActive && chart1CharacteristicsTypeDisabled"> Select the options from the left panel.</div>
+  <div class="centeredNotice" *ngIf="!chart1IsActive && !chart1CharacteristicsTypeDisabled"> Select characteristic options above to display timeseries data.</div>
   <div id="chart1" [ngClass]="{ hidden:!chart1IsActive}"></div>
 </div>
 <div [hidden]="!chart2IsShowing" class="chartWrapper" style="border-top: 1px solid #dfdfdf;">

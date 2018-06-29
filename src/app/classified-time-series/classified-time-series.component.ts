@@ -35,7 +35,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
   subscriptionToClassifiedFmuIDs: Subscription;
   classifiedFmuIDs: any;
   
-
+  leftPanelisTicked=false;
   studyAreaId: number;
   cropList: string;
   characteristicTypes: string[] = [];
@@ -159,6 +159,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
 
           // initializes the field characteristic options
           this.initializeFieldCharacteristicOptions(this.studyAreaId, this.startYear, this.endYear);
+          
         }
       );
 
@@ -166,7 +167,8 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
       this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
         cropTypes => {
           if (cropTypes.length === 0) {
-
+            //variable for left panel template info
+            this.leftPanelisTicked=false;
             // Disable TimeSeries drop downs
             this.chart1DropDownsAreDisabled = true;
             this.chart1CharacteristicsTypeDisabled=true;
@@ -174,7 +176,8 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
             TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
             this.chart1IsActive=false;
           } else if (cropTypes.length > 0) {
-
+            //variable for left panel template info
+             this.leftPanelisTicked=true;
             // Enable time series drop downs
             this.chart1DropDownsAreDisabled = false;
             this.chart1CharacteristicsTypeDisabled=false;
@@ -345,7 +348,6 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
    * Life-cycle hook after component is created.
    */
   ngOnInit() {
-
     //this.createTestGraphs();
       
       // create blank time series

@@ -77,10 +77,10 @@ export class HistogramComponent implements OnInit {
     // subscribe to crop types selections by the user
     this.subscriptionToSelectedCropTypes = this.userSelectionService.cropTypes$.subscribe(
       cropTypes => {
-
         if (cropTypes.length === 0) {
           HistogramBuilderService.createEmptyHistogram(Plotly);
           this.chartIsActive=false;
+          this.fieldConstantCharacteristics=[];
         } else if (cropTypes.length > 0) {
 
           // create the comma-delimited list of crops for an API request

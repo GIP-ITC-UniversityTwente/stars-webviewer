@@ -39,6 +39,7 @@
 
 </div>
 <div class="chartWrapper" style="width:100%;">
-<div class="centeredNotice" *ngIf="fieldConstantCharacteristics.length>0 && !chartIsActive" > Please select the options above to display the histogram.</div>
-  <div id="histogram"></div>
+  <div class="centeredNotice" *ngIf="!chart1IsActive && fieldConstantCharacteristics.length<=0"> Select the options from the left panel.</div>
+  <div class="centeredNotice" *ngIf="fieldConstantCharacteristics.length>0 && !chartIsActive" > Select histogram options above to display histogram.</div>
+  <div id="histogram" [ngClass]="{ hidden:!chartIsActive}"></div>
 </div>
