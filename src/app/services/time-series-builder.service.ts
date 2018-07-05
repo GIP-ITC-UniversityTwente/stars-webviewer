@@ -525,6 +525,7 @@ export class TimeSeriesBuilderService {
       yaxis: {
         title: yAxisTitle,
         showline: false,
+        rangemode:"nonnegative",
         ticks: 'outside',
         showticklabels: true
       },
@@ -562,6 +563,7 @@ export class TimeSeriesBuilderService {
       },
       yaxis: {
         title: '',
+        rangemode:"nonnegative",
         showline: false
       },
       hovermode: 'closest'
@@ -603,6 +605,7 @@ export class TimeSeriesBuilderService {
       },
       yaxis: {
         title: 'NDVI average',
+        rangemode:"nonnegative",
         showline: false,
         ticks: 'outside',
         showticklabels: true

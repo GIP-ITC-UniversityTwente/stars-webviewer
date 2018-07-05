@@ -65,16 +65,17 @@
 
     function resizeHistogramChart() {
       var targetElementWidth = document.getElementById('histogramCard').offsetWidth;
-      if (targetElementWidth > 0) {
+      var targetElementHeight = document.getElementById('histogramCard').offsetHeight;
+      if (targetElementHeight > 200) {        
         Plotly.relayout('histogram', { width: targetElementWidth });
       }
     }
 
     function resizeClassifiedTimeSeriesCharts() {
       var targetElementWidth = document.getElementById('timeSeriesCard').offsetWidth;
-      if ((targetElementWidth * 0.499) > 0) {
-        Plotly.relayout('classifiedChart1', { width: targetElementWidth * 0.499 });
-        Plotly.relayout('classifiedChart2', { width: targetElementWidth * 0.499 });
+      if ((targetElementWidth * 1) > 0) {
+        Plotly.relayout('classifiedChart1', { width: targetElementWidth * 1 });
+        //Plotly.relayout('classifiedChart2', { width: targetElementWidth * 0.499 });
       }
     }
   </script>

@@ -17,7 +17,7 @@
       </mat-option>
     </mat-select>
   </div>
-  <div class="classificationFieldMeasurementOption">
+  <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Grouping Method</div><br/>
     <mat-select [(ngModel)]="selectedClassificationMethod" (change)="onClassificationChange()">
       <mat-option *ngFor="let classificationMethod of classificationMethods" [value]="classificationMethod">
@@ -25,7 +25,9 @@
       </mat-option>
     </mat-select>
   </div>
-  <div class="classificationFieldMeasurementOption">
+  
+
+   <div class="fieldMeasurementOption">
     <div class="parameterOptionTitle">Number of Groups</div> <br/>
     <mat-select [(ngModel)]="selectedClassSize" (change)="onClassSizeChange()">
       <mat-option *ngFor="let classSize of classSizes" [value]="classSize">
@@ -33,9 +35,6 @@
       </mat-option>
     </mat-select>
   </div>
-
- <img class="cardInfoRightButton" src="../../assets/icon_info.svg" alt="info" matTooltip={{fieldConstantsToolTip}} [matTooltipPosition]='toolTipPosition'/>
- <div class=classificationHeaderTitle>GROUPING</div>
 
 </div>
 <div class="chartWrapper" style="width:100%;">
