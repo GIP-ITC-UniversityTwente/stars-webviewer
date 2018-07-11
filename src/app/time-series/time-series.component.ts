@@ -47,10 +47,12 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   chart1ImageCharacteristics: any[] = [];
   chart1SelectedImageCharacteristicName: string;
   chart1SelectedImageCharacteristicId: number;
+  chart1SelectedImageCharacteristicUnit: string;
   chart1Sensors: any[] = [];
   selectedChart1Sensor: string;
   chart1SelectedFieldCharacteristicName: string;
   chart1SelectedFieldCharacteristicId: number;
+  chart1SelectedFieldCharacteristicUnit:string;
 
   chart1Parameter1IsVisible = false;
   chart1Parameter1Name: string;
@@ -192,7 +194,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     // create blank time series
     TimeSeriesBuilderService.createDefaultTimeSeriesCharts(Plotly);
-
     // default style-layout of charts
     this.initializeChartLayout();
   }
@@ -227,7 +228,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
           return response;
         }).then((data) => {
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName, this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
           this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
           //broadcast to other components that chart 1 is activated
           this.broadcastChart1Status(true);
@@ -239,7 +240,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
           return response;
         }).then((data) => {
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName, this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
           this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
           //broadcast to other components that chart 1 is activated
           this.broadcastChart1Status(true);
@@ -250,7 +251,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
           return response;
         }).then((data) => {
           const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+          const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName, this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
           this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
           //broadcast to other components that chart 1 is activated
           this.broadcastChart1Status(true);
@@ -263,7 +264,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         return response;
       }).then((data) => {
         const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
-        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName, this.chart1SelectedFieldCharacteristicName);
         this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
       //broadcast to other components that chart 1 is activated
         this.broadcastChart1Status(true);
@@ -482,7 +483,6 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
     TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart1');
   //broadcast to other components that chart 1 is activated
     this.broadcastChart1Status();
-
     // add sensor drop down items
     if (this.chart1SelectedImageType === 'Spectral') {
 
@@ -491,21 +491,19 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
       // for fetching a time series after a sensor is chosen
       this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
-
+      
+      this.chart1SelectedImageCharacteristicUnit  = TimeSeriesBuilderService.fetchImageCharacteristicUnit(this.chart1SelectedImageCharacteristicName, this.allSpectralCharacteristicObjects);
+      
     } else {
 
-      //
-      console.log(this.allTexturalCharacteristicObjects);
 
       // load textural sensor drop down options
       this.chart1Sensors = TimeSeriesBuilderService.fetchSensorsForImageCharacteristic(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
 
       // for fetching a time series after a sensor is chosen
       this.chart1SelectedImageCharacteristicId  = TimeSeriesBuilderService.fetchImageCharacteristicId(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
+      this.chart1SelectedImageCharacteristicUnit  = TimeSeriesBuilderService.fetchImageCharacteristicUnit(this.chart1SelectedImageCharacteristicName, this.allTexturalCharacteristicObjects);
     }
-
-    //
-    console.log('the chosen image characteristic id: ', this.chart1SelectedImageCharacteristicId);
 
   }
 
@@ -537,7 +535,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
       }).then((data) => {
 
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName, this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
         //broadcast to other components that chart 1 is activated
         this.broadcastChart1Status(true);
@@ -602,7 +600,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         return response;
       }).then((data) => {
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName, this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
       //broadcast to other components that chart 1 is activated
         this.broadcastChart1Status(true);
@@ -626,7 +624,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         return response;
       }).then((data) => {
         const chartData = TimeSeriesBuilderService.createImageCharacteristicTimeSeriesData(data);
-        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageType, this.chart1SelectedImageCharacteristicName);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName, this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
       //broadcast to other components that chart 1 is activated
         this.broadcastChart1Status(true);
@@ -641,20 +639,23 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     // fetch the field characteristic id
     const targetFieldCharName = this.chart1SelectedFieldCharacteristicName;
+    let fieldCharUnit: string = undefined;
     let fieldCharId: number = undefined;
     this.fieldTypes.forEach(function(item){
       if (item.alias === targetFieldCharName) {
         fieldCharId = item.oid;
+        fieldCharUnit=item.unit;
       }
     });
     this.chart1SelectedFieldCharacteristicId = fieldCharId;
+    this.chart1SelectedFieldCharacteristicUnit = fieldCharUnit;
 
     // fetch the time series for the selected field characteristic
     this.starsAPIService.fetchFieldCharacteristicTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedFieldCharacteristicId).then((response) => {
       return response;
     }).then((data) => {
       const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
-      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
+      const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName, this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
       this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
     //broadcast to other components that chart 1 is activated
       this.broadcastChart1Status(true);

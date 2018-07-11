@@ -36,7 +36,7 @@ export class HistogramComponent implements OnInit {
   numberOfBins: any[] = [];
   selectedClassificationMethod: string;
   classificationMethods: string[] = [];
-  selectedClassSize: number;
+  selectedClassSize: any;
   classSizes: number[] = [];
   frequencyData: number[] = [];
   fieldConstantData: any[] = [];
@@ -135,8 +135,8 @@ export class HistogramComponent implements OnInit {
     }).then((data) => {
 
       //
-      console.log('field constant data ...');
-      console.log(JSON.stringify(data.results));
+//      console.log('field constant data ...');
+//      console.log(JSON.stringify(data.results));
 
       // clear frequency data from a previously chosen field constant characteristic
       if (this.frequencyData.length > 0) {
@@ -159,20 +159,40 @@ export class HistogramComponent implements OnInit {
 //      });
       this.numberOfBins=['auto','2','3','4','5','6','7','8','9','10'];
       this.selectedNumberOfBins='auto';
-      // create a un-classified histogram
-      const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
-      this.chartIsActive=true;
-      this.presentHistogramData(histoData, false);
-      console.log('Histodata',histoData);
-      
-      
-      // hold on to the defined bins after the histogram is created
-      this.binStart = histoData[0]['xbins']['start'];
-      this.binEnd = histoData[0]['xbins']['end'];
-      this.binSize = histoData[0]['xbins']['size'];
+      this.selectedClassSize=this.selectedNumberOfBins;
+//      // create a un-classified histogram
+//      const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+//      this.chartIsActive=true;
+//      this.presentHistogramData(histoData, false);
+//      console.log('Histodata',histoData);
+//      
+//      
+//      // hold on to the defined bins after the histogram is created
+//      this.binStart = histoData[0]['xbins']['start'];
+//      this.binEnd = histoData[0]['xbins']['end'];
+//      this.binSize = histoData[0]['xbins']['size'];
 
       // populate number of classes (for now this is standardized as 1-5 and is not dynamic)
-      this.classSizes = [1, 2, 3, 4, 5];
+      //this.classSizes = [1, 2, 3, 4, 5];
+      
+     // clear down flowing drop downs and charts
+      this.selectedClassificationMethod = undefined;
+      this.classificationMethods = [];
+
+      // present the classification methods
+      if (this.classificationMethods.length !== HistogramBuilderService.classificationMethods.length) {
+        this.classificationMethods = HistogramBuilderService.classificationMethods;
+      }
+   // if no classification method is selected we select the first
+      if(typeof(this.selectedClassificationMethod)=='undefined'){
+       
+          this.selectedClassificationMethod=this.classificationMethods[0];
+      }
+      
+      
+      this.onNumberOfBinsChange();
+      
+      
       
       
     }).catch((error) => {
@@ -190,23 +210,428 @@ export class HistogramComponent implements OnInit {
     // clear down flowing drop downs and charts
     HistogramBuilderService.createEmptyHistogram(Plotly);
     this.chartIsActive=false;
-    this.selectedClassificationMethod = undefined;
-    this.classificationMethods = [];
-    this.selectedClassSize = undefined;
-    this.classSizes = [];
+    //this.selectedClassificationMethod = undefined;
+    //this.classificationMethods = [];
+    //this.selectedClassSize = undefined;
+    //this.classSizes = [];
+    
+    this.selectedClassSize=this.selectedNumberOfBins;
+//    console.log(this.selectedClassSize);
 
-    // create a un-classified histogram
-    const histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
-    this.chartIsActive=true;
-    this.presentHistogramData(histoData, false);
-    console.log(histoData);
-    // hold on to the defined bins after the histogram is created
-    this.binStart = histoData[0]['xbins']['start'];
-    this.binEnd = histoData[0]['xbins']['end'];
-    this.binSize = histoData[0]['xbins']['size'];
+    //this.selectedClassificationMethod='Default (plotly based)';
+//    console.log(this.selectedClassificationMethod);
+    // plotly based classification can handle the auto.
+    if (this.selectedClassificationMethod=='Default (plotly based)'){
+//        console.log('automatic');
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // create a un-classified histogram
+        let histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+        this.chartIsActive=false;
+        this.presentHistogramData(histoData, false);
+        
+//        console.log(histoData);
+        // hold on to the defined bins after the histogram is created
+        this.binStart = histoData[0]['xbins']['start'];
+        this.binEnd = histoData[0]['xbins']['end'];
+        this.binSize = histoData[0]['xbins']['size'];
 
-    // populate number of classes (for now this is standardized as 1-5 and is not dynamic)
-    this.classSizes = [1, 2, 3, 4, 5];
+//        console.log('the bin start is: ', this.binStart);
+//        console.log('the bin end is: ', this.binEnd);
+//        console.log('the bin size is: ', this.binSize);
+        
+        // create a collection of bins & create a collection of midpoints for each bin
+        this.classifiedFmuIDs=[];
+        
+        const binCollection = [];
+//        const midBinValues = [];
+        let currentStart = this.binStart;
+        let currentEnd = this.binStart;
+        let fieldConstantData=this.fieldConstantData;
+        let classifiedFmuIDs=this.classifiedFmuIDs;
+        while (currentEnd < this.binEnd) {
+          // define the start and end for the current bin
+          currentEnd += this.binSize;
+          currentStart = currentEnd - this.binSize;
+          
+//          console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+
+
+          // find the frequency data values that should be in the current bin
+          const currentBin = [];
+          this.frequencyData.forEach(function(item){
+            if (item > currentStart && item <= currentEnd) {
+              currentBin.push(item);
+            }
+          });
+
+          binCollection.push(currentBin);
+              
+//           // create the mid value for the bin
+//              const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(3));
+//              midBinValues.push(midPoint);
+        }
+
+        //
+//        console.log('the frequency data: ', this.frequencyData.sort());
+//        console.log('the binCollection: ', JSON.stringify(binCollection));
+//        console.log('the mid point values: ', midBinValues);
+
+        
+//        // derive a collection that is like binCollection but replaces each item with the representative median value
+//        const medianBinCollection = [];
+//        binCollection.forEach(function(item, index) {
+//          let numberOfItems = item.length;
+//          const medianArray = [];
+//          while (numberOfItems > 0) {
+//            const targetMedianValue = midBinValues[index];
+//            medianArray.push(targetMedianValue);
+//            numberOfItems -= 1;
+//          }
+//          medianBinCollection.push(medianArray);
+//        });
+
+        //
+        //console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
+
+//        // flatten out from an array of arrays to a single array
+//        const flatMedianBinCollection = [];
+//        medianBinCollection.forEach(function(item) {
+//          item.forEach(function(subItem) {
+//            flatMedianBinCollection.push(subItem);
+//          });
+//        });
+        
+        //console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
+        // flatten out from an array of arrays of binCollection to a single array
+        const flatBinCollection = [];
+        binCollection.forEach(function(item) {
+          item.forEach(function(subItem) {
+              flatBinCollection.push(subItem);
+          });
+        });
+
+        // classify the data
+        let newRanges=HistogramBuilderService.classifyAutomaticBins(this.binStart,this.binEnd,this.binSize);
+        // create histogram data
+        histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, newRanges);
+        this.chartIsActive=true;
+
+        //
+        //console.log('the histo data: ', histoData);
+       
+        // display histogram data
+        this.presentHistogramData(histoData, true,true);
+        
+        
+        // get the classified FMU's out of the histData object
+        histoData.forEach(function(item) {
+            //console.log(item.x);
+            let currentClassFmusIDs=[];
+            item.x.forEach(function(subitem) {
+                const obj = fieldConstantData.find(o => o.v === subitem);
+                currentClassFmusIDs.push(obj.i);
+            });
+            classifiedFmuIDs.push(currentClassFmusIDs);
+        });
+
+        // broadcast classes and groups to other components
+        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+    else if (this.selectedNumberOfBins=='auto' && this.selectedClassificationMethod!='Default (plotly based)'){
+        console.log('auto but manual classification')
+        // create a un-classified histogram to get the number of bins created by plotly
+        let histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+        this.chartIsActive=false;
+        this.presentHistogramData(histoData, false);
+        
+//        console.log(histoData);
+        // hold on to the defined bins after the histogram is created
+        this.binStart = histoData[0]['xbins']['start'];
+        this.binEnd = histoData[0]['xbins']['end'];
+        this.binSize = histoData[0]['xbins']['size'];
+        let newRanges=HistogramBuilderService.classifyAutomaticBins(this.binStart,this.binEnd,this.binSize);
+        const numberOfBins=newRanges.length;
+        this.selectedClassSize=numberOfBins;
+        
+        ////////////////////////////////////////////////////////////////////////////////////////
+//        console.log('the bin start is: ', this.binStart);
+//        console.log('the bin end is: ', this.binEnd);
+//        console.log('the bin size is: ', this.binSize);
+        
+        // create a collection of bins & create a collection of midpoints for each bin
+        this.classifiedFmuIDs=[];
+        
+        const binCollection = [];
+        //const midBinValues = [];
+        let currentStart = this.binStart;
+        let currentEnd = this.binStart;
+        let fieldConstantData=this.fieldConstantData;
+        let classifiedFmuIDs=this.classifiedFmuIDs;
+        while (currentEnd < this.binEnd) {
+          // define the start and end for the current bin
+          currentEnd += this.binSize;
+          currentStart = currentEnd - this.binSize;
+          
+//          console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+
+          
+
+          // find the frequency data values that should be in the current bin
+          const currentBin = [];
+          this.frequencyData.forEach(function(item){
+            if (item > currentStart && item <= currentEnd) {
+              currentBin.push(item);
+            }
+          });
+       // readjust number of classes or bins so we don't have empty ones!
+//          if(currentBin.length>0){
+              //console.log('LAST currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+              // add the current bin into the bin collection
+              binCollection.push(currentBin);
+              //console.log('currentBin ',currentBin);
+              
+//           // create the mid value for the bin
+//              const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(4));
+//              
+//              midBinValues.push(midPoint);
+//          } else{
+//              console.log('------------------> Empty class removed!');
+//          }
+       
+          //this.selectedClassSize=binCollection.length;
+        }
+
+        //
+//        console.log('the frequency data: ', this.frequencyData.sort());
+//        console.log('the binCollection: ', JSON.stringify(binCollection));
+//        console.log('the mid point values: ', midBinValues);
+        
+        
+        
+//        // derive a collection that is like binCollection but replaces each item with the representative median value
+//        const medianBinCollection = [];
+//        binCollection.forEach(function(item, index) {
+//          let numberOfItems = item.length;
+//          const medianArray = [];
+//          while (numberOfItems > 0) {
+//            const targetMedianValue = midBinValues[index];
+//            medianArray.push(targetMedianValue);
+//            numberOfItems -= 1;
+//          }
+//          medianBinCollection.push(medianArray);
+//        });
+
+        //
+        //console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
+
+//        // flatten out from an array of arrays to a single array
+//        const flatMedianBinCollection = [];
+//        medianBinCollection.forEach(function(item) {
+//          item.forEach(function(subItem) {
+//            flatMedianBinCollection.push(subItem);
+//          });
+//        });
+        
+        //console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
+        // flatten out from an array of arrays of binCollection to a single array
+        const flatBinCollection = [];
+        binCollection.forEach(function(item) {
+          item.forEach(function(subItem) {
+              flatBinCollection.push(subItem);
+          });
+        });
+        //console.log('the flattened binCollection is: ', JSON.stringify(flatBinCollection));
+        //
+
+//        console.log(this.selectedClassificationMethod);
+//        console.log(this.selectedClassSize);
+
+        // series using the medians repeated for each bin
+        this.geostatSeries = new geostats(flatBinCollection);
+//        console.log('geostatSeries ',this.geostatSeries)
+
+        // classify the data
+        
+        HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+//        console.log('geostatSeries after classify ',this.geostatSeries)
+//        console.log('selectedClassSize ',this.selectedClassSize);
+        // create histogram data
+        histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, this.geostatSeries.ranges);
+        this.chartIsActive=true;
+
+        //
+//        console.log('the histo data: ', histoData);
+       
+        // display histogram data
+        this.presentHistogramData(histoData, true,true);
+        
+        
+        // get the classified FMU's out of the histData object
+        
+        histoData.forEach(function(item) {
+            //console.log(item.x);
+            let currentClassFmusIDs=[];
+            item.x.forEach(function(subitem) {
+                const obj = fieldConstantData.find(o => o.v === subitem);
+                currentClassFmusIDs.push(obj.i);
+            });
+            classifiedFmuIDs.push(currentClassFmusIDs);
+        });
+
+        // broadcast classes and groups to other components
+        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+        ////////////////////////////////////////////////////////////////////////////////////////////
+    }
+    else if (this.selectedNumberOfBins!='auto' && this.selectedClassificationMethod!='Default (plotly based)') {
+//        console.log('NOT auto and manual classification');
+        
+        this.selectedClassSize=this.selectedNumberOfBins;
+        
+        ////////////////////////////////////////////////////////////////////////////////////////
+//        console.log('the bin start is: ', this.binStart);
+//        console.log('the bin end is: ', this.binEnd);
+//        console.log('the bin size is: ', this.binSize);
+        
+        // create a collection of bins & create a collection of midpoints for each bin
+        this.classifiedFmuIDs=[];
+        
+        const binCollection = [];
+//        const midBinValues = [];
+        let currentStart = this.binStart;
+        let currentEnd = this.binStart;
+        let fieldConstantData=this.fieldConstantData;
+        let classifiedFmuIDs=this.classifiedFmuIDs;
+        while (currentEnd < this.binEnd) {
+          // define the start and end for the current bin
+          currentEnd += this.binSize;
+          currentStart = currentEnd - this.binSize;
+          
+//          console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+
+          
+
+          // find the frequency data values that should be in the current bin
+          const currentBin = [];
+          this.frequencyData.forEach(function(item){
+            if (item > currentStart && item <= currentEnd) {
+              currentBin.push(item);
+            }
+          });
+       // readjust number of classes or bins so we don't have empty ones!
+//          if(currentBin.length>0){
+              //console.log('LAST currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+              // add the current bin into the bin collection
+              binCollection.push(currentBin);
+              //console.log('currentBin ',currentBin);
+              
+//           // create the mid value for the bin
+//              const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(3));
+//              midBinValues.push(midPoint);
+//          } else{
+//              console.log('------------------> Empty class removed!');
+//          }
+       
+          //this.selectedClassSize=binCollection.length;
+        }
+
+        //
+//        console.log('the frequency data: ', this.frequencyData.sort());
+//        console.log('the binCollection: ', JSON.stringify(binCollection));
+//        console.log('the mid point values: ', midBinValues);
+        
+        
+        
+//        // derive a collection that is like binCollection but replaces each item with the representative median value
+//        const medianBinCollection = [];
+//        binCollection.forEach(function(item, index) {
+//          let numberOfItems = item.length;
+//          const medianArray = [];
+//          while (numberOfItems > 0) {
+//            const targetMedianValue = midBinValues[index];
+//            medianArray.push(targetMedianValue);
+//            numberOfItems -= 1;
+//          }
+//          medianBinCollection.push(medianArray);
+//        });
+
+        //
+        //console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
+//
+//        // flatten out from an array of arrays to a single array
+//        const flatMedianBinCollection = [];
+//        medianBinCollection.forEach(function(item) {
+//          item.forEach(function(subItem) {
+//            flatMedianBinCollection.push(subItem);
+//          });
+//        });
+        
+        //console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
+        // flatten out from an array of arrays of binCollection to a single array
+        const flatBinCollection = [];
+        binCollection.forEach(function(item) {
+          item.forEach(function(subItem) {
+              flatBinCollection.push(subItem);
+          });
+        });
+        //console.log('the flattened binCollection is: ', JSON.stringify(flatBinCollection));
+        //
+//
+//        console.log(this.selectedClassificationMethod);
+//        console.log(this.selectedClassSize);
+
+        // series using the medians repeated for each bin
+        this.geostatSeries = new geostats(flatBinCollection);
+//        console.log('geostatSeries ',this.geostatSeries)
+
+        // classify the data
+        
+        HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+//        console.log('geostatSeries after classify ',this.geostatSeries)
+//        console.log('selectedClassSize ',this.selectedClassSize);
+        // create histogram data
+        let histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, this.geostatSeries.ranges);
+        this.chartIsActive=true;
+
+        //
+        //console.log('the histo data: ', histoData);
+       
+        // display histogram data
+        this.presentHistogramData(histoData, true,true);
+        
+        
+        // get the classified FMU's out of the histData object
+        
+        histoData.forEach(function(item) {
+            //console.log(item.x);
+            let currentClassFmusIDs=[];
+            item.x.forEach(function(subitem) {
+                const obj = fieldConstantData.find(o => o.v === subitem);
+                currentClassFmusIDs.push(obj.i);
+            });
+            classifiedFmuIDs.push(currentClassFmusIDs);
+        });
+
+        // broadcast classes and groups to other components
+        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        
+    }
+    
+
+    
+
+    
+    // clear down flowing drop downs and charts
+    //this.selectedClassificationMethod = undefined;
+    //this.classificationMethods = [];
+
+    // present the classification methods
+    //if (this.classificationMethods.length !== HistogramBuilderService.classificationMethods.length) {
+    //  this.classificationMethods = HistogramBuilderService.classificationMethods;
+   // }
+     // by default we select the first classification method
+    //this.selectedClassificationMethod=this.classificationMethods[0];
   }
 
   /**
@@ -228,118 +653,274 @@ export class HistogramComponent implements OnInit {
    * For handling when a user changes the target classification when viewing the frequency data.
    */
   onClassificationChange() {
-    
-    //console.log('the bin start is: ', this.binStart);
-    //console.log('the bin end is: ', this.binEnd);
-    //console.log('the bin size is: ', this.binSize);
-    
-    // create a collection of bins & create a collection of midpoints for each bin
-    this.classifiedFmuIDs=[];
-    
-    const binCollection = [];
-    const midBinValues = [];
-    let currentStart = this.binStart;
-    let currentEnd = this.binStart;
-    let fieldConstantData=this.fieldConstantData;
-    let classifiedFmuIDs=this.classifiedFmuIDs;
-    while (currentEnd < this.binEnd) {
-      // define the start and end for the current bin
-      currentEnd += this.binSize;
-      currentStart = currentEnd - this.binSize;
-      
-      //console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
-
-      // create the mid value for the bin
-      const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(3));
-      midBinValues.push(midPoint);
-
-      // find the frequency data values that should be in the current bin
-      const currentBin = [];
-      this.frequencyData.forEach(function(item){
-        if (item > currentStart && item <= currentEnd) {
-          currentBin.push(item);
-        }
-      });
-      //console.log('LAST currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
-      // add the current bin into the bin collection
-      binCollection.push(currentBin);
-      //console.log('currentBin ',currentBin);
-    }
-
-    //
-    //console.log('the frequency data: ', this.frequencyData.sort());
-    //console.log('the binCollection: ', JSON.stringify(binCollection));
-    //console.log('the mid point values: ', midBinValues);
-
-    // derive a collection that is like binCollection but replaces each item with the representative median value
-    const medianBinCollection = [];
-    binCollection.forEach(function(item, index) {
-      let numberOfItems = item.length;
-      const medianArray = [];
-      while (numberOfItems > 0) {
-        const targetMedianValue = midBinValues[index];
-        medianArray.push(targetMedianValue);
-        numberOfItems -= 1;
-      }
-      medianBinCollection.push(medianArray);
-    });
-
-    //
-    //console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
-
-    // flatten out from an array of arrays to a single array
-    const flatMedianBinCollection = [];
-    medianBinCollection.forEach(function(item) {
-      item.forEach(function(subItem) {
-        flatMedianBinCollection.push(subItem);
-      });
-    });
-    
-    //console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
-    // flatten out from an array of arrays of binCollection to a single array
-    const flatBinCollection = [];
-    binCollection.forEach(function(item) {
-      item.forEach(function(subItem) {
-          flatBinCollection.push(subItem);
-      });
-    });
-    //console.log('the flattened binCollection is: ', JSON.stringify(flatBinCollection));
-    //
-
-
-    // series using the medians repeated for each bin
-    this.geostatSeries = new geostats(flatMedianBinCollection);
-    //console.log('geostatSeries ',this.geostatSeries)
-
-    // classify the data
-    HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
-    //console.log('geostatSeries after classify ',this.geostatSeries)
-    //console.log('selectedClassSize ',this.selectedClassSize);
-    // create histogram data
-    const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, this.geostatSeries.ranges);
-    this.chartIsActive=true;
-
-    //
-    //console.log('the histo data: ', histoData);
-   
-    // display histogram data
-    this.presentHistogramData(histoData, true,true);
-    
-    
-    // get the classified FMU's out of the histData object
-    
-    histoData.forEach(function(item) {
-        //console.log(item.x);
-        let currentClassFmusIDs=[];
-        item.x.forEach(function(subitem) {
-            const obj = fieldConstantData.find(o => o.v === subitem);
-            currentClassFmusIDs.push(obj.i);
-        });
-        classifiedFmuIDs.push(currentClassFmusIDs);
-    });
-
-    // broadcast classes and groups to other components
-    this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+    this.selectedClassSize=this.selectedNumberOfBins;
+//    console.log(this.selectedClassSize);
+    this.onNumberOfBinsChange();
+//
+//    if(this.selectedClassSize=='auto' || this.selectedClassificationMethod=='Default (plotly based)'){
+//        ////////////////////////////////////////////////////////////////////////////////////////////////
+//        console.log('automatic');
+//        // create a un-classified histogram
+//        let histoData = HistogramBuilderService.createUnclassifiedHistogramDataObject(this.frequencyData, this.selectedNumberOfBins);
+//        this.chartIsActive=false;
+//        this.presentHistogramData(histoData, false);
+//        
+//        console.log(histoData);
+//        // hold on to the defined bins after the histogram is created
+//        this.binStart = histoData[0]['xbins']['start'];
+//        this.binEnd = histoData[0]['xbins']['end'];
+//        this.binSize = histoData[0]['xbins']['size'];
+//
+//        console.log('the bin start is: ', this.binStart);
+//        console.log('the bin end is: ', this.binEnd);
+//        console.log('the bin size is: ', this.binSize);
+//        
+//        // create a collection of bins & create a collection of midpoints for each bin
+//        this.classifiedFmuIDs=[];
+//        
+//        const binCollection = [];
+//        const midBinValues = [];
+//        let currentStart = this.binStart;
+//        let currentEnd = this.binStart;
+//        let fieldConstantData=this.fieldConstantData;
+//        let classifiedFmuIDs=this.classifiedFmuIDs;
+//        while (currentEnd < this.binEnd) {
+//          // define the start and end for the current bin
+//          currentEnd += this.binSize;
+//          currentStart = currentEnd - this.binSize;
+//          
+//          console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+//
+//
+//          // find the frequency data values that should be in the current bin
+//          const currentBin = [];
+//          this.frequencyData.forEach(function(item){
+//            if (item > currentStart && item <= currentEnd) {
+//              currentBin.push(item);
+//            }
+//          });
+//
+//          binCollection.push(currentBin);
+//              
+//           // create the mid value for the bin
+//              const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(3));
+//              midBinValues.push(midPoint);
+//        }
+//
+//        //
+//        console.log('the frequency data: ', this.frequencyData.sort());
+//        console.log('the binCollection: ', JSON.stringify(binCollection));
+//        console.log('the mid point values: ', midBinValues);
+//
+//        
+//        // derive a collection that is like binCollection but replaces each item with the representative median value
+//        const medianBinCollection = [];
+//        binCollection.forEach(function(item, index) {
+//          let numberOfItems = item.length;
+//          const medianArray = [];
+//          while (numberOfItems > 0) {
+//            const targetMedianValue = midBinValues[index];
+//            medianArray.push(targetMedianValue);
+//            numberOfItems -= 1;
+//          }
+//          medianBinCollection.push(medianArray);
+//        });
+//
+//        //
+//        //console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
+//
+//        // flatten out from an array of arrays to a single array
+//        const flatMedianBinCollection = [];
+//        medianBinCollection.forEach(function(item) {
+//          item.forEach(function(subItem) {
+//            flatMedianBinCollection.push(subItem);
+//          });
+//        });
+//        
+//        //console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
+//        // flatten out from an array of arrays of binCollection to a single array
+//        const flatBinCollection = [];
+//        binCollection.forEach(function(item) {
+//          item.forEach(function(subItem) {
+//              flatBinCollection.push(subItem);
+//          });
+//        });
+//
+//        // classify the data
+//        let newRanges=HistogramBuilderService.classifyAutomaticBins(this.binStart,this.binEnd,this.binSize);
+//        // create histogram data
+//        histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, newRanges);
+//        this.chartIsActive=true;
+//
+//        //
+//        //console.log('the histo data: ', histoData);
+//       
+//        // display histogram data
+//        this.presentHistogramData(histoData, true,true);
+//        
+//        
+//        // get the classified FMU's out of the histData object
+//        histoData.forEach(function(item) {
+//            //console.log(item.x);
+//            let currentClassFmusIDs=[];
+//            item.x.forEach(function(subitem) {
+//                const obj = fieldConstantData.find(o => o.v === subitem);
+//                currentClassFmusIDs.push(obj.i);
+//            });
+//            classifiedFmuIDs.push(currentClassFmusIDs);
+//        });
+//
+//        // broadcast classes and groups to other components
+//        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+//        
+//        ////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        
+////        // populate number of classes (for now this is standardized as 1-5 and is not dynamic)
+////        this.classSizes = [1, 2, 3, 4, 5];
+////        
+////        // clear down flowing drop downs and charts
+////        this.selectedClassificationMethod = undefined;
+////        this.classificationMethods = [];
+////
+////        // present the classification methods
+////        if (this.classificationMethods.length !== HistogramBuilderService.classificationMethods.length) {
+////          this.classificationMethods = HistogramBuilderService.classificationMethods;
+////        }
+////         // by default we select the first classification method
+////        this.selectedClassificationMethod=this.classificationMethods[0];
+//        
+//        return
+//    }else{
+//        
+//        console.log('the bin start is: ', this.binStart);
+//        console.log('the bin end is: ', this.binEnd);
+//        console.log('the bin size is: ', this.binSize);
+//        ////////////////////////////////////////////////////////////////////////////////////////////////
+//        // create a collection of bins & create a collection of midpoints for each bin
+//        this.classifiedFmuIDs=[];
+//        
+//        const binCollection = [];
+//        const midBinValues = [];
+//        let currentStart = this.binStart;
+//        let currentEnd = this.binStart;
+//        let fieldConstantData=this.fieldConstantData;
+//        let classifiedFmuIDs=this.classifiedFmuIDs;
+//        while (currentEnd < this.binEnd) {
+//          // define the start and end for the current bin
+//          currentEnd += this.binSize;
+//          currentStart = currentEnd - this.binSize;
+//          
+//          console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+//
+//          
+//
+//          // find the frequency data values that should be in the current bin
+//          const currentBin = [];
+//          this.frequencyData.forEach(function(item){
+//            if (item > currentStart && item <= currentEnd) {
+//              currentBin.push(item);
+//            }
+//          });
+//       // readjust number of classes or bins so we don't have empty ones!
+////          if(currentBin.length>0){
+//              //console.log('LAST currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+//              // add the current bin into the bin collection
+//              binCollection.push(currentBin);
+//              //console.log('currentBin ',currentBin);
+//              
+//           // create the mid value for the bin
+//              const midPoint = Number(((currentStart + currentEnd) / 2).toPrecision(3));
+//              midBinValues.push(midPoint);
+////          } else{
+////              console.log('------------------> Empty class removed!');
+////          }
+//       
+//          //this.selectedClassSize=binCollection.length;
+//        }
+//
+//        //
+//        console.log('the frequency data: ', this.frequencyData.sort());
+//        console.log('the binCollection: ', JSON.stringify(binCollection));
+//        console.log('the mid point values: ', midBinValues);
+//        
+//        
+//        
+//        // derive a collection that is like binCollection but replaces each item with the representative median value
+//        const medianBinCollection = [];
+//        binCollection.forEach(function(item, index) {
+//          let numberOfItems = item.length;
+//          const medianArray = [];
+//          while (numberOfItems > 0) {
+//            const targetMedianValue = midBinValues[index];
+//            medianArray.push(targetMedianValue);
+//            numberOfItems -= 1;
+//          }
+//          medianBinCollection.push(medianArray);
+//        });
+//
+//        //
+//        //console.log('the midpoint repeated for each bin: ', JSON.stringify(medianBinCollection));
+//
+//        // flatten out from an array of arrays to a single array
+//        const flatMedianBinCollection = [];
+//        medianBinCollection.forEach(function(item) {
+//          item.forEach(function(subItem) {
+//            flatMedianBinCollection.push(subItem);
+//          });
+//        });
+//        
+//        //console.log('the flattened midpoint collection is: ', JSON.stringify(flatMedianBinCollection));
+//        // flatten out from an array of arrays of binCollection to a single array
+//        const flatBinCollection = [];
+//        binCollection.forEach(function(item) {
+//          item.forEach(function(subItem) {
+//              flatBinCollection.push(subItem);
+//          });
+//        });
+//        //console.log('the flattened binCollection is: ', JSON.stringify(flatBinCollection));
+//        //
+//
+//        console.log(this.selectedClassificationMethod);
+//        console.log(this.selectedClassSize);
+//
+//        
+//        // series using the medians repeated for each bin
+//        this.geostatSeries = new geostats(flatMedianBinCollection);
+//        console.log('geostatSeries ',this.geostatSeries)
+//
+//        // classify the data
+//        
+//        HistogramBuilderService.classifySeries(this.selectedClassificationMethod, this.selectedClassSize, this.geostatSeries);
+//        console.log('geostatSeries after classify ',this.geostatSeries)
+//        console.log('selectedClassSize ',this.selectedClassSize);
+//        // create histogram data
+//        const histoData = HistogramBuilderService.createClassifiedHistogramDataObject(flatBinCollection, this.geostatSeries.ranges);
+//        this.chartIsActive=true;
+//
+//        //
+//        //console.log('the histo data: ', histoData);
+//       
+//        // display histogram data
+//        this.presentHistogramData(histoData, true,true);
+//        
+//        
+//        // get the classified FMU's out of the histData object
+//        
+//        histoData.forEach(function(item) {
+//            //console.log(item.x);
+//            let currentClassFmusIDs=[];
+//            item.x.forEach(function(subitem) {
+//                const obj = fieldConstantData.find(o => o.v === subitem);
+//                currentClassFmusIDs.push(obj.i);
+//            });
+//            classifiedFmuIDs.push(currentClassFmusIDs);
+//        });
+//
+//        // broadcast classes and groups to other components
+//        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+//        ////////////////////////////////////////////////////////////////////////////////////////////////
+//    }
 
   }
 

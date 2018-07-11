@@ -2,7 +2,7 @@
   <div class="cardHeaderTitle">CLASSIFIED TIME SERIES</div>
   <img class="cardInfoButton" src="../../assets/icon_info.svg" alt="info" matTooltip={{classifiedTimeSeriesToolTip}} [matTooltipPosition]='toolTipPosition' />
 <!--   <button class="addChartButton" mat-button (click)="handleAddChartButtonTap()">{{buttonLabel}}</button> -->
-    
+      <div class="chartHeader">
     <div class="classifiedParameterWrapper">
       <div class="parameterOption" *ngIf="chart1CharacteristicTypeIsVisible">
         <div class="parameterOptionTitle">Characteristic Type</div><br/>
@@ -74,6 +74,7 @@
       </div>
     </div>
     <br/>
+    </div>
 </div>
 <div class="chartWrapper multiChartDivider" style="width:100%;">
 	<div class="centeredNotice" *ngIf="!leftPanelisTicked"> Select the options from the left panel.</div>

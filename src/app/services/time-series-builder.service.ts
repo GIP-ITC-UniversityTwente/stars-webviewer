@@ -38,7 +38,7 @@ export class TimeSeriesBuilderService {
     });
     return Array.from(uniqueCharacteristicNames);
   }
-
+  
   /**
    * Utility for fetching the image characteristic id associated with the input image characteristic name.
    * @param imageCharacteristicAlias
@@ -53,6 +53,23 @@ export class TimeSeriesBuilderService {
       }
     });
     return targetId;
+  }
+  
+  /**
+   * Utility for fetching the image characteristic unit associated with the input image characteristic name.
+   * @param imageCharacteristicAlias
+   * @param allImageCharacteristics
+   * @returns {number}
+   */
+  static fetchImageCharacteristicUnit(imageCharacteristicAlias: string, allImageCharacteristics: any[]): string {
+    let targetUnit: string = undefined;
+    allImageCharacteristics.forEach(function(item){
+      if (item.alias === imageCharacteristicAlias) {
+          targetUnit = item.unit;
+          console.log(item);
+      }
+    });
+    return targetUnit;
   }
 
   /**
@@ -324,30 +341,59 @@ export class TimeSeriesBuilderService {
   }
 
   static createFieldCharacteristicTimeSeriesData(apiResponse: any) {
-
+//    console.log(apiResponse);
     const chartData = [];
     for (const item of apiResponse.results) {
       const cropName = item.crop;
       const dateCollection = [];
       const avgValueCollection = [];
       const maxValueCollection = [];
+      
+      const dateCollectionMultiarray = [];
+      let dateCollectionMultiarrayTemp = [];
+      let maxValueCollectionTemp = [];
       const minValueCollection = [];
+      let minValueCollectionTemp = [];
 
       for (const crop of item.cseries[0]) {   // note variation - need to do [0]
+          
         dateCollection.push(crop.acquisition_date);
         avgValueCollection.push(crop.avgvalue);
+        
+        dateCollectionMultiarrayTemp.push(crop.acquisition_date);
+        
         if (crop.hasOwnProperty('maxvalue') && crop.hasOwnProperty('minvalue')) {
           if (crop.maxvalue != null) {
-            maxValueCollection.push(crop.maxvalue);
+              maxValueCollectionTemp.push(crop.maxvalue);
           }
           if (crop.minvalue != null) {
-            minValueCollection.push(crop.minvalue);
+              minValueCollectionTemp.push(crop.minvalue);
           }
         }
-      }
+        
+        if(crop.seasonedge=='end'){
+            let null_date = new Date(crop.acquisition_date);
+            // Add a day
+            null_date.setDate(null_date.getDate() + 1);
+            dateCollection.push(null_date.toISOString().split('T')[0]);
+            dateCollectionMultiarray.push(dateCollectionMultiarrayTemp);
+            dateCollectionMultiarrayTemp=[];
+            avgValueCollection.push(null);
+            maxValueCollection.push(maxValueCollectionTemp);
+            maxValueCollectionTemp=[];
+            
+            minValueCollection.push(minValueCollectionTemp);
+            minValueCollectionTemp=[];
+        }
 
+      }
+//      console.log(minValueCollection);
+//      console.log(maxValueCollection);
+//      console.log(dateCollectionMultiarray);
+//      console.log(avgValueCollection);
+      
       // draw line and envelope
-      if (avgValueCollection.length === maxValueCollection.length) {
+      if (maxValueCollection.length!=0 && dateCollectionMultiarray.length===maxValueCollection.length) {
 
         // chart's line
         const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
@@ -362,37 +408,44 @@ export class TimeSeriesBuilderService {
           },
           type: 'scatter'
         };
-
-        // chart's envelope
-        const envelopeY = minValueCollection;
-        for (let i = maxValueCollection.length - 1; i >= 0; i--) {
-          envelopeY.push(maxValueCollection[i]);
-        }
-
-        const envelopeX = dateCollection;
-        for (let j = dateCollection.length - 1; j >= 0; j--) {
-          envelopeX.push(dateCollection[j]);
-        }
-
-        const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
-        const envelopeDataObject = {
-          x: envelopeX,
-          y: envelopeY,
-          fill: 'toself',
-          fillcolor: backgroundColor,
-          name: '',
-          showlegend: false,
-          type: 'scatter',
-          line: {color: 'transparent'}
-        };
-
-        // add line & envelope to chart data
-        chartData.push(envelopeDataObject);
         chartData.push(lineDataObject);
+        
+        
+        ////////////Deal with breaks ////////////////////////
+        for (let i=0; i<dateCollectionMultiarray.length;i++) {
+            // chart's envelope
+            const envelopeY = minValueCollection[i];
+            for (let ii = maxValueCollection[i].length - 1; ii >= 0; ii--) {
+              envelopeY.push(maxValueCollection[i][ii]);
+            }
+    
+            const envelopeX = dateCollectionMultiarray[i];
+            for (let jj = dateCollectionMultiarray[i].length - 1; jj >= 0; jj--) {
+              envelopeX.push(dateCollectionMultiarray[i][jj]);
+            }
+            const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
+            const envelopeDataObject = {
+              x: envelopeX,
+              y: envelopeY,
+              fill: 'toself',
+              connectgaps:false, 
+              fillcolor: backgroundColor,
+              name: '',
+              showlegend: false,
+              type: 'scatter',
+              line: {color: 'transparent'}
+            };
+    
+            // add line & envelope to chart data
+            chartData.push(envelopeDataObject);
+         }
+        
+        ///////////////////////////////////////////////////
+        
       } else {
 
         // only draw line ...
-
+          
         // chart's line
         const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
         const lineDataObject = {
@@ -411,6 +464,7 @@ export class TimeSeriesBuilderService {
         chartData.push(lineDataObject);
       }
     }
+//    console.log(chartData);
     return chartData;
   }
   
@@ -425,63 +479,94 @@ export class TimeSeriesBuilderService {
         const maxValueCollection = [];
         const minValueCollection = [];
         
+        const dateCollectionMultiarray = [];
+        let dateCollectionMultiarrayTemp = [];
+        let maxValueCollectionTemp = [];
+        let minValueCollectionTemp = [];
+
         for (const crop of item.cseries[0]) {   // note variation - need to do [0]
+            
           dateCollection.push(crop.acquisition_date);
           avgValueCollection.push(crop.avgvalue);
+          
+          dateCollectionMultiarrayTemp.push(crop.acquisition_date);
+          
           if (crop.hasOwnProperty('maxvalue') && crop.hasOwnProperty('minvalue')) {
             if (crop.maxvalue != null) {
-              maxValueCollection.push(crop.maxvalue);
+                maxValueCollectionTemp.push(crop.maxvalue);
             }
             if (crop.minvalue != null) {
-              minValueCollection.push(crop.minvalue);
+                minValueCollectionTemp.push(crop.minvalue);
             }
           }
+          
+          if(crop.seasonedge=='end'){
+              let null_date = new Date(crop.acquisition_date);
+              // Add a day
+              null_date.setDate(null_date.getDate() + 1);
+              dateCollection.push(null_date.toISOString().split('T')[0]);
+              dateCollectionMultiarray.push(dateCollectionMultiarrayTemp);
+              dateCollectionMultiarrayTemp=[];
+              avgValueCollection.push(null);
+              maxValueCollection.push(maxValueCollectionTemp);
+              maxValueCollectionTemp=[];
+              
+              minValueCollection.push(minValueCollectionTemp);
+              minValueCollectionTemp=[];
+          }
+
         }
 
         // draw line and envelope
-        if (avgValueCollection.length === maxValueCollection.length) {
+        if (maxValueCollection.length!=0 && dateCollectionMultiarray.length===maxValueCollection.length) {
 
-          // chart's line
-          const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
-          const lineDataObject = {
-            x: dateCollection,
-            y: avgValueCollection,
-            mode: 'lines',
-            name: className+' ('+cropName+')',
-            line: {
-              color: lineColor,
-              width: 3
-            },
-            type: 'scatter'
-          };
-
-          // chart's envelope
-          const envelopeY = minValueCollection;
-          for (let i = maxValueCollection.length - 1; i >= 0; i--) {
-            envelopeY.push(maxValueCollection[i]);
-          }
-
-          const envelopeX = dateCollection;
-          for (let j = dateCollection.length - 1; j >= 0; j--) {
-            envelopeX.push(dateCollection[j]);
-          }
-
-          const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
-          const envelopeDataObject = {
-            x: envelopeX,
-            y: envelopeY,
-            fill: 'toself',
-            fillcolor: backgroundColor,
-            name: '',
-            showlegend: false,
-            type: 'scatter',
-            line: {color: 'transparent'}
-          };
-
-          // add line & envelope to chart data
-          chartData.push(envelopeDataObject);
-          chartData.push(lineDataObject);
-        } else {
+            // chart's line
+            const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+            const lineDataObject = {
+              x: dateCollection,
+              y: avgValueCollection,
+              mode: 'lines',
+              name: className+' ('+cropName+')',
+              line: {
+                color: lineColor,
+                width: 3
+              },
+              type: 'scatter'
+            };
+            chartData.push(lineDataObject);
+            
+            
+            ////////////Deal with breaks ////////////////////////
+            for (let i=0; i<dateCollectionMultiarray.length;i++) {
+                // chart's envelope
+                const envelopeY = minValueCollection[i];
+                for (let ii = maxValueCollection[i].length - 1; ii >= 0; ii--) {
+                  envelopeY.push(maxValueCollection[i][ii]);
+                }
+        
+                const envelopeX = dateCollectionMultiarray[i];
+                for (let jj = dateCollectionMultiarray[i].length - 1; jj >= 0; jj--) {
+                  envelopeX.push(dateCollectionMultiarray[i][jj]);
+                }
+                const backgroundColor = TimeSeriesBuilderService.fetchTimeSeriesEnvelopeColor(lineColor);
+                const envelopeDataObject = {
+                  x: envelopeX,
+                  y: envelopeY,
+                  fill: 'toself',
+                  connectgaps:false, 
+                  fillcolor: backgroundColor,
+                  name: '',
+                  showlegend: false,
+                  type: 'scatter',
+                  line: {color: 'transparent'}
+                };
+        
+                // add line & envelope to chart data
+                chartData.push(envelopeDataObject);
+             }
+            ///////////////////////////////////////////////////
+            
+          } else {
 
           // only draw line ...
 
@@ -505,16 +590,30 @@ export class TimeSeriesBuilderService {
       }
       return chartData;
     }
-
+    /**
+     * Utility for capitalize the first letter.
+     * @param {string} string
+     * @returns {string} 
+     */
+    static capitalizeFirstLetter(string: string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
   /**
    * Utility for creating an image characteristics time series layout object.
    * @param {string} chartTitle
    * @param {string} yAxisTitle
    * @returns {}
    */
-  static createTimeSeriesLayout(chartTitle: string, yAxisTitle: string) {
+  static createTimeSeriesLayout(chartTitle: string, yAxisTitle: string,unit:string='') {
+      console.log('Unit: '+unit);
+      if(unit=='none'){
+          unit='';
+      }
+      if(unit!=''){
+          unit='<br>(unit: '+unit+')';
+      }
     return  {
-      title: chartTitle + ' Time Series',
+      title: this.capitalizeFirstLetter(chartTitle) + ' time series'+unit,
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -588,10 +687,49 @@ export class TimeSeriesBuilderService {
     //  CHART 1 PLACEHOLDER
     // ----------------------
 
-    const milletSpectralLineEnvelope = {"x":["2014-05-01","2014-06-24","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-06-24","2014-05-01"],"y":[0.086905,0.157471,0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415,0.253017,0.189081],"fill":"toself","fillcolor":"rgba(0, 87, 127, 0.2)","name":"","showlegend":false,"type":"scatter","line":{"color":"transparent"}};
+    const milletSpectralLineEnvelope = {
+            "x":["2014-05-01","2014-06-24","2014-07-01","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-07-01","2014-06-24","2014-05-01"],
+            "y":[0.086905,0.157471,null,0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415,null,0.253017,0.189081],
+            "fill":"toself",
+            connectgaps: true,
+            "fillcolor":"rgba(0, 87, 127, 0.2)",
+            "name":"",
+            "showlegend":false,
+            "type":"scatter",
+            "line":{"color":"transparent"}
+          };
+    const milletSpectralLineEnvelope1 = {
+            "x":["2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08"],
+            "y":[0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415],
+            "fill":"toself",
+            connectgaps: true,
+            "fillcolor":"rgba(0, 87, 127, 0.2)",
+            "name":"",
+            "showlegend":false,
+            "type":"scatter",
+            "line":{"color":"transparent"}
+          };
+    const milletSpectralLineEnvelope2 = {
+            "x":["2014-05-01","2014-06-24","2014-06-24","2014-05-01"],
+            "y":[0.086905,0.157471,0.253017,0.189081],
+            "fill":"toself",
+            connectgaps: true,
+            "fillcolor":"rgba(0, 87, 127, 0.2)",
+            "name":"",
+            "showlegend":false,
+            "type":"scatter",
+            "line":{"color":"transparent"}
+          };
 
     // data for millet spectral test sample
-    const milletSpectralLine = {"x":["2014-05-01","2014-06-24","2014-07-08","2014-08-07","2014-09-22","2014-09-25","2014-09-25","2014-09-22","2014-08-07","2014-07-08","2014-06-24","2014-05-01"],"y":[0.137993,0.205244,0.296679,0.480262,0.666356,0.598557],"mode":"lines","name":"Groundnut","line":{"color":"#00577F","width":3},"type":"scatter"};
+    const milletSpectralLine = {
+            "x":["2014-05-01","2014-06-24","2014-07-01","2014-07-08","2014-08-07","2014-09-22","2014-09-25"],
+            "y":[0.137993,0.205244,null,0.296679,0.480262,0.666356,0.598557],
+            "mode":"lines",
+            "name":"Groundnut",
+            "line":{"color":"#00577F","width":3},
+            "type":"scatter"
+          };
 
     // layout for millet spectral test sample
     const milletSpectralLayout = {
@@ -614,7 +752,7 @@ export class TimeSeriesBuilderService {
     };
 
     // spectral chart for millet
-    const milletSpectralData = []//[milletSpectralLineEnvelope, milletSpectralLine];
+    const milletSpectralData =[]// [milletSpectralLineEnvelope1,milletSpectralLineEnvelope2, milletSpectralLine];
     Plotly.newPlot(targetChartDivId,
       milletSpectralData,
       milletSpectralLayout,

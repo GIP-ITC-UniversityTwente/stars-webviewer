@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class HistogramBuilderService {
 
   // This standardizes the classification methods available to the application when calling methods from the geostats library
-  static classificationMethods = ['Jenks', 'Equal Interval', 'Quantile', 'Standard Deviation', 'Arithmetic Progression', 'Geometric Progression'];
+  static classificationMethods = ['Default (plotly based)','Jenks', 'Equal Interval', 'Quantile', 'Standard Deviation', 'Arithmetic Progression', 'Geometric Progression'];
 
   /**
    * Utility for fetching numbers in the input series that are greater than or equal to the input start number and less then the input end number.
@@ -53,6 +53,22 @@ export class HistogramBuilderService {
       return '#005A32';
     }
   }
+  /**
+   * Utility for fetching a histogram color.
+   * @param {number} index
+   */
+  static classifyAutomaticBins(binStart: number,binEnd: number,binSize: number) {
+      let currentEnd = binStart;
+      let currentStart = binStart;
+      let range=[];
+      while (currentEnd < binEnd) {
+          currentEnd += binSize;
+          currentStart = currentEnd - binSize;
+          range.push(currentStart+" - "+currentEnd);
+//          console.log('currentStart is: ', currentStart, ' currentEnd is: ', currentEnd);
+      }
+      return range
+  }
 
   /**
    * Utility for classifiying the frequency data using geostats.
@@ -61,17 +77,21 @@ export class HistogramBuilderService {
    * @param geostatSeries
    */
   static classifySeries(targetClassification: string, classSize: number, geostatSeries: any) {
-    if (targetClassification === HistogramBuilderService.classificationMethods[0]) {
+      if(targetClassification === HistogramBuilderService.classificationMethods[0]){
+          console.log('Default classification selected, not manual!');
+          return null
+      } 
+      else if (targetClassification === HistogramBuilderService.classificationMethods[1]) {
       geostatSeries.getJenks(classSize);
-    } else if (targetClassification === HistogramBuilderService.classificationMethods[1]) {
-      geostatSeries.getClassEqInterval(classSize);
     } else if (targetClassification === HistogramBuilderService.classificationMethods[2]) {
-      geostatSeries.getClassQuantile(classSize);
+      geostatSeries.getClassEqInterval(classSize);
     } else if (targetClassification === HistogramBuilderService.classificationMethods[3]) {
-      geostatSeries.getClassStdDeviation(classSize);
+      geostatSeries.getClassQuantile(classSize);
     } else if (targetClassification === HistogramBuilderService.classificationMethods[4]) {
-      geostatSeries.getClassArithmeticProgression(classSize);
+      geostatSeries.getClassStdDeviation(classSize);
     } else if (targetClassification === HistogramBuilderService.classificationMethods[5]) {
+      geostatSeries.getClassArithmeticProgression(classSize);
+    } else if (targetClassification === HistogramBuilderService.classificationMethods[6]) {
       geostatSeries.getClassGeometricProgression(classSize);
     } else {
       geostatSeries.getJenks(classSize);
@@ -86,17 +106,16 @@ export class HistogramBuilderService {
    */
   static createClassifiedHistogramDataObject(series: number[], ranges: string[]) {
     const result = [];
+    let previousIndex=0;
     ranges.forEach(function(item, index) {
       // get the start and end values for the current range
       const sliced = item.split(' - ');
       const startRange = Number(sliced[0]);
-      let endRange = Number(sliced[1]);
+      let endRange = Number(sliced[1]);// to increase the range
 
       // get the values in the series for the current
-      const values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange);
-
-      //
-      //console.log('values: ', values);
+      let values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange+0.0001);
+      
 
       // create color array (per Plotly spec)
       const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(index);
@@ -104,10 +123,18 @@ export class HistogramBuilderService {
       values.forEach(function(){
         colorArray.push(targetColor);
       });
+      
+      // Logic for naming the bins. Taking into account the previous bin length.
+      let newIndex=null;
+      if(values.length!=0){
+          newIndex=previousIndex+1;
+          previousIndex+=1;
+      }else{
+          newIndex=0;
+      }
       // create a frequency data item (per Plotly spec)
-      const newIndex=index+1
       const freqItem = {
-        name: 'Class ' + newIndex + ' (' + startRange.toFixed(2) + ' to ' + endRange.toFixed(2) + ')',
+        name: 'Bin ' + newIndex + ' (' + startRange.toFixed(2) + ' to ' + endRange.toFixed(2) + ')',
         x: values,
         type: 'histogram',
         marker: { color:  targetColor},
@@ -115,8 +142,8 @@ export class HistogramBuilderService {
         nbinsx: 1,
         xbins: {
           start: startRange,
-          end: endRange,
-          size: endRange - startRange // values.length
+          end: endRange+0.0001,
+          size: (endRange+0.0001) - startRange // values.length
         }
       };
 
