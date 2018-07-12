@@ -7,6 +7,7 @@ import { UserSelectionService } from '../services/user-selection.service';
 
 declare const ol: any;
 declare const Popup: any;
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -158,7 +159,8 @@ export class MapComponent implements OnInit, OnDestroy {
     });
    this.map.addControl(this.layerSwitcher);
     // map goes global for debug purposes ONLY!!
-    eval("map = this.map;");
+   eval("map = this.map;");
+    
   }
 
   /**
@@ -279,7 +281,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
     let mapLayersCollection = this.baseLayers.getLayers();
     mapLayersCollection.insertAt(1, bingLayer);
-    console.log(mapLayersCollection);
   }
 
   /**

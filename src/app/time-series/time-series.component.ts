@@ -14,7 +14,7 @@ declare const Plotly: any;
   styleUrls: ['./time-series.component.css']
 })
 export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked {
-
+  
   /**
    * Properties
    */
@@ -195,7 +195,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
    * Life-cycle hook after component is created.
    */
   ngOnInit() {
-
+    
     // create blank time series
     TimeSeriesBuilderService.createDefaultTimeSeriesCharts(Plotly);
     // default style-layout of charts

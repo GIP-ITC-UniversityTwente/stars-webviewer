@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+declare const chroma: any;
 @Injectable()
 export class TimeSeriesBuilderService {
 
@@ -66,7 +66,6 @@ export class TimeSeriesBuilderService {
     allImageCharacteristics.forEach(function(item){
       if (item.alias === imageCharacteristicAlias) {
           targetUnit = item.unit;
-          console.log(item);
       }
     });
     return targetUnit;
@@ -158,36 +157,40 @@ export class TimeSeriesBuilderService {
    * Utility for fetching a random color from color palette when drawing lines for the time series chart
    * @returns {string}
    */
-  static fetchTimeSeriesLineColor(crop:string='none',className:string='none'): string {
-      const orange='#cc6600';
-      const orangeLst=['#ffd9b3','#ffb366','#ff8c1a','#cc6600','#994d00','#663300','#331a00'];
+  static fetchTimeSeriesLineColor(crop:string='none',className:string='none',numberClasses:number=10): string {
+      const orange='#ff9933';
+      const orangeLst=chroma.scale(['#ffe6cc','#ff9933','#4d2600']).colors(numberClasses);
       const blue='#000099';
-      const blueLst=['#e6e6ff','#9999ff','#4d4dff','#0000ff','#0000cc','#000099','#00004d'];
+      const blueLst=chroma.scale(['#ccccff','#000099','#000033']).colors(numberClasses);
+      //blueLst=['#e6e6ff','#9999ff','#4d4dff','#0000ff','#0000cc','#000099','#00004d'];
       const red='#ff0000';
-      const redLst=['#ffe6e6','#ffb3b3','#ff6666','#ff0000','#b30000','#660000','#330000'];
+      const redLst=chroma.scale(['#ffe6e6','#ff0000','#330000']).colors(numberClasses);
+      //const redLst=['#ffe6e6','#ffb3b3','#ff6666','#ff0000','#b30000','#660000','#330000'];
       const green='#339933';
-      const greenLst=['#ecf9ec','#b3e6b3','#79d279','#40bf40','#339933','#206020','#133913'];
+      const greenLst=chroma.scale(['#ccffdd','#339933','#003311']).colors(numberClasses);
+      //const greenLst=['#ecf9ec','#b3e6b3','#79d279','#40bf40','#339933','#206020','#133913'];
       const brown='#996633';
-      const brownLst=['#f9f2ec','#e6ccb3','#d2a679','#bf8040','#996633','#604020','#261a0d'];
+      const brownLst=chroma.scale(['#f2e6d9','#996633','#261a0d']).colors(numberClasses);
+      //const brownLst=['#f9f2ec','#e6ccb3','#d2a679','#bf8040','#996633','#604020','#261a0d'];
       const grey='#808080';
-      const greyLst=['#f2f2f2','#cccccc','#a6a6a6','#808080','#595959','#404040','#262626'];
+      const greyLst=chroma.scale(['white','#808080','black']).colors(numberClasses);
+      //const greyLst=['#f2f2f2','#cccccc','#a6a6a6','#808080','#595959','#404040','#262626'];
       const purple='#cc00cc';
-      const purpleLst=['#ffe6ff','#ff99ff','#ff4dff','#ff00ff','#cc00cc','#990099','#4d004d'];
-      
-      console.log(className);
+      const purpleLst=chroma.scale(['#ffccff','#cc00cc','#330033']).colors(numberClasses);
+      //const purpleLst=['#ffe6ff','#ff99ff','#ff4dff','#ff00ff','#cc00cc','#990099','#4d004d'];
       
       
       if(crop=='none'||crop.toLowerCase()=='cotton'){
           if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
               const classNumber=Number(className.split(" ")[1]);
-              return orangeLst[classNumber];
+              return orangeLst[classNumber-1];
           }else{
               return orange;
           }
       }else if(crop.toLowerCase()=='groundnut'){
           if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
               const classNumber=Number(className.split(" ")[1]);
-              return blueLst[classNumber];
+              return blueLst[classNumber-1];
           }else{
               return blue;
           }
@@ -195,7 +198,7 @@ export class TimeSeriesBuilderService {
       else if(crop.toLowerCase()=='maize'){
           if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
               const classNumber=Number(className.split(" ")[1]);
-              return redLst[classNumber];
+              return redLst[classNumber-1];
           }else{
               return red;
           }
@@ -203,7 +206,7 @@ export class TimeSeriesBuilderService {
       else if(crop.toLowerCase()=='millet'){
           if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
               const classNumber=Number(className.split(" ")[1]);
-              return greenLst[classNumber];
+              return greenLst[classNumber-1];
           }else{
               return green;
           }
@@ -211,7 +214,7 @@ export class TimeSeriesBuilderService {
       else if(crop.toLowerCase()=='other'){
           if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
               const classNumber=Number(className.split(" ")[1]);
-              return brownLst[classNumber];
+              return brownLst[classNumber-1];
           }else{
               return brown;
           }
@@ -219,7 +222,7 @@ export class TimeSeriesBuilderService {
       else if(crop.toLowerCase()=='sorghum'){
           if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
               const classNumber=Number(className.split(" ")[1]);
-              return greyLst[classNumber];
+              return greyLst[classNumber-1];
           }else{
               return grey;
           }
@@ -227,7 +230,7 @@ export class TimeSeriesBuilderService {
       else if(crop.toLowerCase()=='uncultivated'){
           if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
               const classNumber=Number(className.split(" ")[1]);
-              return purpleLst[classNumber];
+              return purpleLst[classNumber-1];
           }else{
               return purple;
           }
@@ -274,7 +277,7 @@ export class TimeSeriesBuilderService {
           c= '0x'+c.join('');
           return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+transp+')';
       }
-      throw new Error('Bad Hex');
+      throw new Error('Bad Hex: '+hex);
   }
 
   /**
@@ -355,7 +358,6 @@ export class TimeSeriesBuilderService {
         chartData.push(lineDataObject);
       }
     }
-    console.log(chartData);
     return chartData;
   }
   
@@ -364,8 +366,8 @@ export class TimeSeriesBuilderService {
    * @param apiResponse
    * @returns {Array}
    */
-  static createImageClassifiedTimeSeriesData(apiResponse: any) {
-
+  static createImageClassifiedTimeSeriesData(apiResponse: any,classesList:any='none') {
+    let numberClasses=classesList.split(",").filter(e => e !== 'Bin 0').length;
     const chartData = [];
 
     for (const item of apiResponse.results) {
@@ -385,7 +387,7 @@ export class TimeSeriesBuilderService {
         }
 
         // chart's line
-        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className);
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className,Number(numberClasses));
         const lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
@@ -563,7 +565,8 @@ export class TimeSeriesBuilderService {
     return chartData;
   }
   
-  static createFieldClassifiedTimeSeriesData(apiResponse: any) {
+  static createFieldClassifiedTimeSeriesData(apiResponse: any,classesList:any='none') {
+      let numberClasses=classesList.split(",").filter(e => e !== 'Bin 0').length;
 
       const chartData = [];
       for (const item of apiResponse.results) {
@@ -614,9 +617,8 @@ export class TimeSeriesBuilderService {
 
         // draw line and envelope
         if (maxValueCollection.length!=0 && dateCollectionMultiarray.length===maxValueCollection.length) {
-
             // chart's line
-            const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className);
+            const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className,Number(numberClasses));
             const lineDataObject = {
               x: dateCollection,
               y: avgValueCollection,
@@ -668,7 +670,7 @@ export class TimeSeriesBuilderService {
           // only draw line ...
 
           // chart's line
-          const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className);
+          const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className,Number(numberClasses));
           const lineDataObject = {
             x: dateCollection,
             y: avgValueCollection,

@@ -7,7 +7,7 @@ import { UserSelectionService } from '../services/user-selection.service';
 import { TimeSeriesBuilderService } from '../services/time-series-builder.service';
 
 declare const Plotly: any;
-
+declare const chroma: any;
 @Component({
   selector: 'app-classified-time-series',
   templateUrl: './classified-time-series.component.html',
@@ -282,7 +282,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                 this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.chart1SelectedFieldCharacteristicId, this.cropList, this.fmusList, this.classesList).then((response) => {
                     return response;
                   }).then((data) => {
-                    const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data);
+                    const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
                     const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicName);
                     this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                     this.chart1IsActive=true;
@@ -297,7 +297,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                 this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
                     return response;
                   }).then((data) => {
-                    const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+                    const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
                     const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
                     this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                     this.chart1IsActive=true;
@@ -321,7 +321,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                     this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.chart1SelectedFieldCharacteristicId, this.cropList, this.fmusList, this.classesList).then((response) => {
                         return response;
                       }).then((data) => {
-                        const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data);
+                        const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
                         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
                         this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                         this.chart1IsActive=true;
@@ -335,7 +335,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                     this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
                         return response;
                       }).then((data) => {
-                        const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+                        const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
                         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
                         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                         this.chart1IsActive=true;
@@ -359,8 +359,6 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
    * Life-cycle hook after component is created.
    */
   ngOnInit() {
-    //this.createTestGraphs();
-      
       // create blank time series
       TimeSeriesBuilderService.createDefaultTimeSeriesCharts(Plotly,'classifiedChart1');
 
@@ -398,7 +396,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
           this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
               return response;
             }).then((data) => {
-              const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+              const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
               const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
               this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
               this.chart1IsActive=true;
@@ -418,7 +416,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
           this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
               return response;
             }).then((data) => {
-              const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+              const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
               const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
               this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
               this.chart1IsActive=true;
@@ -438,7 +436,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
           this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
               return response;
             }).then((data) => {
-              const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+              const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
               const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
               this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
               this.chart1IsActive=true;
@@ -462,7 +460,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
         this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.chart1SelectedFieldCharacteristicId, this.cropList, this.fmusList, this.classesList).then((response) => {
             return response;
           }).then((data) => {
-            const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data);
+            const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
             const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
             this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
@@ -691,7 +689,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
         this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
             return response;
           }).then((data) => {
-            const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+            const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
             const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
             this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
@@ -765,7 +763,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
         this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
             return response;
           }).then((data) => {
-            const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+            const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
             const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
             this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
@@ -798,7 +796,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
         this.starsAPIService.fetchImageClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, this.cropList, this.chart1SelectedImageCharacteristicId, this.selectedChart1Sensor, this.chart1SelectedParameter1Option, this.chart1SelectedParameter2Option, this.fmusList, this.classesList).then((response) => {
             return response;
           }).then((data) => {
-            const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data);
+            const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
             const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
             this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
@@ -837,7 +835,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
     this.starsAPIService.fetchFieldClassifiedTimeSeries(this.studyArea['properties']['id'], this.startYear, this.endYear, fieldCharId, this.cropList, this.fmusList, this.classesList).then((response) => {
         return response;
       }).then((data) => {
-        const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data);
+        const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
         const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
         this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
         this.chart1IsActive=true;

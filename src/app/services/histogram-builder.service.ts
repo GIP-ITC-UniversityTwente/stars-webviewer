@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-
+declare const chroma: any;
 @Injectable()
 export class HistogramBuilderService {
 
@@ -40,18 +40,13 @@ export class HistogramBuilderService {
    * Utility for fetching a histogram color.
    * @param {number} index
    */
-  static fetchHistogramColorForIndex(index: number) {
-    if (index === 1) {
-      return '#A1D99B';
-    } else if (index === 2) {
-      return '#74C476';
-    } else if (index === 3) {
-      return '#41AB5D';
-    } else if (index === 4) {
-      return '#0e7615';
-    } else if (index === 5) {
-      return '#034527';
-    }
+  static fetchHistogramColorForIndex(index: number,classesNumber:number=10) {
+     const colors= chroma.scale(['#d6f5d6','#33cc33','#0a290a']).colors(classesNumber);
+     if(index<=20){
+         return colors[index-1];
+     }else{
+         return chroma.random();
+     }
   }
   /**
    * Utility for fetching a histogram color.
@@ -126,18 +121,18 @@ export class HistogramBuilderService {
       }
       
       // create color array (per Plotly spec)
-      const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(newIndex);
-      const colorArray = [];
-      values.forEach(function(){
-        colorArray.push(targetColor);
-      });
+//      const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(newIndex);
+//      const colorArray = [];
+//      values.forEach(function(){
+//        colorArray.push(targetColor);
+//      });
       
       // create a frequency data item (per Plotly spec)
       const freqItem = {
         name: 'Bin ' + newIndex + ' (' + startRange.toFixed(2) + ' to ' + endRange.toFixed(2) + ')',
         x: values,
         type: 'histogram',
-        marker: { color:  targetColor},
+        marker: { color:  null},
         autobinx: false,
         nbinsx: 1,
         xbins: {
@@ -149,7 +144,17 @@ export class HistogramBuilderService {
 
       result.push(freqItem);
     });
-    console.log(result);
+    let classesNumber=0;
+    result.forEach(item=>{
+        if(typeof(item.name.split(' ')[1])!='undefined' && item.name.split(' ')[1]!='0'){
+            classesNumber++;
+        }
+    });
+    result.forEach(item=>{
+        if(typeof(item.name.split(' ')[1])!='undefined' && item.name.split(' ')[1]!='0'){
+            item.marker.color=HistogramBuilderService.fetchHistogramColorForIndex(item.name.split(' ')[1],classesNumber);
+        }
+    });
     return result;
   }
 
