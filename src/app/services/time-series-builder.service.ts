@@ -228,6 +228,7 @@ export class TimeSeriesBuilderService {
         const lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
+          legendgroup: cropName,
           mode: 'lines',
           name: cropName,
           line: {
@@ -253,6 +254,7 @@ export class TimeSeriesBuilderService {
           x: envelopeX,
           y: envelopeY,
           fill: 'toself',
+          legendgroup: cropName,
           fillcolor: backgroundColor,
           name: '',
           showlegend: false,
@@ -300,6 +302,7 @@ export class TimeSeriesBuilderService {
           x: dateCollection,
           y: avgValueCollection,
           mode: 'lines',
+          legendgroup: className+' ('+cropName+')',
           name: className+' ('+cropName+')',
           line: {
             color: lineColor,
@@ -323,6 +326,7 @@ export class TimeSeriesBuilderService {
         const envelopeDataObject = {
           x: envelopeX,
           y: envelopeY,
+          legendgroup: className+' ('+cropName+')',
           fill: 'toself',
           fillcolor: backgroundColor,
           name: '',
@@ -401,6 +405,7 @@ export class TimeSeriesBuilderService {
           x: dateCollection,
           y: avgValueCollection,
           mode: 'lines',
+          legendgroup: cropName,
           name: cropName,
           line: {
             color: lineColor,
@@ -430,6 +435,7 @@ export class TimeSeriesBuilderService {
               fill: 'toself',
               connectgaps:false, 
               fillcolor: backgroundColor,
+              legendgroup: cropName,
               name: '',
               showlegend: false,
               type: 'scatter',
@@ -452,6 +458,7 @@ export class TimeSeriesBuilderService {
           x: dateCollection,
           y: avgValueCollection,
           mode: 'lines',
+          legendgroup: cropName,
           name: cropName,
           line: {
             color: lineColor,
@@ -526,6 +533,7 @@ export class TimeSeriesBuilderService {
               x: dateCollection,
               y: avgValueCollection,
               mode: 'lines',
+              legendgroup: className+' ('+cropName+')',
               name: className+' ('+cropName+')',
               line: {
                 color: lineColor,
@@ -553,6 +561,7 @@ export class TimeSeriesBuilderService {
                   x: envelopeX,
                   y: envelopeY,
                   fill: 'toself',
+                  legendgroup: className+' ('+cropName+')',
                   connectgaps:false, 
                   fillcolor: backgroundColor,
                   name: '',
@@ -575,6 +584,7 @@ export class TimeSeriesBuilderService {
           const lineDataObject = {
             x: dateCollection,
             y: avgValueCollection,
+            legendgroup: className+' ('+cropName+')',
             mode: 'lines',
             name: className+' ('+cropName+')',
             line: {
@@ -614,6 +624,9 @@ export class TimeSeriesBuilderService {
       }
     return  {
       title: this.capitalizeFirstLetter(chartTitle) + ' time series'+unit,
+      legend:{
+          traceorder:"normal",
+      },
       xaxis: {
         title: 'Time',
         showgrid: true,
@@ -692,6 +705,7 @@ export class TimeSeriesBuilderService {
             "y":[0.086905,0.157471,null,0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415,null,0.253017,0.189081],
             "fill":"toself",
             connectgaps: true,
+            legendgroup: 'a',
             "fillcolor":"rgba(0, 87, 127, 0.2)",
             "name":"",
             "showlegend":false,
@@ -703,6 +717,7 @@ export class TimeSeriesBuilderService {
             "y":[0.231943,0.406578,0.579189,0.522719,0.674395,0.753523,0.553946,0.361415],
             "fill":"toself",
             connectgaps: true,
+            legendgroup: 'a',
             "fillcolor":"rgba(0, 87, 127, 0.2)",
             "name":"",
             "showlegend":false,
@@ -714,6 +729,7 @@ export class TimeSeriesBuilderService {
             "y":[0.086905,0.157471,0.253017,0.189081],
             "fill":"toself",
             connectgaps: true,
+            legendgroup: 'a',
             "fillcolor":"rgba(0, 87, 127, 0.2)",
             "name":"",
             "showlegend":false,
@@ -726,6 +742,7 @@ export class TimeSeriesBuilderService {
             "x":["2014-05-01","2014-06-24","2014-07-01","2014-07-08","2014-08-07","2014-09-22","2014-09-25"],
             "y":[0.137993,0.205244,null,0.296679,0.480262,0.666356,0.598557],
             "mode":"lines",
+            legendgroup: 'a',
             "name":"Groundnut",
             "line":{"color":"#00577F","width":3},
             "type":"scatter"
@@ -752,7 +769,7 @@ export class TimeSeriesBuilderService {
     };
 
     // spectral chart for millet
-    const milletSpectralData =[]// [milletSpectralLineEnvelope1,milletSpectralLineEnvelope2, milletSpectralLine];
+    const milletSpectralData = [];//[milletSpectralLineEnvelope1,milletSpectralLineEnvelope2, milletSpectralLine];
     Plotly.newPlot(targetChartDivId,
       milletSpectralData,
       milletSpectralLayout,

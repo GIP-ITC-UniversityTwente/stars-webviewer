@@ -105,6 +105,10 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         //broadcast to other components that chart 1 is activated
         this.broadcastChart1Status();
         TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'chart2');
+        
+//        // For chart testing purposes
+//        TimeSeriesBuilderService.createDefaultTimeSeriesCharts(Plotly);
+//        this.broadcastChart1Status(true);
       }
     );
 
