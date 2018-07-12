@@ -41,16 +41,16 @@ export class HistogramBuilderService {
    * @param {number} index
    */
   static fetchHistogramColorForIndex(index: number) {
-    if (index === 0) {
+    if (index === 1) {
       return '#A1D99B';
-    } else if (index === 1) {
-      return '#74C476';
     } else if (index === 2) {
-      return '#41AB5D';
+      return '#74C476';
     } else if (index === 3) {
-      return '#238B45';
+      return '#41AB5D';
     } else if (index === 4) {
-      return '#005A32';
+      return '#0e7615';
+    } else if (index === 5) {
+      return '#034527';
     }
   }
   /**
@@ -116,14 +116,6 @@ export class HistogramBuilderService {
       // get the values in the series for the current
       let values = HistogramBuilderService.fetchValuesInRange(series, startRange, endRange+0.0001);
       
-
-      // create color array (per Plotly spec)
-      const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(index);
-      const colorArray = [];
-      values.forEach(function(){
-        colorArray.push(targetColor);
-      });
-      
       // Logic for naming the bins. Taking into account the previous bin length.
       let newIndex=null;
       if(values.length!=0){
@@ -132,6 +124,14 @@ export class HistogramBuilderService {
       }else{
           newIndex=0;
       }
+      
+      // create color array (per Plotly spec)
+      const targetColor = HistogramBuilderService.fetchHistogramColorForIndex(newIndex);
+      const colorArray = [];
+      values.forEach(function(){
+        colorArray.push(targetColor);
+      });
+      
       // create a frequency data item (per Plotly spec)
       const freqItem = {
         name: 'Bin ' + newIndex + ' (' + startRange.toFixed(2) + ' to ' + endRange.toFixed(2) + ')',
@@ -149,7 +149,7 @@ export class HistogramBuilderService {
 
       result.push(freqItem);
     });
-
+    console.log(result);
     return result;
   }
 

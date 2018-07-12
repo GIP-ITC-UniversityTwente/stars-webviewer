@@ -158,11 +158,95 @@ export class TimeSeriesBuilderService {
    * Utility for fetching a random color from color palette when drawing lines for the time series chart
    * @returns {string}
    */
-  static fetchTimeSeriesLineColor(): string {
-    const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
-    const randomIndex = TimeSeriesBuilderService.randomIntFromInterval(0, (colors.length - 1));
-    return colors[randomIndex];
+  static fetchTimeSeriesLineColor(crop:string='none',className:string='none'): string {
+      const orange='#cc6600';
+      const orangeLst=['#ffd9b3','#ffb366','#ff8c1a','#cc6600','#994d00','#663300','#331a00'];
+      const blue='#000099';
+      const blueLst=['#e6e6ff','#9999ff','#4d4dff','#0000ff','#0000cc','#000099','#00004d'];
+      const red='#ff0000';
+      const redLst=['#ffe6e6','#ffb3b3','#ff6666','#ff0000','#b30000','#660000','#330000'];
+      const green='#339933';
+      const greenLst=['#ecf9ec','#b3e6b3','#79d279','#40bf40','#339933','#206020','#133913'];
+      const brown='#996633';
+      const brownLst=['#f9f2ec','#e6ccb3','#d2a679','#bf8040','#996633','#604020','#261a0d'];
+      const grey='#808080';
+      const greyLst=['#f2f2f2','#cccccc','#a6a6a6','#808080','#595959','#404040','#262626'];
+      const purple='#cc00cc';
+      const purpleLst=['#ffe6ff','#ff99ff','#ff4dff','#ff00ff','#cc00cc','#990099','#4d004d'];
+      
+      console.log(className);
+      
+      
+      if(crop=='none'||crop.toLowerCase()=='cotton'){
+          if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
+              const classNumber=Number(className.split(" ")[1]);
+              return orangeLst[classNumber];
+          }else{
+              return orange;
+          }
+      }else if(crop.toLowerCase()=='groundnut'){
+          if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
+              const classNumber=Number(className.split(" ")[1]);
+              return blueLst[classNumber];
+          }else{
+              return blue;
+          }
+      }
+      else if(crop.toLowerCase()=='maize'){
+          if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
+              const classNumber=Number(className.split(" ")[1]);
+              return redLst[classNumber];
+          }else{
+              return red;
+          }
+      }
+      else if(crop.toLowerCase()=='millet'){
+          if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
+              const classNumber=Number(className.split(" ")[1]);
+              return greenLst[classNumber];
+          }else{
+              return green;
+          }
+      }
+      else if(crop.toLowerCase()=='other'){
+          if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
+              const classNumber=Number(className.split(" ")[1]);
+              return brownLst[classNumber];
+          }else{
+              return brown;
+          }
+      }
+      else if(crop.toLowerCase()=='sorghum'){
+          if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
+              const classNumber=Number(className.split(" ")[1]);
+              return greyLst[classNumber];
+          }else{
+              return grey;
+          }
+      }
+      else if(crop.toLowerCase()=='uncultivated'){
+          if(className!='none'&& isNaN(Number(className.split(" ")[1]))!=true){
+              const classNumber=Number(className.split(" ")[1]);
+              return purpleLst[classNumber];
+          }else{
+              return purple;
+          }
+      }
+      
+//    const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
+//    const randomIndex = TimeSeriesBuilderService.randomIntFromInterval(0, (colors.length - 1));
+//    return colors[randomIndex];
   }
+  
+//  /**
+//   * Utility for fetching a random color from color palette when drawing lines for the time series chart
+//   * @returns {string}
+//   */
+//  static fetchTimeSeriesLineColor(): string {
+//    const colors = ['#6A7f00', '#D26F51', '#D59F2E', '#00577F', '#C548C0'];
+//    const randomIndex = TimeSeriesBuilderService.randomIntFromInterval(0, (colors.length - 1));
+//    return colors[randomIndex];
+//  }
 
   /**
    * Utility for fetching a random number between the input min and max values
@@ -173,6 +257,25 @@ export class TimeSeriesBuilderService {
   static randomIntFromInterval(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
+  
+  /**
+   * Utility to transform Hex into rgba qith transparency. Adapted from https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
+   * @param hex
+   * @param transp
+   * @returns {string}
+   */
+  static hexToRgbA(hex: string, transp: string): string {
+      let c;
+      if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+          c= hex.substring(1).split('');
+          if(c.length== 3){
+              c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+          }
+          c= '0x'+c.join('');
+          return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+transp+')';
+      }
+      throw new Error('Bad Hex');
+  }
 
   /**
    * Utility for fetching a complimentary background color for the time series envelope.
@@ -180,22 +283,7 @@ export class TimeSeriesBuilderService {
    * @returns {string}
    */
   static fetchTimeSeriesEnvelopeColor(lineColor): string {
-
-    let backgroundColor: string;
-
-    if (lineColor === '#6A7f00') {
-      backgroundColor = 'rgba(106, 127, 0, 0.2)';
-    } else if (lineColor === '#D26F51') {
-      backgroundColor = 'rgba(210, 111, 82, 0.2)';
-    } else if (lineColor === '#D59F2E') {
-      backgroundColor = 'rgba(213, 159, 46, 0.2)';
-    } else if (lineColor === '#00577F') {
-      backgroundColor = 'rgba(0, 87, 127, 0.2)';
-    } else if (lineColor === '#C548C0') {
-      backgroundColor = 'rgba(197, 72, 192, 0.2)';
-    }
-
-    return backgroundColor;
+    return this.hexToRgbA(lineColor,'0.2');
   }
 
   /**
@@ -224,7 +312,7 @@ export class TimeSeriesBuilderService {
         }
 
         // chart's line
-        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName);
         const lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
@@ -297,7 +385,7 @@ export class TimeSeriesBuilderService {
         }
 
         // chart's line
-        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className);
         const lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
@@ -400,7 +488,7 @@ export class TimeSeriesBuilderService {
       if (maxValueCollection.length!=0 && dateCollectionMultiarray.length===maxValueCollection.length) {
 
         // chart's line
-        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName);
         const lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
@@ -453,7 +541,7 @@ export class TimeSeriesBuilderService {
         // only draw line ...
           
         // chart's line
-        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+        const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName);
         const lineDataObject = {
           x: dateCollection,
           y: avgValueCollection,
@@ -528,7 +616,7 @@ export class TimeSeriesBuilderService {
         if (maxValueCollection.length!=0 && dateCollectionMultiarray.length===maxValueCollection.length) {
 
             // chart's line
-            const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+            const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className);
             const lineDataObject = {
               x: dateCollection,
               y: avgValueCollection,
@@ -580,7 +668,7 @@ export class TimeSeriesBuilderService {
           // only draw line ...
 
           // chart's line
-          const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor();
+          const lineColor = TimeSeriesBuilderService.fetchTimeSeriesLineColor(cropName,className);
           const lineDataObject = {
             x: dateCollection,
             y: avgValueCollection,
@@ -615,7 +703,6 @@ export class TimeSeriesBuilderService {
    * @returns {}
    */
   static createTimeSeriesLayout(chartTitle: string, yAxisTitle: string,unit:string='') {
-      console.log('Unit: '+unit);
       if(unit=='none'){
           unit='';
       }
