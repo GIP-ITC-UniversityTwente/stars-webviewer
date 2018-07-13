@@ -324,7 +324,10 @@ export class HistogramComponent implements OnInit {
         
         
         // get the classified FMU's out of the histData object
-        histoData.forEach(function(item) {
+        let classifiedFmuColors=[];
+        histoData.forEach(function(item:any) {
+            // get color
+            classifiedFmuColors.push(item.marker.color);
             //console.log(item.x);
             let currentClassFmusIDs=[];
             item.x.forEach(function(subitem) {
@@ -335,7 +338,7 @@ export class HistogramComponent implements OnInit {
         });
 
         // broadcast classes and groups to other components
-        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs,classifiedFmuColors);
         ////////////////////////////////////////////////////////////////////////////////////////////////
     }
     else if (this.selectedNumberOfBins=='auto' && this.selectedClassificationMethod!='Default (plotly based)'){
@@ -468,8 +471,10 @@ export class HistogramComponent implements OnInit {
         
         
         // get the classified FMU's out of the histData object
-        
-        histoData.forEach(function(item) {
+        let classifiedFmuColors=[];
+        histoData.forEach(function(item:any) {
+            // get color
+            classifiedFmuColors.push(item.marker.color);
             //console.log(item.x);
             let currentClassFmusIDs=[];
             item.x.forEach(function(subitem) {
@@ -480,7 +485,7 @@ export class HistogramComponent implements OnInit {
         });
 
         // broadcast classes and groups to other components
-        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs,classifiedFmuColors);
         ////////////////////////////////////////////////////////////////////////////////////////////
     }
     else if (this.selectedNumberOfBins!='auto' && this.selectedClassificationMethod!='Default (plotly based)') {
@@ -601,8 +606,10 @@ export class HistogramComponent implements OnInit {
         
         
         // get the classified FMU's out of the histData object
-        
+        let classifiedFmuColors=[];
         histoData.forEach(function(item) {
+            // get color
+            classifiedFmuColors.push(item.marker.color);
             //console.log(item.x);
             let currentClassFmusIDs=[];
             item.x.forEach(function(subitem) {
@@ -613,7 +620,7 @@ export class HistogramComponent implements OnInit {
         });
 
         // broadcast classes and groups to other components
-        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs);
+        this.userSelectionService.updateClassifiedFmuIDs(classifiedFmuIDs,classifiedFmuColors);
         ////////////////////////////////////////////////////////////////////////////////////////////
         
     }

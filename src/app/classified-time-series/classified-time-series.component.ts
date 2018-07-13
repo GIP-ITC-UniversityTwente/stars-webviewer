@@ -202,7 +202,8 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
 
     // subscribe to the groupedTimeSeriesData
     this.subscriptionToClassifiedFmuIDs = this.userSelectionService.classifiedFmuIDs$.subscribe(
-      classifiedFmuIDs => {
+      data => {
+        let classifiedFmuIDs=data.classifiedFmuIDs;
         this.classifiedFmuIDs = classifiedFmuIDs;
         //console.log('Grouped timeseries ',classifiedFmuIDs);
         let fmusList=this.fmusList;
@@ -283,7 +284,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                     return response;
                   }).then((data) => {
                     const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
-                    const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicName);
+                    const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per bin', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicName);
                     this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                     this.chart1IsActive=true;
                   }).catch((error) => {
@@ -298,7 +299,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                     return response;
                   }).then((data) => {
                     const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-                    const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+                    const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
                     this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                     this.chart1IsActive=true;
                   }).catch((error) => {
@@ -322,7 +323,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                         return response;
                       }).then((data) => {
                         const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
-                        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
+                        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per bin', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
                         this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                         this.chart1IsActive=true;
                       }).catch((error) => {
@@ -336,7 +337,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                         return response;
                       }).then((data) => {
                         const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-                        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+                        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
                         this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                         this.chart1IsActive=true;
                       }).catch((error) => {
@@ -397,7 +398,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
               return response;
             }).then((data) => {
               const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-              const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+              const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
               this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
               this.chart1IsActive=true;
             }).catch((error) => {
@@ -417,7 +418,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
               return response;
             }).then((data) => {
               const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-              const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+              const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
               this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
               this.chart1IsActive=true;
             }).catch((error) => {
@@ -437,7 +438,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
               return response;
             }).then((data) => {
               const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-              const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+              const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
               this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
               this.chart1IsActive=true;
             }).catch((error) => {
@@ -461,7 +462,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
             return response;
           }).then((data) => {
             const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
-            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
+            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per bin', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
             this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
           }).catch((error) => {
@@ -690,7 +691,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
             return response;
           }).then((data) => {
             const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
             this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
           }).catch((error) => {
@@ -764,7 +765,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
             return response;
           }).then((data) => {
             const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
             this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
           }).catch((error) => {
@@ -797,7 +798,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
             return response;
           }).then((data) => {
             const chartData = TimeSeriesBuilderService.createImageClassifiedTimeSeriesData(data,this.classesList);
-            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per class', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
+            const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedImageCharacteristicName+' per bin', this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicUnit);
             this.renderImageCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
             this.chart1IsActive=true;
           }).catch((error) => {
@@ -836,7 +837,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
         return response;
       }).then((data) => {
         const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
-        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per class', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per bin', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
         this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
         this.chart1IsActive=true;
       }).catch((error) => {

@@ -7,6 +7,7 @@ import { UserSelectionService } from '../services/user-selection.service';
 
 declare const ol: any;
 declare const Popup: any;
+declare const chroma: any;
 
 @Component({
   selector: 'app-map',
@@ -35,6 +36,9 @@ export class MapComponent implements OnInit, OnDestroy {
   subscriptionToSelectedCropTypes: Subscription;
   cropTypes: string[] = [];
   layerSwitcher:any;
+  subscriptionToClassifiedFmuIDs: Subscription;
+  classifiedFmuIDs: any;
+  classifiedFmuColors: any;
 
   /**
    * For dependency injecting needed Services.
@@ -93,6 +97,12 @@ export class MapComponent implements OnInit, OnDestroy {
         });
       }
     );
+    // subscribe to the groupedTimeSeriesData
+    this.subscriptionToClassifiedFmuIDs = this.userSelectionService.classifiedFmuIDs$.subscribe(
+      data => {
+          this.applyFMUsColors(data);
+          
+      });
   }
 
   /**
@@ -116,7 +126,80 @@ export class MapComponent implements OnInit, OnDestroy {
     this.subscriptionToSelectedEndYear.unsubscribe();
     this.subscriptionToSelectedCropTypes.unsubscribe();
   }
-
+  /**
+   * For initializing the map.
+   */
+  
+  applyFMUsColors(data:any) {
+      let fmusLayer=null;
+      this.map.getLayers().forEach(l=>{if(l.get('title')=='Layers'){
+          l.getLayers().forEach(ll=>{
+              if (ll.get('title')=='Farm fields'){
+                  fmusLayer=ll;
+              }
+          });
+      }});
+      fmusLayer.setStyle(function(feature){
+          let featureOid=feature.getProperties().oid;
+          let i;
+          for (i = 0; i < data.classifiedFmuIDs.length; i++) {
+              let ii;
+              for (ii = 0; ii < data.classifiedFmuIDs[i].length; ii++) {
+                  if(featureOid==data.classifiedFmuIDs[i][ii]){
+                      let featureColor=data.classifiedFmuColors[i];
+                      return new ol.style.Style({
+                          stroke: new ol.style.Stroke({
+                              color: featureColor,
+                              lineDash: [4],
+                              width: 4
+                            }),
+                            fill: new ol.style.Fill({
+                              color: 'rgba(102, 153, 67, 0.1)'
+                            })
+                          });
+                  }
+              }
+          }
+          const orange='#ff9933';
+          const blue='#000099';
+          const red='#ff0000';
+          const green='#339933';
+          const brown='#996633';
+          const grey='#808080';
+          const purple='#cc00cc';
+          let color;
+          if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Cotton'){
+              color=orange;
+          }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Groundnut'){
+              color=blue;
+          }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Maize'){
+              color=red;
+          }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Millet'){
+              color=green;
+          }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Other'){
+              color=brown;
+          }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Sorgum'){
+              color=grey;
+          }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Uncultivated'){
+              color=purple;
+          }else{
+              color='#808000';
+          }
+          const polygonStyle = new ol.style.Style({
+              stroke: new ol.style.Stroke({
+                //color: 'rgba(102, 153, 67, 1.0)',
+                color: chroma(color).alpha(0.7).css(),
+                width: 4
+              }),
+              fill: new ol.style.Fill({
+                color: chroma(color).alpha(0.1).css()
+              })
+            });
+          return polygonStyle
+      });
+      
+      
+  }
   /**
    * For initializing the map.
    */
@@ -353,7 +436,7 @@ export class MapComponent implements OnInit, OnDestroy {
       const cropType = feature.get('croptype');
       const fieldType=feature.get('fieldwork') ? 'Fieldwork' : 'Non fieldwork'
       const farmArea=(Math.round(feature.getGeometry().getArea())/10000).toFixed(3);
-      console.log(feature);
+      //console.log(feature);
       if(cropType !== undefined) {
         let featureCenter=ol.extent.getCenter(feature.getGeometry().getExtent());
         if(mapPopup.isOpened()){
@@ -421,7 +504,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
     const polygonStyle = new ol.style.Style({
       stroke: new ol.style.Stroke({
-        color: 'rgba(255, 117, 24, 1.0)',
+        //color: 'rgba(255, 117, 24, 1.0)',
+        color: '#a7a7a5',
         lineDash: [4],
         width: 4
       }),
@@ -539,21 +623,49 @@ export class MapComponent implements OnInit, OnDestroy {
         features: (geoJSON).readFeatures(farmFieldsGeoJSON)
       });
 
-      const polygonStyle = new ol.style.Style({
-        stroke: new ol.style.Stroke({
-          color: 'rgba(102, 153, 67, 1.0)',
-          lineDash: [4],
-          width: 4
-        }),
-        fill: new ol.style.Fill({
-          color: 'rgba(102, 153, 67, 0.1)'
-        })
-      });
+
 
       const vectorLayer = new ol.layer.Vector({
         title:'Farm fields',
         source: vectorSource,
-        style: polygonStyle
+        style: function(feature:any){
+            const orange='#ff9933';
+            const blue='#000099';
+            const red='#ff0000';
+            const green='#339933';
+            const brown='#996633';
+            const grey='#808080';
+            const purple='#cc00cc';
+            let color;
+            if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Cotton'){
+                color=orange;
+            }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Groundnut'){
+                color=blue;
+            }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Maize'){
+                color=red;
+            }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Millet'){
+                color=green;
+            }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Other'){
+                color=brown;
+            }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Sorgum'){
+                color=grey;
+            }else if(typeof(feature.getProperties().croptype)!='undefined'&&feature.getProperties().croptype=='Uncultivated'){
+                color=purple;
+            }else{
+                color='#808000';
+            }
+            const polygonStyle = new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                  //color: 'rgba(102, 153, 67, 1.0)',
+                  color: chroma(color).alpha(0.7).css(),
+                  width: 4
+                }),
+                fill: new ol.style.Fill({
+                  color: chroma(color).alpha(0.1).css()
+                })
+              });
+            return polygonStyle
+        }
       });
 
       const mapLayersCollection = this.overlayLayers.getLayers();

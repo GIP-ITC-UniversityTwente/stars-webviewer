@@ -66,8 +66,8 @@ export class UserSelectionService {
    * For changing the data from 
    * @param groupedTimeSeriesData
    */
-  updateClassifiedFmuIDs(classifiedFmuIDs: any) {
-    this.classifiedFmuIDsSource.next(classifiedFmuIDs);
+  updateClassifiedFmuIDs(classifiedFmuIDs: any,classifiedFmuColors:any) {
+    this.classifiedFmuIDsSource.next({classifiedFmuIDs:classifiedFmuIDs,classifiedFmuColors:classifiedFmuColors});
   }
   
   /**

@@ -1,6 +1,15 @@
 /**
  You can add global styles to this file, and also import other style files
  */
+.mat-tooltip {
+    color: #fff;
+    border-radius: 2px;
+    margin: 14px;
+    max-width: 300px !important;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 11px;
+}
 
 body {
   padding:0;
@@ -104,6 +113,7 @@ body {
   white-space: nowrap;
   font-size: 14px;
 }
+
 
 /**
   Overrides OpenLayers

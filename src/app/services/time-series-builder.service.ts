@@ -705,11 +705,14 @@ export class TimeSeriesBuilderService {
    * @returns {}
    */
   static createTimeSeriesLayout(chartTitle: string, yAxisTitle: string,unit:string='') {
+      let unitY;
       if(unit=='none'){
+          unitY='';
           unit='';
       }
       if(unit!=''){
-          unit='<br>(unit: '+unit+')';
+          unitY='['+unit+']';
+          unit='<br>['+unit+']';
       }
     return  {
       title: this.capitalizeFirstLetter(chartTitle) + ' time series'+unit,
@@ -724,7 +727,7 @@ export class TimeSeriesBuilderService {
         showticklabels: true
       },
       yaxis: {
-        title: yAxisTitle,
+        title: yAxisTitle+' '+unitY,
         showline: false,
         rangemode:"nonnegative",
         ticks: 'outside',

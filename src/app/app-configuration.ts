@@ -10,11 +10,11 @@ export class AppConfiguration {
   static bingKey = 'AtBPLiCjWdjtGtkHLgJbyMGfXMNtpME9EOtVBiqP7fD8sQUMMDuDfTS1To5TKVJr';
 
   // Configuration for the Tool Tip
-  static studyAreaToolTip = 'Enter tooltip for Study Area in AppConfiguration';
-  static cropTypeToolTip = 'Enter tooltip for Crop Type in AppConfiguration';
-  static timeSeriesTooltip = 'Enter tooltip for Time Series in AppConfiguration';
-  static fieldConstantsToolTip = 'Enter tooltip for Field Constants in AppConfiguration';
-  static classifiedTimeSeriesToolTip = 'Enter tooltip for Classified Time Series section in AppConfiguration';
+  static studyAreaToolTip = 'A contiguous geographic area within which crop field studies have been conducted, and images have been collected for monitoring purposes.';
+  static cropTypeToolTip = 'The list of crops grown in the chosen study area in the selected year(s).';
+  static timeSeriesTooltip = 'A set of chronological measurements over farm fields with the selected crops of a single field characteristic or single image-derived characteristic, averaged per date.';
+  static fieldConstantsToolTip = 'A field constant is measured only once per season for any farm field, the histogram shows frequency of these values over the set of fields.';
+  static classifiedTimeSeriesToolTip = 'A set of chronological measurements over farm fields of a secondary field/image characteristic, displayed per clas class.';
 
   // Configuration for Online Help
   static onlineHelpURL = 'https://s3.amazonaws.com/test-kly-web/PlaceholderOnlineDoc.pdf';
