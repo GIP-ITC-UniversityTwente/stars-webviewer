@@ -80,11 +80,13 @@ export class UserSelectionService {
           chart1SelectedImageType:any,
           chart1SelectedImageCharacteristicName:any,
           chart1SelectedImageCharacteristicId:any,
+          chart1SelectedImageCharacteristicUnit:any,
           selectedChart1Sensor:any,
           chart1SelectedParameter1Option:any,
           chart1SelectedParameter2Option:any,
           chart1SelectedFieldCharacteristicName:any,
-          chart1SelectedFieldCharacteristicId:any
+          chart1SelectedFieldCharacteristicId:any,
+          chart1SelectedFieldCharacteristicUnit:any
           ) {
     this.chart1TimeSeriesStatusSource.next({
         active:active,
@@ -92,11 +94,13 @@ export class UserSelectionService {
         chart1SelectedImageType:chart1SelectedImageType,
         chart1SelectedImageCharacteristicName:chart1SelectedImageCharacteristicName,
         chart1SelectedImageCharacteristicId:chart1SelectedImageCharacteristicId,
+        chart1SelectedImageCharacteristicUnit:chart1SelectedImageCharacteristicUnit,
         selectedChart1Sensor:selectedChart1Sensor,
         chart1SelectedParameter1Option:chart1SelectedParameter1Option,
         chart1SelectedParameter2Option:chart1SelectedParameter2Option,
         chart1SelectedFieldCharacteristicName:chart1SelectedFieldCharacteristicName,
-        chart1SelectedFieldCharacteristicId:chart1SelectedFieldCharacteristicId
+        chart1SelectedFieldCharacteristicId:chart1SelectedFieldCharacteristicId,
+        chart1SelectedFieldCharacteristicUnit:chart1SelectedFieldCharacteristicUnit
         }); 
   }
   

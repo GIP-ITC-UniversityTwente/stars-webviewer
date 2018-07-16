@@ -249,11 +249,13 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
             this.chart1SelectedImageType=this.chart1TimeSeriesStatus.chart1SelectedImageType,
             this.chart1SelectedImageCharacteristicName=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicName,
             this.chart1SelectedImageCharacteristicId=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicId,
+            this.chart1SelectedImageCharacteristicUnit=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicUnit,
             this.selectedChart1Sensor=this.chart1TimeSeriesStatus.selectedChart1Sensor,
             this.chart1SelectedParameter1Option=this.chart1TimeSeriesStatus.chart1SelectedParameter1Option,
             this.chart1SelectedParameter2Option=this.chart1TimeSeriesStatus.chart1SelectedParameter2Option,
             this.chart1SelectedFieldCharacteristicName=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicName,
-            this.chart1SelectedFieldCharacteristicId=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicId
+            this.chart1SelectedFieldCharacteristicId=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicId,
+            this.chart1SelectedFieldCharacteristicUnit=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicUnit
             
             //Make sure the fields are visible in case they are hidden
 
@@ -284,7 +286,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                     return response;
                   }).then((data) => {
                     const chartData = TimeSeriesBuilderService.createFieldClassifiedTimeSeriesData(data,this.classesList);
-                    const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per bin', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicName);
+                    const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName+' per bin', this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
                     this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
                     this.chart1IsActive=true;
                   }).catch((error) => {
@@ -313,9 +315,8 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
             //const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout('Field Characteristic', this.chart1SelectedFieldCharacteristicName);
             //this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'classifiedChart1');
         }else{
-            //if we have a chart then we should redraw it
+            //if Timeseries is not active and we have a chart then we should redraw it (we always have a chart sometimes it's empty!)
             if(this.chart1IsActive){
-                //console.log('Chart is active');
                 if(typeof(this.chart1SelectedFieldCharacteristicName)!='undefined'){
                     //console.log('Field classified chart')
                     //Ready to request the classified timeseries and Plot the chart
@@ -346,7 +347,7 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
                       });
                 }
             }else{
-                //DO NOTHING for now!
+                //In case timeseries chart is not active we DO NOTHING for now (the user needs to select parameters manualy)!
             }
             
         }

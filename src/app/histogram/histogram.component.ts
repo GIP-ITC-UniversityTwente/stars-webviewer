@@ -944,6 +944,20 @@ export class HistogramComponent implements OnInit {
     });
     return result;
   }
+  
+  /**
+   * Utility for looking up the Field Constant unit for the input Field Constant id
+   * @param {number} id
+   */
+  lookUpFieldConstantUnit(id: number) {
+    let result: string = undefined;
+    this.fieldConstantCharacteristics.forEach(function(item) {
+      if (item.oid === id) {
+        result = item.unit;
+      }
+    });
+    return result;
+  }
 
   /**
    * Utility for presenting a histogram for the input data
@@ -954,10 +968,14 @@ export class HistogramComponent implements OnInit {
   presentHistogramData(histogramData: any, isShowing: boolean,isHistogram:boolean=false) {
 
     const targetFieldConstantAlias = this.lookUpFieldConstantName(this.selectedFieldConstantCharacteristicId);
+    let targetFieldConstantUnit = this.lookUpFieldConstantUnit(this.selectedFieldConstantCharacteristicId);
+    if(targetFieldConstantUnit!=''){
+        targetFieldConstantUnit='<br>['+targetFieldConstantUnit+']';
+    }
     let layout={};
     if(isHistogram){
         layout = {
-                title: 'Classified histogram of ' + targetFieldConstantAlias,
+                title: 'Classified histogram of ' + targetFieldConstantAlias+targetFieldConstantUnit,
                 yaxis: { title: 'Count'},
                 bargap: 0.05,
                 hovermode: 'closest',
@@ -965,7 +983,7 @@ export class HistogramComponent implements OnInit {
               };
     }else{
         layout = {
-                title: 'Histogram of ' + targetFieldConstantAlias,
+                title: 'Histogram of ' + targetFieldConstantAlias+targetFieldConstantUnit,
                 yaxis: { title: 'Count'},
                 bargap: 0.05,
                 hovermode: 'closest',

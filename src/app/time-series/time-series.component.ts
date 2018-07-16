@@ -268,7 +268,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
         return response;
       }).then((data) => {
         const chartData = TimeSeriesBuilderService.createFieldCharacteristicTimeSeriesData(data);
-        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName, this.chart1SelectedFieldCharacteristicName);
+        const chartLayout = TimeSeriesBuilderService.createTimeSeriesLayout(this.chart1SelectedFieldCharacteristicName, this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicUnit);
         this.renderFieldCharacteristicTimeSeriesChart(chartData, chartLayout, 'chart1');
       //broadcast to other components that chart 1 is activated
         this.broadcastChart1Status(true);
@@ -326,7 +326,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   broadcastChart1Status(status:any=false) {
     //broadcast Chart1TimeSeriesActivated
       this.chart1IsActive=status;
-      this.userSelectionService.updateChart1TimeSeriesStatus(status,this.chart1SelectedCharacteristicType,this.chart1SelectedImageType,this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicId,this.selectedChart1Sensor,this.chart1SelectedParameter1Option,this.chart1SelectedParameter2Option,this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicId);
+      this.userSelectionService.updateChart1TimeSeriesStatus(status,this.chart1SelectedCharacteristicType,this.chart1SelectedImageType,this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicId,this.chart1SelectedImageCharacteristicUnit,this.selectedChart1Sensor,this.chart1SelectedParameter1Option,this.chart1SelectedParameter2Option,this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicId,this.chart1SelectedFieldCharacteristicUnit);
 
     }
   /**
