@@ -109,7 +109,6 @@ export class HistogramComponent implements OnInit {
                   //this.onClassSizeChange();
             }
             else if(typeof(this.selectedClassificationMethod)!='undefined'&&typeof(this.selectedNumberOfBins)!='undefined'&&typeof(this.selectedFieldConstantCharacteristicId)!='undefined'){
-                console.log('existe');
                 this.onFieldConstantChange();
             }
             
