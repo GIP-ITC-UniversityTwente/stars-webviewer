@@ -240,42 +240,55 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
         this.chart1CharacteristicTypeIsVisible=true;
         //By default select the same as the first timeseries!
         //Check if timeseries chart 1 is active or not. If so copy the same parameters as before.
-        
-        if(typeof(this.chart1TimeSeriesStatus.active)!='undefined' && this.chart1TimeSeriesStatus.active==true){
+        if(typeof(this.chart1TimeSeriesStatus.active)!='undefined' && this.chart1TimeSeriesStatus.active==true && this.chart1IsActive==false){
             TimeSeriesBuilderService.createEmptyTimeSeriesChart(Plotly, 'classifiedChart1');
             this.chart1IsActive=false;
             //timeseries chart 1 is active
-            this.chart1SelectedCharacteristicType=this.chart1TimeSeriesStatus.chart1SelectedCharacteristicType,
-            this.chart1SelectedImageType=this.chart1TimeSeriesStatus.chart1SelectedImageType,
-            this.chart1SelectedImageCharacteristicName=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicName,
-            this.chart1SelectedImageCharacteristicId=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicId,
-            this.chart1SelectedImageCharacteristicUnit=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicUnit,
-            this.selectedChart1Sensor=this.chart1TimeSeriesStatus.selectedChart1Sensor,
-            this.chart1SelectedParameter1Option=this.chart1TimeSeriesStatus.chart1SelectedParameter1Option,
-            this.chart1SelectedParameter2Option=this.chart1TimeSeriesStatus.chart1SelectedParameter2Option,
-            this.chart1SelectedFieldCharacteristicName=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicName,
-            this.chart1SelectedFieldCharacteristicId=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicId,
-            this.chart1SelectedFieldCharacteristicUnit=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicUnit
+            this.chart1SelectedCharacteristicType=this.chart1TimeSeriesStatus.chart1SelectedCharacteristicType;
+            this.chart1ImageCharacteristics=this.chart1TimeSeriesStatus.chart1ImageCharacteristics;
+            // Image
+            this.chart1SelectedImageType=this.chart1TimeSeriesStatus.chart1SelectedImageType;
+            this.chart1SelectedImageCharacteristicName=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicName;
+            this.chart1SelectedImageCharacteristicId=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicId;
+            this.chart1SelectedImageCharacteristicUnit=this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicUnit;
+            this.chart1Sensors=this.chart1TimeSeriesStatus.chart1Sensors;
+            this.selectedChart1Sensor=this.chart1TimeSeriesStatus.selectedChart1Sensor;
+            this.chart1Parameter1Name=this.chart1TimeSeriesStatus.chart1Parameter1Name;
+            this.chart1Parameter1Range=this.chart1TimeSeriesStatus.chart1Parameter1Range;
+            this.chart1SelectedParameter1Option=this.chart1TimeSeriesStatus.chart1SelectedParameter1Option;
+            this.chart1Parameter2Name=this.chart1TimeSeriesStatus.chart1Parameter2Name;
+            this.chart1Parameter2Range=this.chart1TimeSeriesStatus.chart1Parameter2Range;
+            this.chart1SelectedParameter2Option=this.chart1TimeSeriesStatus.chart1SelectedParameter2Option;
+            //Field
+            this.chart1SelectedFieldCharacteristicName=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicName;
+            this.chart1SelectedFieldCharacteristicId=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicId;
+            this.chart1SelectedFieldCharacteristicUnit=this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicUnit;
             
             //Make sure the fields are visible in case they are hidden
 
             if(typeof(this.chart1TimeSeriesStatus.chart1SelectedImageType)!='undefined' && this.chart1ImageOptionsAreVisible==false ){
                 this.chart1ImageOptionsAreVisible=true;
+                this.chart1DropDownsAreDisabled=false;
             }
             if(typeof(this.chart1TimeSeriesStatus.chart1SelectedImageCharacteristicName)!='undefined' && this.chart1ImageOptionsAreVisible==false ){
                 this.chart1ImageOptionsAreVisible=true;
+                this.chart1DropDownsAreDisabled=false;
             }
             if(typeof(this.chart1TimeSeriesStatus.selectedChart1Sensor)!='undefined' && this.chart1ImageOptionsAreVisible==false ){
                 this.chart1ImageOptionsAreVisible=true;
+                this.chart1DropDownsAreDisabled=false;
             }
             if(typeof(this.chart1TimeSeriesStatus.chart1SelectedParameter1Option)!='undefined' && this.chart1Parameter1IsVisible==false ){
                 this.chart1Parameter1IsVisible=true;
+                this.chart1DropDownsAreDisabled=false;
             }
             if(typeof(this.chart1TimeSeriesStatus.chart1SelectedParameter2Option)!='undefined' && this.chart1Parameter2IsVisible==false ){
                 this.chart1Parameter2IsVisible=true;
+                this.chart1DropDownsAreDisabled=false;
             }
             if(typeof(this.chart1TimeSeriesStatus.chart1SelectedFieldCharacteristicName)!='undefined' && this.chart1FieldOptionsAreVisible==false ){
                 this.chart1FieldOptionsAreVisible=true;
+                this.chart1DropDownsAreDisabled=false;
             }
             
             //In this if we need always to plot a chart. Field or Image
@@ -455,7 +468,6 @@ export class ClassifiedTimeSeriesComponent implements OnInit, OnDestroy {
 //        });
       }
     } else if (this.chart1SelectedCharacteristicType === 'Field Characteristic') {
-        
       // update field characteristic time series
         //console.log('updateTimeSeries');
         // Get The Group classes just like in the histogram data

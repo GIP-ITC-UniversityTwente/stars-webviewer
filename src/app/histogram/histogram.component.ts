@@ -57,6 +57,7 @@ export class HistogramComponent implements OnInit {
     this.subscriptionToSelectedStudyArea = this.userSelectionService.studyArea$.subscribe(
       studyArea => {
         this.studyArea = studyArea;
+        this.chartIsActive=false;
       }
     );
 
@@ -64,6 +65,7 @@ export class HistogramComponent implements OnInit {
     this.subscriptionToSelectedStartYear = this.userSelectionService.startYear$.subscribe(
       startYear => {
         this.startYear = startYear;
+        this.chartIsActive=false;
       }
     );
 
@@ -71,6 +73,7 @@ export class HistogramComponent implements OnInit {
     this.subscriptionToSelectedEndYear = this.userSelectionService.endYear$.subscribe(
       endYear => {
         this.endYear = endYear;
+        this.chartIsActive=false;
       }
     );
 
@@ -80,7 +83,7 @@ export class HistogramComponent implements OnInit {
         if (cropTypes.length === 0) {
           HistogramBuilderService.createEmptyHistogram(Plotly);
           this.chartIsActive=false;
-          this.fieldConstantCharacteristics=[];
+          //this.fieldConstantCharacteristics=[];
         } else if (cropTypes.length > 0) {
 
           // create the comma-delimited list of crops for an API request
@@ -99,6 +102,18 @@ export class HistogramComponent implements OnInit {
             return response;
           }).then((data) => {
             this.fieldConstantCharacteristics = data.results.fieldConstants;
+            
+            //If the histogram is active then we should upgrade it.
+            if(this.chartIsActive){
+                  this.onFieldConstantChange();
+                  //this.onClassSizeChange();
+            }
+            else if(typeof(this.selectedClassificationMethod)!='undefined'&&typeof(this.selectedNumberOfBins)!='undefined'&&typeof(this.selectedFieldConstantCharacteristicId)!='undefined'){
+                console.log('existe');
+                this.onFieldConstantChange();
+            }
+            
+            
           }).catch((error) => {
             console.log(error);
           });
@@ -133,7 +148,6 @@ export class HistogramComponent implements OnInit {
     this.starsAPIService.fetchFieldConstantData(this.studyArea['properties']['id'], this.startYear, this.endYear, this.selectedFieldConstantCharacteristicId, this.cropTypes).then((response) => {
       return response;
     }).then((data) => {
-
       //
 //      console.log('field constant data ...');
 //      console.log(JSON.stringify(data.results));
@@ -188,12 +202,8 @@ export class HistogramComponent implements OnInit {
        
           this.selectedClassificationMethod=this.classificationMethods[0];
       }
-      
-      
+
       this.onNumberOfBinsChange();
-      
-      
-      
       
     }).catch((error) => {
       console.log(error);
@@ -975,7 +985,7 @@ export class HistogramComponent implements OnInit {
     let layout={};
     if(isHistogram){
         layout = {
-                title: 'Classified histogram of ' + targetFieldConstantAlias+targetFieldConstantUnit,
+                title: 'Histogram of ' + targetFieldConstantAlias+targetFieldConstantUnit,
                 yaxis: { title: 'Count'},
                 bargap: 0.05,
                 hovermode: 'closest',

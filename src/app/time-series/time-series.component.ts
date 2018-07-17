@@ -186,6 +186,7 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
 
           // Render chart(s)
           this.updateTimeSeries();
+          
         }
       }
     );
@@ -326,7 +327,26 @@ export class TimeSeriesComponent implements OnInit, OnDestroy, AfterViewChecked 
   broadcastChart1Status(status:any=false) {
     //broadcast Chart1TimeSeriesActivated
       this.chart1IsActive=status;
-      this.userSelectionService.updateChart1TimeSeriesStatus(status,this.chart1SelectedCharacteristicType,this.chart1SelectedImageType,this.chart1SelectedImageCharacteristicName,this.chart1SelectedImageCharacteristicId,this.chart1SelectedImageCharacteristicUnit,this.selectedChart1Sensor,this.chart1SelectedParameter1Option,this.chart1SelectedParameter2Option,this.chart1SelectedFieldCharacteristicName,this.chart1SelectedFieldCharacteristicId,this.chart1SelectedFieldCharacteristicUnit);
+      this.userSelectionService.updateChart1TimeSeriesStatus(
+              status,
+              this.chart1SelectedCharacteristicType,
+              this.chart1SelectedImageType,
+              this.chart1ImageCharacteristics,
+              this.chart1SelectedImageCharacteristicName,
+              this.chart1SelectedImageCharacteristicId,
+              this.chart1SelectedImageCharacteristicUnit,
+              this.chart1Sensors,
+              this.selectedChart1Sensor,
+              this.chart1Parameter1Name,
+              this.chart1Parameter1Range,
+              this.chart1SelectedParameter1Option,
+              this.chart1Parameter2Name,
+              this.chart1Parameter2Range,
+              this.chart1SelectedParameter2Option,
+              this.chart1SelectedFieldCharacteristicName,
+              this.chart1SelectedFieldCharacteristicId,
+              this.chart1SelectedFieldCharacteristicUnit
+              );
 
     }
   /**

@@ -13,7 +13,7 @@ export class AppConfiguration {
   static studyAreaToolTip = 'A contiguous geographic area within which crop field studies have been conducted, and images have been collected for monitoring purposes.';
   static cropTypeToolTip = 'The list of crops grown in the chosen study area in the selected year(s).';
   static timeSeriesTooltip = 'A set of chronological measurements over farm fields with the selected crops of a single field characteristic or single image-derived characteristic, averaged per date.';
-  static fieldConstantsToolTip = 'A field constant is measured only once per season for any farm field, the histogram shows frequency of these values over the set of fields.';
+  static fieldConstantsToolTip = 'A field constant is measured only once per season for any farm field, the histogram shows frequency of these values over the set of fields. In the map you can visualize the measured fields with the corresponding bin color.';
   static classifiedTimeSeriesToolTip = 'A set of chronological measurements over farm fields of a secondary field/image characteristic, displayed per class.';
 
   // Configuration for Online Help

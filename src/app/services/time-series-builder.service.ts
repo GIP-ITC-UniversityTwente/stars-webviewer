@@ -286,7 +286,12 @@ export class TimeSeriesBuilderService {
    * @returns {string}
    */
   static fetchTimeSeriesEnvelopeColor(lineColor): string {
-    return this.hexToRgbA(lineColor,'0.2');
+      if(typeof(lineColor)!='undefined'){
+          return this.hexToRgbA(lineColor,'0.2');
+      }else{
+          return 'rgb(0,0,0,0)'
+      }
+    
   }
 
   /**
@@ -295,7 +300,9 @@ export class TimeSeriesBuilderService {
    * @returns {Array}
    */
   static createImageCharacteristicTimeSeriesData(apiResponse: any) {
-
+      if(typeof(apiResponse)=='undefined' || typeof(apiResponse.results)=='undefined'){
+          return null
+      }
     const chartData = [];
 
     for (const item of apiResponse.results) {
@@ -367,6 +374,9 @@ export class TimeSeriesBuilderService {
    * @returns {Array}
    */
   static createImageClassifiedTimeSeriesData(apiResponse: any,classesList:any='none') {
+      if(typeof(apiResponse)=='undefined' || typeof(apiResponse.results)=='undefined'){
+          return null
+      }
     let numberClasses=classesList.split(",").filter(e => e !== 'Bin 0').length;
     const chartData = [];
 
@@ -435,6 +445,9 @@ export class TimeSeriesBuilderService {
   }
 
   static createFieldCharacteristicTimeSeriesData(apiResponse: any) {
+      if(typeof(apiResponse)=='undefined' || typeof(apiResponse.results)=='undefined'){
+          return null
+      }
 //    console.log(apiResponse);
     const chartData = [];
     for (const item of apiResponse.results) {
@@ -566,8 +579,10 @@ export class TimeSeriesBuilderService {
   }
   
   static createFieldClassifiedTimeSeriesData(apiResponse: any,classesList:any='none') {
+      if(typeof(apiResponse)=='undefined' || typeof(apiResponse.results)=='undefined'){
+          return null
+      }
       let numberClasses=classesList.split(",").filter(e => e !== 'Bin 0').length;
-
       const chartData = [];
       for (const item of apiResponse.results) {
         const cropName = item.crop;
